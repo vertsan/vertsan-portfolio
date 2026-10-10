@@ -248,6 +248,27 @@ code {
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
   --animate-aurora: aurora 10s ease infinite;
   --animate-shine: shine var(--duration) infinite linear;
+  --animate-page-enter: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes skeleton-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes aurora {
@@ -514,6 +535,56 @@ code {
   .animated-line {
     font-size: 0.7rem;
     line-height: 1.5;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal
+   Elements opt in with `data-reveal`. A single observer (ScrollReveal) adds
+   `.reveal-init` before paint and swaps it for `.reveal-in` once the element
+   enters the viewport, producing a smooth, staggered entrance. An animation is
+   used (rather than a transition) so pre-existing hover transitions such as
+   `transition-all` on cards keep working without a stagger delay.
+--------------------------------------------------------------------------- */
+[data-reveal] {
+  will-change: opacity, transform;
+}
+
+[data-reveal].reveal-init {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y, 22px), 0);
+}
+
+[data-reveal].reveal-in {
+  animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+  will-change: auto;
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 22px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respect users who prefer reduced motion: no entrance animations at all. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal].reveal-init {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal].reveal-in {
+    animation: none !important;
+  }
+
+  .animate-page-enter {
+    animation: none !important;
   }
 }
 

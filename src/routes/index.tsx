@@ -3,8 +3,8 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import ResumeAssistant from "#/components/ResumeAssistant";
 import HeroSection from "#/components/sections/HeroSection";
 
+import { Spinner } from "#/components/ui/spinner";
 import { DataProvider, type InitialData } from "#/lib/data-context";
-import { Projector } from "lucide-react";
 
 const GetInTouchSection = lazy(
 	() => import("#/components/sections/GetInTouchSection"),
@@ -18,7 +18,7 @@ const WhatICanDoSection = lazy(
 
 const SectionFallback = () => (
 	<div className="min-h-[50vh] flex items-center justify-center">
-		<div className="size-8 rounded-full border-2 border-muted-foreground/30 border-t-primary animate-spin" />
+		<Spinner className="size-8" />
 	</div>
 );
 

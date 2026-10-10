@@ -1,6 +1,13 @@
 ﻿import { Link } from "@tanstack/react-router";
 import { Code2, Globe, Sparkles } from "lucide-react";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import {
+	type CSSProperties,
+	type ReactNode,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,7 +20,6 @@ import DriftWall from "../ui/DriftWall";
 import SectionHeading from "../ui/section-heading";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
-import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
 
 function useCountUp(target: number, duration = 2000) {
 	const [count, setCount] = useState(0);
@@ -66,10 +72,7 @@ function AnimatedStat({
 	const { count, ref } = useCountUp(value);
 
 	return (
-		<div
-			ref={ref}
-			className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5"
-		>
+		<div ref={ref} className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
 			<div className="flex items-center justify-center size-10 sm:size-12 rounded-lg sm:rounded-xl bg-primary/10 text-primary shrink-0">
 				<Icon className="size-4 sm:size-5" />
 			</div>
@@ -100,15 +103,15 @@ export default function AboutSection() {
 			className="relative min-h-screen flex flex-col justify-center py-16 md:py-24 scroll-mt-20"
 		>
 			<FlickeringGrid
-							className="absolute inset-0 z-0 h-48 md:h-64"
-							squareSize={4}
-							gridGap={6}
-							color="#4ade80"
-							maxOpacity={0.14}
-							flickerChance={0.1}
-							width={1400}
-							height={200}
-						/>
+				className="absolute inset-0 z-0 h-48 md:h-64"
+				squareSize={4}
+				gridGap={6}
+				color="#4ade80"
+				maxOpacity={0.14}
+				flickerChance={0.1}
+				width={1400}
+				height={200}
+			/>
 			<div className="absolute inset-0 -z-10 bg-gradient-to-b from-muted/30 via-transparent to-muted/30" />
 
 			<div className="max-w-6xl mx-auto w-full relative z-10 px-4 sm:px-6">
@@ -138,7 +141,10 @@ export default function AboutSection() {
 				/>
 
 				<div className="grid md:grid-cols-2 gap-6 mb-6">
-					<div className="relative h-[260px] sm:h-[320px] md:h-[380px] rounded-2xl border border-border/50 overflow-hidden bg-muted/20">
+					<div
+						data-reveal
+						className="relative h-[260px] sm:h-[320px] md:h-[380px] rounded-2xl border border-border/50 overflow-hidden bg-muted/20"
+					>
 						<DriftWall
 							items={driftItems}
 							columns={3}
@@ -160,7 +166,11 @@ export default function AboutSection() {
 						/>
 					</div>
 
-					<div className="rounded-2xl border border-border/50 bg-muted/20 p-6 md:p-8 flex flex-col justify-center">
+					<div
+						data-reveal
+						style={{ "--reveal-delay": "90ms" } as CSSProperties}
+						className="rounded-2xl border border-border/50 bg-muted/20 p-6 md:p-8 flex flex-col justify-center"
+					>
 						<div className="space-y-6">
 							<div className="space-y-3">
 								<h3 className="text-lg font-semibold text-foreground">

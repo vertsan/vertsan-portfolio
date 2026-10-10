@@ -1,6 +1,6 @@
 import { Calendar, GraduationCap } from "lucide-react";
 import { marked } from "marked";
-import { useMemo } from "react";
+import { type CSSProperties, useMemo } from "react";
 import { Badge } from "#/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
 import SectionHeading from "#/components/ui/section-heading";
@@ -87,9 +87,13 @@ export default function EducationSection() {
 				<div>
 					<TracingBeam>
 						<div className="space-y-4 md:space-y-6">
-							{sortedEducation.map((edu) => (
+							{sortedEducation.map((edu, index) => (
 								<Card
 									key={edu.school}
+									data-reveal
+									style={
+										{ "--reveal-delay": `${index * 80}ms` } as CSSProperties
+									}
 									className="border shadow-sm hover:shadow-lg hover:border-primary/10 transition-all duration-300 gap-3 md:gap-6 py-3 md:py-6"
 								>
 									<CardHeader className="px-3 md:px-6">

@@ -1,27 +1,23 @@
 "use client";
 
 import { Mesh, Program, Renderer, RenderTarget, Texture, Triangle } from "ogl";
-import type { CSSProperties } from "react";
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 
 import "./DitherVeil.css";
 
 type Pattern = "bayer" | "noise" | "atkinson" | "floyd" | "lines";
 type Palette = "duotone" | "rgb";
 type Fit = "contain" | "cover";
-type Align = "left" | "center" | "right";
 type Kernel = [number, number, number][];
 type Rgb = [number, number, number];
 
 export interface DitherVeilProps {
 	src?: string;
 	fit?: Fit;
-	align?: Align;
 	pattern?: Pattern;
 	pixelSize?: number;
 	levels?: number;
 	palette?: Palette;
-	colorReveal?: boolean;
 	inkColor?: string;
 	paperColor?: string;
 	contrast?: number;
@@ -94,12 +90,6 @@ const wanderAt = (t: number, w: number, h: number): [number, number] => [
 	h * (0.5 + 0.28 * Math.sin(t * 0.71 + 1.1) + 0.07 * Math.cos(t * 1.57)),
 ];
 
-const alignShift = (align: Align, cover: number): number => {
-	if (align === "left") return -(1 - cover) / 2;
-	if (align === "right") return (1 - cover) / 2;
-	return 0;
-};
-
 const measureEdge = (
 	context: CanvasRenderingContext2D,
 	image: HTMLImageElement,
@@ -112,9 +102,17 @@ const measureEdge = (
 	const sum = [0, 0, 0];
 	const squares = [0, 0, 0];
 	let count = 0;
+	let transparent = 0;
+	let total = 0;
 	for (let y = 0; y < size; y++) {
 		for (let x = 0; x < size; x++) {
 			if (x > 0 && y > 0 && x < size - 1 && y < size - 1) continue;
+			total++;
+			const alpha = data[(y * size + x) * 4 + 3] / 255;
+			if (alpha < 0.25) {
+				transparent++;
+				continue;
+			}
 			for (let c = 0; c < 3; c++) {
 				const v = data[(y * size + x) * 4 + c] / 255;
 				sum[c] += v;
@@ -122,6 +120,9 @@ const measureEdge = (
 			}
 			count++;
 		}
+	}
+	if (count === 0 || transparent / total > 0.5) {
+		return { matte: [0.96, 0.94, 0.89], plain: false };
 	}
 	const matte: Rgb = [sum[0] / count, sum[1] / count, sum[2] / count];
 	const spread =
@@ -318,7 +319,6 @@ uniform sampler2D tImage;
 uniform sampler2D tMask;
 uniform sampler2D tNoise;
 uniform sampler2D tDiffused;
-uniform sampler2D tDiffusedColor;
 uniform vec2 uResolution;
 uniform vec2 uCover;
 uniform float uLod;
@@ -326,8 +326,6 @@ uniform float uCell;
 uniform int uPattern;
 uniform int uPalette;
 uniform float uLevels;
-uniform float uAlign;
-uniform float uColorReveal;
 uniform vec3 uInk;
 uniform vec3 uPaper;
 uniform vec3 uRimColor;
@@ -364,9 +362,7 @@ float engraving(vec2 cell) {
 }
 
 vec2 imageUv(vec2 uv) {
-  vec2 s = (uv - 0.5) * uCover + 0.5;
-  s.x += uAlign * (1.0 - uCover.x) * 0.5;
-  return s;
+  return (uv - 0.5) * uCover + 0.5;
 }
 
 float within(vec2 p) {
@@ -408,25 +404,24 @@ void main() {
   vec2 cellUv = vec2(center.x / uResolution.x, 1.0 - center.y / uResolution.y);
 
   vec2 sampleUv = imageUv(cellUv);
-  float framed = within(sampleUv);
-  vec3 srcColor = mix(uMatte, textureLod(tImage, sampleUv, uLod).rgb, framed);
+  vec4 srcSample = textureLod(tImage, sampleUv, uLod);
+  float framed = within(sampleUv) * smoothstep(0.05, 0.5, srcSample.a);
+  vec3 srcColor = mix(uMatte, srcSample.rgb, framed);
   float t = uPattern == 1 ? blueNoise(cell) : (uPattern == 2 ? engraving(cell) : bayer(cell));
   vec3 level;
-  vec3 colorLevel;
   if (uPattern == 3) {
     level = texelFetch(tDiffused, ivec2(cell), 0).rgb;
-    colorLevel = texelFetch(tDiffusedColor, ivec2(cell), 0).rgb;
   } else {
     level = quantize(toned(srcColor), t);
-    colorLevel = quantize(grade(srcColor), t);
   }
 
   vec3 color = mix(uInk, mix(uInk, uPaper, level), max(framed, uKey));
   vec3 backdrop = mix(uInk, uPaper, toned(uMatte));
   vec2 photoUv = imageUv(vUv);
-  vec3 raw = texture(tImage, photoUv).rgb;
-  float plain = uKey * (1.0 - smoothstep(0.05, 0.22, distance(raw, uMatte)));
-  vec3 photo = mix(mix(uInk, backdrop, uKey), mix(raw, backdrop, plain), within(photoUv));
+  vec4 photoSample = texture(tImage, photoUv);
+  float photoAlpha = within(photoUv) * smoothstep(0.05, 0.5, photoSample.a);
+  float plain = uKey * (1.0 - smoothstep(0.05, 0.22, distance(photoSample.rgb, uMatte)));
+  vec3 photo = mix(mix(uInk, backdrop, uKey), mix(photoSample.rgb, backdrop, plain), photoAlpha);
 
   vec2 point = vec2(cellUv.x, 1.0 - cellUv.y) * uSize;
   float mask = max(clamp(texture(tMask, cellUv).r * uHold, 0.0, 1.0), shockwave(point));
@@ -434,25 +429,23 @@ void main() {
   float order = bayer(cell.yx);
   float low = order * (1.0 - uRim);
   color = mix(color, uRimColor, step(low, shown) * step(0.001, uRim));
-  vec3 revealed = uColorReveal > 0.5 ? colorLevel : photo;
-  color = mix(color, revealed, step(low + uRim, shown));
+  color = mix(color, photo, step(low + uRim, shown));
 
   vec2 aspect = vec2(uResolution.x / uResolution.y, 1.0);
   float spread = length((cellUv - 0.5) * aspect) / length(aspect * 0.5);
   float appear = step(spread * 0.72 + bayer(cell + vec2(3.0, 5.0)) * 0.28, uIntro * 1.001);
-  fragColor = vec4(mix(uInk, color, appear), 1.0);
+	float imageAlpha = texture(tImage, photoUv).a;
+	fragColor = vec4(mix(uInk, color, appear), within(photoUv) * imageAlpha);
 }
 `;
 
 const DitherVeil = ({
 	src = DEFAULT_SRC,
 	fit = "contain",
-	align = "center",
 	pattern = "floyd",
 	pixelSize = 2,
 	levels = 2,
 	palette = "duotone",
-	colorReveal = false,
 	inkColor = "#120f17",
 	paperColor = "#f4f1ea",
 	contrast = 1.15,
@@ -475,12 +468,10 @@ const DitherVeil = ({
 	useEffect(() => {
 		settingsRef.current = {
 			fit,
-			align,
 			pattern,
 			pixelSize,
 			levels,
 			palette,
-			colorReveal,
 			inkColor,
 			paperColor,
 			contrast,
@@ -506,7 +497,7 @@ const DitherVeil = ({
 		).matches;
 		const renderer = new Renderer({
 			dpr: Math.min(window.devicePixelRatio || 1, 2),
-			alpha: false,
+			alpha: true,
 			antialias: false,
 		});
 		const gl = renderer.gl;
@@ -537,7 +528,6 @@ const DitherVeil = ({
 		});
 		const noiseTexture = dataTexture();
 		const diffusedTexture = dataTexture();
-		const diffusedColorTexture = dataTexture();
 
 		const createMask = (w: number, h: number) =>
 			new RenderTarget(gl, {
@@ -571,7 +561,6 @@ const DitherVeil = ({
 			tMask: { value: masks[0].texture },
 			tNoise: { value: noiseTexture },
 			tDiffused: { value: diffusedTexture },
-			tDiffusedColor: { value: diffusedColorTexture },
 			uResolution: { value: [1, 1] },
 			uCover: { value: [1, 1] },
 			uLod: { value: 0 },
@@ -579,8 +568,6 @@ const DitherVeil = ({
 			uPattern: { value: 0 },
 			uPalette: { value: 0 },
 			uLevels: { value: 2 },
-			uAlign: { value: 0 },
-			uColorReveal: { value: 0 },
 			uInk: { value: [0, 0, 0] },
 			uPaper: { value: [1, 1, 1] },
 			uRimColor: { value: [1, 1, 1] },
@@ -664,8 +651,6 @@ const DitherVeil = ({
 				s.pattern,
 				s.levels,
 				s.palette,
-				s.colorReveal,
-				s.align,
 				s.contrast,
 				s.brightness,
 				s.fit,
@@ -686,7 +671,7 @@ const DitherVeil = ({
 			const [mr, mg, mb] = viewUniforms.uMatte.value;
 			samplerContext.fillStyle = `rgb(${mr * 255}, ${mg * 255}, ${mb * 255})`;
 			samplerContext.fillRect(0, 0, cols, rows);
-			const sx = (0.5 - 0.5 * cx + alignShift(s.align, cx)) * iw;
+			const sx = (0.5 - 0.5 * cx) * iw;
 			const sy = (0.5 - 0.5 * cy) * ih;
 			const sw = ((cols * cell) / canvas.width) * cx * iw;
 			const sh = ((rows * cell) / canvas.height) * cy * ih;
@@ -723,20 +708,6 @@ const DitherVeil = ({
 			diffusedTexture.width = cols;
 			diffusedTexture.height = rows;
 			diffusedTexture.needsUpdate = true;
-			if (s.colorReveal) {
-				diffusedColorTexture.image = diffuse(
-					pixels,
-					cols,
-					rows,
-					KERNELS[s.pattern],
-					s.levels,
-					true,
-					grade,
-				);
-				diffusedColorTexture.width = cols;
-				diffusedColorTexture.height = rows;
-				diffusedColorTexture.needsUpdate = true;
-			}
 		};
 
 		const frame = (now: number) => {
@@ -844,12 +815,6 @@ const DitherVeil = ({
 			viewUniforms.uLod.value = Math.log2(Math.max(cell * texelsPerPixel, 1));
 			viewUniforms.uPattern.value = patternIndex;
 			viewUniforms.uPalette.value = s.palette === "rgb" ? 1 : 0;
-			viewUniforms.uAlign.value =
-				s.align === "left" ? -1 : s.align === "right" ? 1 : 0;
-			viewUniforms.uColorReveal.value = s.colorReveal ? 1 : 0;
-			viewUniforms.tDiffusedColor.value = s.colorReveal
-				? diffusedColorTexture
-				: diffusedTexture;
 			viewUniforms.uLevels.value = Math.max(2, Math.round(s.levels));
 			viewUniforms.uInk.value = hexToRgb(s.inkColor);
 			viewUniforms.uPaper.value = hexToRgb(s.paperColor);

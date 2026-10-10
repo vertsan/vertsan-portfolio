@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Badge } from "#/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "#/components/ui/breadcrumb";
 import { Button } from "#/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "#/components/ui/skeleton";
 import { getCache, setCache } from "#/lib/useLiveContent";
 
 import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
@@ -75,8 +75,42 @@ function ProjectDetail() {
 
 	if (loading) {
 		return (
-			<main className="min-h-[60vh] flex items-center justify-center">
-				<Loader2 className="size-6 animate-spin text-muted-foreground" />
+			<main className="relative min-h-screen">
+				<div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24">
+					<div className="mb-10 sm:mb-12">
+						<Skeleton className="h-4 w-48" />
+					</div>
+					<div className="lg:grid lg:grid-cols-3 lg:gap-14">
+						<div className="lg:col-span-2 space-y-8 sm:space-y-10">
+							<div className="space-y-4">
+								<div className="flex flex-wrap items-start justify-between gap-3">
+									<Skeleton className="h-9 w-2/3 max-w-md sm:h-11" />
+									<Skeleton className="h-6 w-20 rounded-full" />
+								</div>
+								<Skeleton className="h-4 w-full" />
+								<Skeleton className="h-4 w-4/5" />
+							</div>
+							<Skeleton className="aspect-video w-full rounded-xl" />
+							<div className="space-y-3">
+								<Skeleton className="h-4 w-full" />
+								<Skeleton className="h-4 w-full" />
+								<Skeleton className="h-4 w-3/4" />
+							</div>
+						</div>
+						<aside className="mt-10 lg:mt-0 lg:col-span-1">
+							<div className="space-y-5 rounded-xl border border-border bg-muted/20 p-4 sm:p-5">
+								<Skeleton className="h-4 w-40" />
+								<div className="flex flex-wrap gap-1.5">
+									<Skeleton className="h-5 w-14 rounded-full" />
+									<Skeleton className="h-5 w-20 rounded-full" />
+									<Skeleton className="h-5 w-16 rounded-full" />
+								</div>
+								<Skeleton className="h-8 w-full" />
+								<Skeleton className="h-8 w-full" />
+							</div>
+						</aside>
+					</div>
+				</div>
 			</main>
 		);
 	}

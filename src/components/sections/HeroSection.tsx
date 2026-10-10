@@ -145,21 +145,19 @@ export default function HeroSection() {
 				<div aria-hidden className="absolute inset-0 z-0 overflow-hidden">
 					{reducedMotion ? (
 						<img
-							src="/Iridescent%20Chrome%20Portrait%20in%20Suit.png"
+							src="/hero-portrait-cutout.png"
 							alt=""
 							className="size-full object-contain object-right mix-blend-multiply dark:mix-blend-normal"
 							decoding="async"
 						/>
 					) : (
 						<DitherVeil
-							src="/Iridescent%20Chrome%20Portrait%20in%20Suit.png"
+							src="/hero-portrait-cutout.png"
 							fit="contain"
-							align="center"
 							pattern="floyd"
 							pixelSize={2}
 							levels={3}
 							palette="duotone"
-							colorReveal={true}
 							inkColor={isDark ? "#05070f" : "#eef0f4"}
 							paperColor={isDark ? "#f8fafc" : "#0b0e17"}
 							contrast={1.35}
