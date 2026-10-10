@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { Button } from "#/components/ui/button";
 import SectionHeading from "#/components/ui/section-heading";
+import { Skeleton } from "#/components/ui/skeleton";
+import { Spinner } from "#/components/ui/spinner";
 import { cn } from "#/lib/utils";
 import { Marquee } from "#/registry/magicui/marquee";
 
@@ -97,7 +99,9 @@ const ReviewCard = ({
 					<ProviderIcon provider={provider} className="text-muted-foreground" />
 				</span>
 			</div>
-			<blockquote className="mt-3 text-sm leading-relaxed">{content}</blockquote>
+			<blockquote className="mt-3 text-sm leading-relaxed">
+				{content}
+			</blockquote>
 		</>
 	);
 
@@ -259,8 +263,26 @@ export default function TestimonialsSection() {
 				/>
 
 				{loading ? (
-					<div className="flex items-center justify-center py-12">
-						<div className="size-8 rounded-full border-2 border-muted-foreground/30 border-t-primary animate-spin" />
+					<div className="flex flex-wrap items-stretch justify-center gap-4 overflow-hidden">
+						{[...Array(3)].map((_, i) => (
+							<div
+								key={i}
+								className="w-[15rem] sm:w-72 shrink-0 rounded-2xl border border-border/60 bg-card/70 p-4 shadow-sm backdrop-blur-sm"
+							>
+								<div className="flex items-start gap-3">
+									<Skeleton className="size-8 rounded-full" />
+									<div className="flex-1 space-y-2">
+										<Skeleton className="h-3.5 w-24" />
+										<Skeleton className="h-3 w-16" />
+									</div>
+								</div>
+								<div className="mt-4 space-y-2">
+									<Skeleton className="h-3.5 w-full" />
+									<Skeleton className="h-3.5 w-11/12" />
+									<Skeleton className="h-3.5 w-3/4" />
+								</div>
+							</div>
+						))}
 					</div>
 				) : testimonials.length === 0 ? (
 					<div className="text-center py-12 text-muted-foreground">
@@ -309,7 +331,7 @@ export default function TestimonialsSection() {
 				<div className="mx-auto max-w-lg space-y-6">
 					{authLoading ? (
 						<div className="flex justify-center py-4">
-							<div className="size-6 rounded-full border-2 border-muted-foreground/30 border-t-primary animate-spin" />
+							<Spinner className="size-6" />
 						</div>
 					) : authUser ? (
 						<div className="space-y-5">
@@ -330,7 +352,10 @@ export default function TestimonialsSection() {
 								<div className="flex-1 text-left">
 									<p className="text-sm font-semibold">{authUser.name}</p>
 									<p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-										<ProviderIcon provider={authUser.provider} className="text-muted-foreground/70" />
+										<ProviderIcon
+											provider={authUser.provider}
+											className="text-muted-foreground/70"
+										/>
 										Signed in
 									</p>
 								</div>

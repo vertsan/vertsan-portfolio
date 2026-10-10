@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import { marked } from "marked";
-import { memo, useMemo, useState } from "react";
+import { type CSSProperties, memo, useMemo, useState } from "react";
 import { Badge } from "#/components/ui/badge";
 import {
 	Breadcrumb,
@@ -97,8 +97,10 @@ function ProjectsShimmer() {
 
 const ProjectCard = memo(function ProjectCard({
 	project,
+	index = 0,
 }: {
 	project: Project;
+	index?: number;
 }) {
 	const renderedSummary = useMemo(
 		() => (project.summary?.trim() ? marked(project.summary) : ""),
@@ -106,7 +108,11 @@ const ProjectCard = memo(function ProjectCard({
 	);
 
 	return (
-		<Card className="group flex flex-col border shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md overflow-hidden gap-0">
+		<Card
+			data-reveal
+			style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
+			className="group flex flex-col border shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md overflow-hidden gap-0"
+		>
 			<CardHeader className="px-5 pt-5 pb-3">
 				<div className="flex items-start justify-between gap-3">
 					<CardTitle className="text-base leading-snug md:text-lg group-hover:text-primary transition-colors duration-300">
@@ -228,9 +234,7 @@ export default function ProjectsSection() {
 		(safePage - 1) * PAGE_SIZE,
 		safePage * PAGE_SIZE,
 	);
-	const displayed = isHome
-		? sortedProjects.slice(0, MAX_HOME)
-		: pageItems;
+	const displayed = isHome ? sortedProjects.slice(0, MAX_HOME) : pageItems;
 
 	const handlePageChange = (nextPage: number) => {
 		setPage(nextPage);
@@ -279,10 +283,11 @@ export default function ProjectsSection() {
 				/>
 
 				<div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
-					{displayed.map((project) => (
+					{displayed.map((project, index) => (
 						<ProjectCard
 							key={project.slug ?? project.title}
 							project={project}
+							index={index}
 						/>
 					))}
 				</div>

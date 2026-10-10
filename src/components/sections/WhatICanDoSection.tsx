@@ -7,6 +7,7 @@ import {
 	Server,
 	Smartphone,
 } from "lucide-react";
+import type { CSSProperties } from "react";
 import { GlowingEffect } from "#/components/ui/glowing-effect";
 import SectionHeading from "#/components/ui/section-heading";
 
@@ -70,8 +71,13 @@ export default function WhatICanDoSection() {
 
 				<div>
 					<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-						{services.map(({ icon: Icon, title, description }) => (
-							<li key={title} className="min-h-[14rem] list-none">
+						{services.map(({ icon: Icon, title, description }, index) => (
+							<li
+								key={title}
+								data-reveal
+								style={{ "--reveal-delay": `${index * 70}ms` } as CSSProperties}
+								className="min-h-[14rem] list-none"
+							>
 								<div className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3">
 									<GlowingEffect
 										blur={0}

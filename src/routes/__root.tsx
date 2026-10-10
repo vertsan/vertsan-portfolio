@@ -10,7 +10,10 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import RouteProgress from "../components/RouteProgress";
+import ScrollReveal from "../components/ScrollReveal";
 import ScrollToTop from "../components/ScrollToTop";
+import { Spinner } from "../components/ui/spinner";
 
 import appCss from "../styles.css?url";
 
@@ -129,6 +132,11 @@ export const Route = createRootRoute({
 		],
 	}),
 	shellComponent: RootDocument,
+	pendingComponent: () => (
+		<div className="flex min-h-[60vh] items-center justify-center">
+			<Spinner className="size-7" />
+		</div>
+	),
 	notFoundComponent: () => (
 		<main className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4 sm:px-6 text-center">
 			<h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-muted-foreground/30">
@@ -203,10 +211,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						)})}},100);})();`,
 					}}
 				/>
+				<ScrollReveal />
+				<RouteProgress />
 				{!isAdmin ? (
 					<div className="min-h-screen bg-card overflow-x-clip pb-[env(safe-area-inset-bottom)]">
 						<Header />
-						{children}
+						<div key={loc.pathname} className="animate-page-enter">
+							{children}
+						</div>
 						<Footer />
 						<ScrollToTop />
 					</div>

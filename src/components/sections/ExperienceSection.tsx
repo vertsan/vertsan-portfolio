@@ -1,6 +1,6 @@
 import { Briefcase, Calendar } from "lucide-react";
 import { marked } from "marked";
-import { useMemo } from "react";
+import { type CSSProperties, useMemo } from "react";
 import { Badge } from "#/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
 import SectionHeading from "#/components/ui/section-heading";
@@ -90,9 +90,13 @@ export default function ExperienceSection() {
 				<div>
 					<TracingBeam>
 						<div className="space-y-5 md:space-y-8">
-							{sortedJobs.map((job) => (
+							{sortedJobs.map((job, index) => (
 								<Card
 									key={job.jobTitle}
+									data-reveal
+									style={
+										{ "--reveal-delay": `${index * 80}ms` } as CSSProperties
+									}
 									className="border shadow-sm hover:shadow-lg hover:border-primary/10 transition-all duration-300 gap-2 md:gap-6 py-3 md:py-6"
 								>
 									<CardHeader className="px-2 md:px-6">

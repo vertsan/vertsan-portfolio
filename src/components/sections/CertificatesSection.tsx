@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { ArrowUpRight, Award, Calendar, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { Badge } from "#/components/ui/badge";
 import {
 	Breadcrumb,
@@ -91,9 +91,7 @@ export default function CertificatesSection() {
 		(safePage - 1) * PAGE_SIZE,
 		safePage * PAGE_SIZE,
 	);
-	const displayed = isHome
-		? sortedCerts.slice(0, MAX_HOME)
-		: pageItems;
+	const displayed = isHome ? sortedCerts.slice(0, MAX_HOME) : pageItems;
 
 	const handlePageChange = (nextPage: number) => {
 		setPage(nextPage);
@@ -140,9 +138,11 @@ export default function CertificatesSection() {
 				/>
 
 				<div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
-					{displayed.map((cert) => (
+					{displayed.map((cert, index) => (
 						<Card
 							key={(cert as Record<string, any>).title as string}
+							data-reveal
+							style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
 							className="group border shadow-sm hover:shadow-md hover:border-primary/15 transition-all duration-300 overflow-hidden gap-0"
 						>
 							<CardHeader className="px-5 pt-5 pb-3">
