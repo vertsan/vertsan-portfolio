@@ -37,8 +37,7 @@ const GRID_SPANS = [
 	"lg:col-span-1",
 ];
 
-const GRID_ROWS =
-	"auto-rows-[15rem] sm:auto-rows-[18rem] lg:auto-rows-[20rem]";
+const GRID_ROWS = "auto-rows-[15rem] sm:auto-rows-[18rem] lg:auto-rows-[20rem]";
 
 function statusIcon(status?: string): LucideIcon {
 	const value = (status ?? "").toLowerCase();

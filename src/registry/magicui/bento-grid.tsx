@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { type ComponentPropsWithoutRef, type ElementType, type ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { Button } from "#/components/ui/button";
 import { cn } from "#/lib/utils";
 

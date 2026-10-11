@@ -64,9 +64,9 @@ function Home() {
 				<ShowcaseSection />
 			</Suspense>
 
-			<Suspense fallback={<SectionFallback />}>
+			{/* <Suspense fallback={<SectionFallback />}>
 				<BentoShowcaseSection />
-			</Suspense>
+			</Suspense> */}
 
 			<Suspense fallback={<SectionFallback />}>
 				<WhatICanDoSection />
