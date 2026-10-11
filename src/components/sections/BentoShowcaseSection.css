@@ -1,0 +1,17 @@
+.bento-card-fallback {
+	position: absolute;
+	inset: 0;
+	display: block;
+	background:
+		radial-gradient(
+			130% 130% at 15% 10%,
+			rgba(168, 85, 247, 0.5),
+			transparent 55%
+		),
+		radial-gradient(
+			130% 130% at 90% 95%,
+			rgba(56, 189, 248, 0.42),
+			transparent 55%
+		),
+		linear-gradient(135deg, #111827 0%, #1f2937 100%);
+}

@@ -6,8 +6,14 @@ import HeroSection from "#/components/sections/HeroSection";
 import { Spinner } from "#/components/ui/spinner";
 import { DataProvider, type InitialData } from "#/lib/data-context";
 
+const BentoShowcaseSection = lazy(
+	() => import("#/components/sections/BentoShowcaseSection"),
+);
 const GetInTouchSection = lazy(
 	() => import("#/components/sections/GetInTouchSection"),
+);
+const ShowcaseSection = lazy(
+	() => import("#/components/sections/ShowcaseSection"),
 );
 const TestimonialsSection = lazy(
 	() => import("#/components/sections/TestimonialsSection"),
@@ -54,9 +60,14 @@ function Home() {
 		<DataProvider data={data}>
 			<ResumeAssistant />
 			<HeroSection />
+			<Suspense fallback={<SectionFallback />}>
+				<ShowcaseSection />
+			</Suspense>
+
 			{/* <Suspense fallback={<SectionFallback />}>
-			<ProjectSlideSection />
+				<BentoShowcaseSection />
 			</Suspense> */}
+
 			<Suspense fallback={<SectionFallback />}>
 				<WhatICanDoSection />
 			</Suspense>
