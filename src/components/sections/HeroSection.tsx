@@ -239,10 +239,7 @@ export default function HeroSection() {
 						{/* Left: Headline & Actions */}
 						<div className="flex w-full max-w-2xl flex-col items-start gap-5 sm:gap-6 pointer-events-auto">
 							<div className="space-y-3">
-								<div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-black/60 dark:text-white/60">
-									<span className="h-px w-6 bg-black/40 dark:bg-white/40" />
-									Full-Stack Engineer
-								</div>
+								
 
 								<h1 className="text-balance text-4xl font-light leading-[1.08] tracking-tight text-[#0b0e17] sm:text-6xl md:text-7xl [text-shadow:0_2px_30px_rgba(255,255,255,0.7)] dark:text-white dark:[text-shadow:0_2px_30px_rgba(0,0,0,0.8)]">
 									I'm{" "}
