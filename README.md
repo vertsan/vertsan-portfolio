@@ -1,4 +1,4 @@
-# Vert San - Portfolio
+<h1><img src="public/vert.ico" alt="Vert San icon" width="32" /> Vert San - Portfolio</h1>
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://vertsan.netlify.app)
 [![Netlify Status](https://img.shields.io/badge/deployed%20on-Netlify-blue)](https://vertsan.netlify.app)

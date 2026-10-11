@@ -1,0 +1,128 @@
+.showcase-stage {
+	position: relative;
+	width: 100%;
+	height: 420px;
+}
+
+@media (min-width: 640px) {
+	.showcase-stage {
+		height: 480px;
+	}
+}
+
+@media (min-width: 768px) {
+	.showcase-stage {
+		height: 540px;
+	}
+}
+
+.showcase-card {
+	position: relative;
+	display: block;
+	height: 100%;
+}
+
+.showcase-card-media {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	overflow: hidden;
+	background: #0b0e17;
+}
+
+.showcase-card-media img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.showcase-card-fallback {
+	position: absolute;
+	inset: 0;
+	display: block;
+	background:
+		radial-gradient(
+			120% 120% at 15% 10%,
+			rgba(168, 85, 247, 0.45),
+			transparent 55%
+		),
+		radial-gradient(
+			120% 120% at 90% 90%,
+			rgba(56, 189, 248, 0.4),
+			transparent 55%
+		),
+		linear-gradient(135deg, #111827 0%, #1f2937 100%);
+}
+
+.showcase-card-scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(
+		to top,
+		rgba(3, 5, 12, 0.94) 0%,
+		rgba(3, 5, 12, 0.6) 34%,
+		rgba(3, 5, 12, 0.08) 68%,
+		transparent 100%
+	);
+}
+
+.showcase-card-body {
+	position: absolute;
+	inset-inline: 0;
+	bottom: 0;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 1.15rem 1.3rem 1.25rem;
+	color: #fff;
+}
+
+.showcase-card-status {
+	display: inline-flex;
+	width: fit-content;
+	align-items: center;
+	border-radius: 9999px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	background: rgba(255, 255, 255, 0.1);
+	padding: 0.15rem 0.6rem;
+	font-size: 0.68rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	backdrop-filter: blur(6px);
+}
+
+.showcase-card-title {
+	font-size: 1.2rem;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-shadow: 0 1px 18px rgba(0, 0, 0, 0.55);
+}
+
+.showcase-card-summary {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	margin: 0;
+	font-size: 0.82rem;
+	line-height: 1.45;
+	color: rgba(255, 255, 255, 0.78);
+	text-shadow: 0 1px 14px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 640px) {
+	.showcase-card-title {
+		font-size: 1.45rem;
+	}
+
+	.showcase-card-summary {
+		font-size: 0.88rem;
+	}
+}
