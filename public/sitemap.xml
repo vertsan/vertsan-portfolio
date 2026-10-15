@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://vertsan.netlify.app/</loc>
+  </url>
+  <url>
+    <loc>https://vertsan.netlify.app/about</loc>
+  </url>
+  <url>
+    <loc>https://vertsan.netlify.app/projects</loc>
+  </url>
+  <url>
+    <loc>https://vertsan.netlify.app/experience</loc>
+  </url>
+  <url>
+    <loc>https://vertsan.netlify.app/education</loc>
+  </url>
+  <url>
+    <loc>https://vertsan.netlify.app/certificates</loc>
+  </url>
+  <url>
+    <loc>https://vertsan.netlify.app/technologies</loc>
+  </url>
+</urlset>

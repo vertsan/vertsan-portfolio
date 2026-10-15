@@ -44,6 +44,10 @@ export const Route = createRootRoute({
 				content: "light dark",
 			},
 			{
+				name: "google-site-verification",
+				content: "ysOW2503SgfmufIhlZ3WVrF7TONcyLm3mwwDjquUS4s",
+			},
+			{
 				title: "vert",
 			},
 			{
