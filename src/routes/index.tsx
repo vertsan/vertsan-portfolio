@@ -5,6 +5,7 @@ import HeroSection from "#/components/sections/HeroSection";
 
 import { Spinner } from "#/components/ui/spinner";
 import { DataProvider, type InitialData } from "#/lib/data-context";
+import AboutSection from "#/components/sections/AboutSection";
 
 const BentoShowcaseSection = lazy(
 	() => import("#/components/sections/BentoShowcaseSection"),
@@ -63,7 +64,9 @@ function Home() {
 			<Suspense fallback={<SectionFallback />}>
 				<ShowcaseSection />
 			</Suspense>
-
+			<Suspense fallback={<SectionFallback />}>
+				<AboutSection />
+			</Suspense>
 			{/* <Suspense fallback={<SectionFallback />}>
 				<BentoShowcaseSection />
 			</Suspense> */}
