@@ -4,14 +4,6 @@ import { marked } from "marked";
 import { type CSSProperties, memo, useMemo, useState } from "react";
 import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Badge } from "#/components/ui/badge";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "#/components/ui/breadcrumb";
 import { Button } from "#/components/ui/button";
 import {
 	Card,
@@ -212,8 +204,6 @@ const ProjectCard = memo(function ProjectCard({
 export default function ProjectsSection() {
 	const { items: projects, loading } = useLiveContent<Project>("projects");
 	const location = useLocation();
-	const showBreadcrumb =
-		location.pathname === "/projects" || location.pathname === "/projects/";
 	const isHome = location.pathname === "/";
 	const MAX_HOME = 6;
 	const PAGE_SIZE = 6;
@@ -252,21 +242,6 @@ export default function ProjectsSection() {
 		>
 			<AsciiBackdrop className="inset-x-0 top-0 z-0 h-48 md:h-64" />
 			<div className="max-w-6xl mx-auto w-full space-y-12 px-4 sm:px-6 relative z-10">
-				{showBreadcrumb && (
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link to="/">Home</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage>Projects</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-				)}
 				<SectionHeading
 					eyebrow="Portfolio"
 					title="Projects"
