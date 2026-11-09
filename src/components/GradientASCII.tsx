@@ -676,7 +676,7 @@ const GradientASCII = ({
 			atlasKey = key;
 			if (atlas) gl.deleteTexture(atlas.texture);
 			atlas = buildAtlas(gl, s.characters, s.fontFamily);
-			document.fonts.load(`300 64px ${s.fontFamily}`, s.characters).then(
+			document.fonts?.load(`300 64px ${s.fontFamily}`, s.characters).then(
 				() => {
 					if (disposed || atlasKey !== key) return;
 					if (atlas) gl.deleteTexture(atlas.texture);
