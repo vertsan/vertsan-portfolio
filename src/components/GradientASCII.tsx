@@ -4,6 +4,7 @@ import {
 	useEffect,
 	useRef,
 } from "react";
+import "./GradientASCII.css";
 
 const MAX_COLORS = 8;
 const MAX_CLICKS = 4;
@@ -676,7 +677,7 @@ const GradientASCII = ({
 			atlasKey = key;
 			if (atlas) gl.deleteTexture(atlas.texture);
 			atlas = buildAtlas(gl, s.characters, s.fontFamily);
-			document.fonts?.load(`300 64px ${s.fontFamily}`, s.characters).then(
+			document.fonts?.load?.(`300 64px ${s.fontFamily}`, s.characters).then(
 				() => {
 					if (disposed || atlasKey !== key) return;
 					if (atlas) gl.deleteTexture(atlas.texture);
@@ -985,15 +986,15 @@ const GradientASCII = ({
 	return (
 		<div
 			ref={containerRef}
-			className={["relative h-full w-full overflow-hidden", className]
-				.filter(Boolean)
-				.join(" ")}
+			className={`gradient-ascii-container${className ? ` ${className}` : ""}`}
 			style={style}
 			{...rest}
 		>
+			{/* biome-ignore lint/a11y/noAriaHiddenOnFocusable: the canvas is purely decorative and not focusable */}
 			<canvas
 				ref={canvasRef}
-				className="absolute inset-0 block h-full w-full"
+				className="gradient-ascii-canvas"
+				aria-hidden="true"
 			/>
 		</div>
 	);

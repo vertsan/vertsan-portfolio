@@ -57,6 +57,9 @@ export default function PortraitCard() {
 							loading="lazy"
 							decoding="async"
 							className="size-full object-contain p-6"
+							style={{
+								filter: "grayscale(1) contrast(1.05) brightness(1.05)",
+							}}
 						/>
 					) : (
 						<DitherVeil
@@ -66,12 +69,12 @@ export default function PortraitCard() {
 							pixelSize={3}
 							levels={3}
 							palette="duotone"
-							inkColor={isDark ? "#eef0ff" : "#111114"}
-							paperColor={isDark ? "#0b0b0f" : "#f4f4f7"}
-							contrast={1.25}
-							brightness={0.05}
-							revealRadius={900}
-							softness={0.9}
+							inkColor={isDark ? "#0b0b0f" : "#111114"}
+							paperColor={isDark ? "#eef0ff" : "#f4f4f7"}
+							contrast={1.3}
+							brightness={isDark ? 0.12 : 0.02}
+							revealRadius={400}
+							softness={0.95}
 							linger={2}
 							rimColor={isDark ? "#818cf8" : "#4f46e5"}
 							rim={0.14}
