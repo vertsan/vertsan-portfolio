@@ -118,6 +118,7 @@ export default function HeroSection() {
 			/>
 			<AsciiBackdrop
 				className="inset-0 opacity-40 dark:opacity-50"
+				colors={["#1e1b4b", "#4338ca", "#818cf8", "#e0e7ff"]}
 				shape="horizon"
 				cellSize={20}
 				density={0.45}

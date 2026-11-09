@@ -5,6 +5,8 @@ import { useIsDark } from "#/lib/useIsDark";
 
 interface AsciiBackdropProps {
 	className?: string;
+	/** Override the default blue palette (dim → bright). */
+	colors?: GradientASCIIProps["colors"];
 	shape?: GradientASCIIProps["shape"];
 	cellSize?: number;
 	density?: number;
@@ -20,6 +22,7 @@ interface AsciiBackdropProps {
 
 export default function AsciiBackdrop({
 	className = "",
+	colors,
 	shape = "horizon",
 	cellSize = 18,
 	density = 0.55,
@@ -32,9 +35,11 @@ export default function AsciiBackdrop({
 	fade = true,
 }: AsciiBackdropProps) {
 	const isDark = useIsDark();
-	const colors = isDark
-		? ["#1e3fd8", "#f6f8ff", "#a5d8ff", "#38bdf8"]
-		: ["#1e3fd8", "#0b0e17", "#38bdf8", "#a5d8ff"];
+	const palette =
+		colors ??
+		(isDark
+			? ["#1e3fd8", "#f6f8ff", "#a5d8ff", "#38bdf8"]
+			: ["#1e3fd8", "#0b0e17", "#38bdf8", "#a5d8ff"]);
 
 	return (
 		<div
@@ -52,7 +57,7 @@ export default function AsciiBackdrop({
 			}
 		>
 			<GradientASCII
-				colors={colors}
+				colors={palette}
 				shape={shape}
 				cellSize={cellSize}
 				density={density}

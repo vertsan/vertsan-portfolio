@@ -642,6 +642,10 @@ code {
     border-color: var(--ui-border-strong);
   }
 
+  .ui-card-flat {
+    box-shadow: none;
+  }
+
   .ui-thumb {
     overflow: hidden;
     border-radius: 0.875rem;

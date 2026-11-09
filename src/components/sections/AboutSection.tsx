@@ -42,6 +42,7 @@ export default function AboutSection({
 					/>
 					<AsciiBackdrop
 						className="inset-x-0 top-0 h-[34rem] opacity-40 dark:opacity-50"
+						colors={["#1e1b4b", "#4338ca", "#818cf8", "#e0e7ff"]}
 						shape="horizon"
 						cellSize={20}
 						density={0.45}

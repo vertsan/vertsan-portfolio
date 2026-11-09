@@ -73,7 +73,7 @@ export default function StatCard({
 			ref={ref}
 			data-reveal
 			style={{ "--reveal-delay": `${delay}ms` } as CSSProperties}
-			className="ui-card flex h-full flex-col justify-between gap-4 p-5 sm:p-6"
+			className="ui-card ui-card-flat flex h-full flex-col justify-between gap-4 p-5 sm:p-6"
 		>
 			<span className="ui-icon-chip" aria-hidden>
 				<Icon className="size-[18px]" />
