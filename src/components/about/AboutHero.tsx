@@ -1,48 +1,15 @@
-import { Link } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "#/components/ui/breadcrumb";
 
 const reveal = (delay: number) =>
 	({ "--reveal-delay": `${delay}ms` }) as CSSProperties;
 
 /**
- * Centered About hero: low-key breadcrumb, pill label, headline and a
- * comfortably narrow subtitle. Every element fades up on a 60ms stagger.
+ * Centered About hero: pill label, headline and a comfortably narrow
+ * subtitle. Every element fades up on a 60ms stagger.
  */
 export default function AboutHero() {
 	return (
 		<header className="relative flex flex-col items-center text-center">
-			<Breadcrumb className="mb-10">
-				<BreadcrumbList
-					className="text-xs sm:text-sm"
-					style={{ color: "var(--ui-text-subtle)" }}
-				>
-					<BreadcrumbItem>
-						<BreadcrumbLink asChild>
-							<Link
-								to="/"
-								className="ui-focusable rounded-sm transition-colors hover:text-[var(--ui-text)]"
-							>
-								Home
-							</Link>
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
-						<BreadcrumbPage style={{ color: "var(--ui-text-muted)" }}>
-							About
-						</BreadcrumbPage>
-					</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb>
-
 			<span
 				data-reveal
 				style={{

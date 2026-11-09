@@ -3,14 +3,6 @@ import { ArrowUpRight, Award, Calendar, ExternalLink } from "lucide-react";
 import { type CSSProperties, useState } from "react";
 import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Badge } from "#/components/ui/badge";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "#/components/ui/breadcrumb";
 import { Button } from "#/components/ui/button";
 import {
 	Card,
@@ -68,9 +60,6 @@ export default function CertificatesSection() {
 	const { items: certs, loading } =
 		useLiveContent<Record<string, unknown>>("certificates");
 	const location = useLocation();
-	const showBreadcrumb =
-		location.pathname === "/certificates" ||
-		location.pathname === "/certificates/";
 	const isHome = location.pathname === "/";
 	const MAX_HOME = 6;
 	const PAGE_SIZE = 6;
@@ -107,21 +96,6 @@ export default function CertificatesSection() {
 		>
 			<AsciiBackdrop className="inset-x-0 top-0 z-0 h-48 md:h-64" />
 			<div className="max-w-6xl mx-auto w-full space-y-12 px-4 sm:px-6 relative z-10">
-				{showBreadcrumb && (
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link to="/">Home</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage>Certificates</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-				)}
 				<SectionHeading
 					eyebrow="Credentials"
 					title="Certificates"
