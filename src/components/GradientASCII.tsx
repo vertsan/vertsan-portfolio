@@ -692,7 +692,9 @@ const GradientASCII = ({
 			const key = s.colors.join(",");
 			if (key === paletteKey) return;
 			paletteKey = key;
-			s.colors.forEach((color, i) => ramp.set(toLab(parse(color)), i * 3));
+			s.colors.forEach((color, i) => {
+				ramp.set(toLab(parse(color)), i * 3);
+			});
 		};
 
 		const bindGlyphs = (
@@ -743,6 +745,7 @@ const GradientASCII = ({
 			gl.bindFramebuffer(gl.FRAMEBUFFER, fieldTarget.framebuffer);
 			gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1]);
 			gl.viewport(0, 0, fieldTarget.width, fieldTarget.height);
+			// biome-ignore lint/correctness/useHookAtTopLevel: WebGL API call, not a React hook
 			gl.useProgram(field.program);
 			const fu = field.uniforms;
 			gl.uniform1f(fu.uAspect, aspect);
@@ -767,11 +770,13 @@ const GradientASCII = ({
 				gl.bindFramebuffer(gl.FRAMEBUFFER, haloA.framebuffer);
 				gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
 				gl.viewport(0, 0, haloA.width, haloA.height);
+				// biome-ignore lint/correctness/useHookAtTopLevel: WebGL API call, not a React hook
 				gl.useProgram(halo.program);
 				bindGlyphs(halo, canvas.width, canvas.height);
 				gl.uniform1f(halo.uniforms.uDownscale, canvas.width / haloA.width);
 				gl.drawArrays(gl.TRIANGLES, 0, 3);
 
+				// biome-ignore lint/correctness/useHookAtTopLevel: WebGL API call, not a React hook
 				gl.useProgram(blur.program);
 				gl.activeTexture(gl.TEXTURE0);
 				gl.uniform1i(blur.uniforms.uSource, 0);
@@ -787,6 +792,7 @@ const GradientASCII = ({
 
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 			gl.viewport(0, 0, canvas.width, canvas.height);
+			// biome-ignore lint/correctness/useHookAtTopLevel: WebGL API call, not a React hook
 			gl.useProgram(composite.program);
 			bindGlyphs(composite, canvas.width, canvas.height);
 			const cu = composite.uniforms;
@@ -958,14 +964,16 @@ const GradientASCII = ({
 			window.removeEventListener("pointerdown", onPointerDown);
 			document.removeEventListener("visibilitychange", onVisibility);
 			[fieldTarget, haloA, haloB].forEach((target) => {
-				target.textures.forEach((texture) => gl.deleteTexture(texture));
+				target.textures.forEach((texture) => {
+					gl.deleteTexture(texture);
+				});
 				gl.deleteFramebuffer(target.framebuffer);
 			});
 			if (atlas) gl.deleteTexture(atlas.texture);
 			gl.deleteVertexArray(vao);
-			[field, halo, blur, composite].forEach((item) =>
-				gl.deleteProgram(item.program),
-			);
+			[field, halo, blur, composite].forEach((item) => {
+				gl.deleteProgram(item.program);
+			});
 			gl.getExtension("WEBGL_lose_context")?.loseContext();
 		};
 	}, []);
@@ -986,7 +994,6 @@ const GradientASCII = ({
 			<canvas
 				ref={canvasRef}
 				className="absolute inset-0 block h-full w-full"
-				aria-hidden="true"
 			/>
 		</div>
 	);
