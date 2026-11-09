@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { ArrowUpRight, Award, Calendar, ExternalLink } from "lucide-react";
 import { type CSSProperties, useState } from "react";
+import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Badge } from "#/components/ui/badge";
 import {
 	Breadcrumb,
@@ -22,7 +23,6 @@ import Pagination from "#/components/ui/pagination";
 import SectionHeading from "#/components/ui/section-heading";
 import { Skeleton } from "#/components/ui/skeleton";
 import { useLiveContent } from "#/lib/useLiveContent";
-import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
 
 function CertificatesShimmer() {
 	return (
@@ -105,16 +105,7 @@ export default function CertificatesSection() {
 			id="certificates"
 			className="relative min-h-screen flex flex-col justify-center py-16 md:py-24 bg-muted/30 scroll-mt-20 overflow-hidden"
 		>
-			<FlickeringGrid
-				className="absolute inset-0 z-0 h-48 md:h-64"
-				squareSize={4}
-				gridGap={6}
-				color="#4ade80"
-				maxOpacity={0.14}
-				flickerChance={0.1}
-				width={1400}
-				height={200}
-			/>
+			<AsciiBackdrop className="inset-x-0 top-0 z-0 h-48 md:h-64" />
 			<div className="max-w-6xl mx-auto w-full space-y-12 px-4 sm:px-6 relative z-10">
 				{showBreadcrumb && (
 					<Breadcrumb>

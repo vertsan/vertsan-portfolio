@@ -7,7 +7,8 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
+import DitherVeil from "#/components/DitherVeil";
+import { useIsDark } from "#/lib/useIsDark";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -102,6 +103,8 @@ export default function AboutSection({
 	/** Home already tells this story inside the hero. */
 	hideIntro?: boolean;
 }) {
+	const isDark = useIsDark();
+
 	return (
 		<section
 			id="about"
@@ -112,116 +115,133 @@ export default function AboutSection({
 			}
 		>
 			{!hideIntro && (
-				<FlickeringGrid
-					className="absolute inset-0 z-0 h-48 md:h-64"
-					squareSize={4}
-					gridGap={6}
-					color="#4ade80"
-					maxOpacity={0.14}
-					flickerChance={0.1}
-					width={1400}
-					height={200}
-				/>
+				<div
+					aria-hidden
+					className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+				>
+					<div className="absolute inset-x-0 top-0 h-[38rem] opacity-60 dark:opacity-70">
+						<DitherVeil
+							src="/hero-portrait-cutout.png"
+							fit="contain"
+							pattern="floyd"
+							pixelSize={3}
+							levels={3}
+							palette="duotone"
+							inkColor={isDark ? "#05070f" : "#eef0f4"}
+							paperColor={isDark ? "#f8fafc" : "#0b0e17"}
+							contrast={1.35}
+							brightness={0.08}
+							revealRadius={380}
+							softness={0.7}
+							linger={1.5}
+							rimColor="#ff3366"
+							rim={0.12}
+							wander
+							className="size-full"
+						/>
+					</div>
+					<div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/70 to-background" />
+				</div>
 			)}
 			<div className="absolute inset-0 -z-10 bg-gradient-to-b from-muted/30 via-transparent to-muted/30" />
 
 			<div className="max-w-6xl mx-auto w-full relative z-10 px-4 sm:px-6">
 				{!hideIntro && (
 					<>
-				<Breadcrumb className="justify-center mb-8">
-					<BreadcrumbList>
-						<BreadcrumbItem>
-							<BreadcrumbLink asChild>
-								<Link to="/">Home</Link>
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-						<BreadcrumbSeparator />
-						<BreadcrumbItem>
-							<BreadcrumbPage>About</BreadcrumbPage>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-				</Breadcrumb>
+						<Breadcrumb className="justify-center mb-8">
+							<BreadcrumbList>
+								<BreadcrumbItem>
+									<BreadcrumbLink asChild>
+										<Link to="/">Home</Link>
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator />
+								<BreadcrumbItem>
+									<BreadcrumbPage>About</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
 
-				<SectionHeading
-					className="mb-12"
-					eyebrow="About me"
-					title={
-						<>
-							Who <span className="accent-gradient-text">I Am</span>
-						</>
-					}
-					description="Software engineer crafting accessible, performant web applications with modern technologies and clean architecture."
-				/>
-
-				<div className="grid md:grid-cols-2 gap-6 mb-6">
-					<div
-						data-reveal
-						className="relative h-[260px] sm:h-[320px] md:h-[380px] rounded-2xl border border-border/50 overflow-hidden bg-muted/20"
-					>
-						<DriftWall
-							items={driftItems}
-							columns={3}
-							tileWidth={140}
-							tileHeight={110}
-							gap={10}
-							tilt={10}
-							turn={-8}
-							perspective={1000}
-							depth={60}
-							speed={25}
-							direction="up"
-							variance={0.3}
-							parallax={0.4}
-							lift={40}
-							fade={0.5}
-							dim={0.55}
-							overlayColor="var(--background)"
+						<SectionHeading
+							className="mb-12"
+							eyebrow="About me"
+							title={
+								<>
+									Who <span className="accent-gradient-text">I Am</span>
+								</>
+							}
+							description="Software engineer crafting accessible, performant web applications with modern technologies and clean architecture."
 						/>
-					</div>
 
-					<div
-						data-reveal
-						style={{ "--reveal-delay": "90ms" } as CSSProperties}
-						className="rounded-2xl border border-border/50 bg-muted/20 p-6 md:p-8 flex flex-col justify-center"
-					>
-						<div className="space-y-6">
-							<div className="space-y-3">
-								<h3 className="text-lg font-semibold text-foreground">
-									A bit about me
-								</h3>
-								<p className="text-muted-foreground text-sm leading-relaxed">
-									I focus on building interfaces that are fast, accessible, and
-									visually clean. I enjoy working across the full stack — from
-									pixel-perfect frontends to robust backends.
-								</p>
-							</div>
-							<div className="h-px bg-border/50" />
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
-								<AnimatedStat
-									icon={Code2}
-									value={2.5}
-									suffix="+"
-									label="Years Experience"
-									decimals={1}
-								/>
-								<AnimatedStat
-									icon={Globe}
-									value={10}
-									suffix="+"
-									label="Projects Delivered"
+						<div className="grid md:grid-cols-2 gap-6 mb-6">
+							<div
+								data-reveal
+								className="relative h-[260px] sm:h-[320px] md:h-[380px] rounded-2xl border border-border/50 overflow-hidden bg-muted/20"
+							>
+								<DriftWall
+									items={driftItems}
+									columns={3}
+									tileWidth={140}
+									tileHeight={110}
+									gap={10}
+									tilt={10}
+									turn={-8}
+									perspective={1000}
+									depth={60}
+									speed={25}
+									direction="up"
+									variance={0.3}
+									parallax={0.4}
+									lift={40}
+									fade={0.5}
+									dim={0.55}
+									overlayColor="var(--background)"
 								/>
 							</div>
-							<div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/10">
-								<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10 text-primary shrink-0">
-									<Sparkles className="size-4" />
+
+							<div
+								data-reveal
+								style={{ "--reveal-delay": "90ms" } as CSSProperties}
+								className="rounded-2xl border border-border/50 bg-muted/20 p-6 md:p-8 flex flex-col justify-center"
+							>
+								<div className="space-y-6">
+									<div className="space-y-3">
+										<h3 className="text-lg font-semibold text-foreground">
+											A bit about me
+										</h3>
+										<p className="text-muted-foreground text-sm leading-relaxed">
+											I focus on building interfaces that are fast, accessible,
+											and visually clean. I enjoy working across the full stack
+											— from pixel-perfect frontends to robust backends.
+										</p>
+									</div>
+									<div className="h-px bg-border/50" />
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
+										<AnimatedStat
+											icon={Code2}
+											value={2.5}
+											suffix="+"
+											label="Years Experience"
+											decimals={1}
+										/>
+										<AnimatedStat
+											icon={Globe}
+											value={10}
+											suffix="+"
+											label="Projects Delivered"
+										/>
+									</div>
+									<div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/10">
+										<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10 text-primary shrink-0">
+											<Sparkles className="size-4" />
+										</div>
+										<p className="text-sm text-muted-foreground">
+											Always learning, always building.
+										</p>
+									</div>
 								</div>
-								<p className="text-sm text-muted-foreground">
-									Always learning, always building.
-								</p>
 							</div>
 						</div>
-					</div>
-				</div>
 					</>
 				)}
 				<ExperienceSection />

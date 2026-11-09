@@ -8,7 +8,7 @@ import { Button } from "#/components/ui/button";
 import { Skeleton } from "#/components/ui/skeleton";
 import { getCache, setCache } from "#/lib/useLiveContent";
 
-import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
+import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import "#/lib/markdown";
 
 interface Project {
@@ -131,16 +131,7 @@ function ProjectDetail() {
 
 	return (
 		<main className="relative min-h-screen overflow-hidden">
-			<FlickeringGrid
-				className="absolute inset-0 z-0 h-48 md:h-64"
-				squareSize={4}
-				gridGap={6}
-				color="#4ade80"
-				maxOpacity={0.14}
-				flickerChance={0.1}
-				width={1400}
-				height={200}
-			/>
+			<AsciiBackdrop className="inset-x-0 top-0 z-0 h-48 md:h-64" />
 			<div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24">
 				<nav className="flex items-center justify-between mb-10 sm:mb-12">
 					<Breadcrumb className="hidden sm:flex">

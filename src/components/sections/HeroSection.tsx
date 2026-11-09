@@ -12,8 +12,8 @@ import {
 	MapPin,
 	Sparkles,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import DitherVeil from "#/components/DitherVeil";
+import { useState } from "react";
+import GradientASCII from "#/components/GradientASCII";
 import { useIsDark } from "#/lib/useIsDark";
 import { useLiveContent } from "#/lib/useLiveContent";
 import { cn } from "#/lib/utils";
@@ -86,17 +86,8 @@ export default function HeroSection() {
 		loading: certificatesLoading,
 		error: certificatesError,
 	} = useLiveContent<Record<string, unknown>>("certificates");
-	const [reducedMotion, setReducedMotion] = useState(false);
 	const [copied, setCopied] = useState(false);
 	const isDark = useIsDark();
-
-	useEffect(() => {
-		const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-		const update = () => setReducedMotion(mq.matches);
-		update();
-		mq.addEventListener("change", update);
-		return () => mq.removeEventListener("change", update);
-	}, []);
 
 	const handleCopyEmail = (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -145,52 +136,39 @@ export default function HeroSection() {
 		<section className="relative w-full px-3 pt-3 sm:px-4 sm:pt-4">
 			<div className="relative flex min-h-[calc(100svh-5.25rem)] w-full flex-col overflow-hidden rounded-[1.75rem] bg-[#eef0f4] shadow-2xl shadow-black/10 ring-1 ring-black/5 dark:bg-[#05070f] dark:shadow-black/40 dark:ring-white/10">
 				<div aria-hidden className="absolute inset-0 z-0 overflow-hidden">
-					{reducedMotion ? (
-						<img
-							src="/hero-portrait-cutout.png"
-							alt=""
-							className="size-full object-contain object-right mix-blend-multiply dark:mix-blend-normal"
-							decoding="async"
-						/>
-					) : (
-						<DitherVeil
-							src="/hero-portrait-cutout.png"
-							fit="contain"
-							pattern="floyd"
-							pixelSize={2}
-							levels={3}
-							palette="duotone"
-							inkColor={isDark ? "#05070f" : "#eef0f4"}
-							paperColor={isDark ? "#f8fafc" : "#0b0e17"}
-							contrast={1.35}
-							brightness={0.08}
-							revealRadius={380}
-							softness={0.7}
-							linger={1.5}
-							rimColor="#ff3366"
-							rim={0.12}
-							wander={true}
-							clickBurst={true}
-							className="size-full"
-						/>
-					)}
+					<GradientASCII
+						colors={
+							isDark
+								? ["#1e3fd8", "#f6f8ff", "#a5d8ff", "#38bdf8"]
+								: ["#1e3fd8", "#0b0e17", "#38bdf8", "#a5d8ff"]
+						}
+						shape="horizon"
+						characters=" =+xX0S8#@"
+						cellSize={16}
+						density={0.62}
+						glyphOpacity={isDark ? 0.72 : 0.55}
+						gradientOpacity={isDark ? 0.62 : 0.42}
+						glow={isDark ? 0.32 : 0.22}
+						softness={0.62}
+						scale={1.05}
+						flow={0.5}
+						speed={0.55}
+						grain={0.06}
+						mouseInteraction
+						clickEffect="wave"
+						intro
+						lightMode={!isDark}
+						className="size-full"
+					/>
 				</div>
 
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-t from-[#eef0f4] via-[#eef0f4]/45 to-transparent dark:from-[#05070f] dark:via-[#05070f]/55"
+					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-t from-[#eef0f4] via-[#eef0f4]/40 to-transparent dark:from-[#05070f] dark:via-[#05070f]/50"
 				/>
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-r from-[#eef0f4] via-[#eef0f4]/72 to-transparent lg:via-[#eef0f4]/35 dark:from-[#05070f] dark:via-[#05070f]/78 dark:lg:via-[#05070f]/40"
-				/>
-				<div
-					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_top_right,rgba(168,85,247,0.14),transparent_58%)]"
-				/>
-				<div
-					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.16),transparent_52%)] dark:bg-[radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.07),transparent_52%)]"
+					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-r from-[#eef0f4] via-[#eef0f4]/70 to-transparent lg:via-[#eef0f4]/30 dark:from-[#05070f] dark:via-[#05070f]/75 dark:lg:via-[#05070f]/35"
 				/>
 
 				<div className="pointer-events-none relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-between gap-10 px-5 py-6 sm:px-8 sm:py-8 lg:px-10">
@@ -234,8 +212,7 @@ export default function HeroSection() {
 									Software engineer
 								</p>
 								<h1 className="text-balance text-[2.65rem] font-light leading-[0.98] tracking-tight text-[#0b0e17] sm:text-6xl md:text-7xl dark:text-white">
-									Vert{" "}
-									<span className="font-semibold">San</span>
+									Vert <span className="font-semibold">San</span>
 								</h1>
 								<p className="max-w-md text-base leading-relaxed text-[#0b0e17]/75 sm:text-lg dark:text-white/75">
 									I build accessible, scalable, and secure web and mobile
