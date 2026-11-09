@@ -1,249 +1,75 @@
-﻿import { Link } from "@tanstack/react-router";
-import { Code2, Globe, Sparkles } from "lucide-react";
-import {
-	type CSSProperties,
-	type ReactNode,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-import DitherVeil from "#/components/DitherVeil";
-import { useIsDark } from "#/lib/useIsDark";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "../ui/breadcrumb";
-import DriftWall from "../ui/DriftWall";
-import SectionHeading from "../ui/section-heading";
+﻿import AboutHero from "#/components/about/AboutHero";
+import BioCard from "#/components/about/BioCard";
+import PortraitCard from "#/components/about/PortraitCard";
+import AsciiBackdrop from "#/components/ui/ascii-backdrop";
+import { cn } from "#/lib/utils";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
 
-function useCountUp(target: number, duration = 2000) {
-	const [count, setCount] = useState(0);
-	const ref = useRef<HTMLDivElement>(null);
-	const started = useRef(false);
-
-	useEffect(() => {
-		const el = ref.current;
-		if (!el) return;
-
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting && !started.current) {
-					started.current = true;
-					const startTime = performance.now();
-
-					const animate = (now: number) => {
-						const elapsed = now - startTime;
-						const progress = Math.min(elapsed / duration, 1);
-						const eased = 1 - (1 - progress) ** 3;
-						setCount(eased * target);
-						if (progress < 1) requestAnimationFrame(animate);
-					};
-					requestAnimationFrame(animate);
-				}
-			},
-			{ threshold: 0.3 },
-		);
-
-		observer.observe(el);
-		return () => observer.disconnect();
-	}, [target, duration]);
-
-	return { count, ref };
-}
-
-function AnimatedStat({
-	icon: Icon,
-	value,
-	suffix,
-	label,
-	decimals = 0,
-}: {
-	icon: (props: any) => ReactNode;
-	value: number;
-	suffix: string;
-	label: string;
-	decimals?: number;
-}) {
-	const { count, ref } = useCountUp(value);
-
-	return (
-		<div ref={ref} className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
-			<div className="flex items-center justify-center size-10 sm:size-12 rounded-lg sm:rounded-xl bg-primary/10 text-primary shrink-0">
-				<Icon className="size-4 sm:size-5" />
-			</div>
-			<div>
-				<p className="text-xl sm:text-2xl font-bold text-foreground tabular-nums tracking-tight">
-					{count.toFixed(decimals)}
-					{suffix}
-				</p>
-				<p className="text-xs sm:text-sm text-muted-foreground">{label}</p>
-			</div>
-		</div>
-	);
-}
-
-const driftItems = [
-	{ image: "/profile.webp", title: "Profile portrait of Vert San" },
-	{ image: "/profile1.webp", title: "Vert San profile 1" },
-	{ image: "/profile2.webp", title: "Vert San profile 2" },
-	{ image: "/profile3.webp", title: "Vert San profile 3" },
-	{ image: "/profile4.webp", title: "Vert San profile 4" },
-	{ image: "/profile5.webp", title: "Vert San profile 5" },
-];
-
+/**
+ * About page — premium, minimal, dark-first.
+ *
+ * What changed and why:
+ * - The dithered portrait used to sit behind the whole page and collided with
+ *   the heading, breadcrumb and bio. It now lives inside a contained portrait
+ *   frame, so it can never overlap text.
+ * - The drifting photo collage was replaced by one clear focal portrait plus a
+ *   quiet thumbnail row, removing the cluttered, uneven crop.
+ * - Shared surface tokens (near-black canvas, #111114 cards, one indigo accent)
+ *   keep spacing, contrast and hierarchy consistent across the page.
+ * - GradientASCII stays as a faint, masked backdrop for depth without
+ *   competing with the copy.
+ */
 export default function AboutSection({
 	hideIntro = false,
 }: {
 	/** Home already tells this story inside the hero. */
 	hideIntro?: boolean;
 }) {
-	const isDark = useIsDark();
-
 	return (
 		<section
 			id="about"
-			className={
-				hideIntro
-					? "relative scroll-mt-20"
-					: "relative min-h-screen flex flex-col justify-center py-16 md:py-24 scroll-mt-20"
-			}
+			className={cn(
+				"relative scroll-mt-20 overflow-hidden",
+				!hideIntro && "about-shell pt-16 pb-20 sm:pt-20 md:pt-24 md:pb-24",
+			)}
 		>
 			{!hideIntro && (
-				<div
-					aria-hidden
-					className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
-				>
-					<div className="absolute inset-x-0 top-0 h-[38rem] opacity-60 dark:opacity-70">
-						<DitherVeil
-							src="/hero-portrait-cutout.png"
-							fit="contain"
-							pattern="floyd"
-							pixelSize={3}
-							levels={3}
-							palette="duotone"
-							inkColor={isDark ? "#05070f" : "#eef0f4"}
-							paperColor={isDark ? "#f8fafc" : "#0b0e17"}
-							contrast={1.35}
-							brightness={0.08}
-							revealRadius={380}
-							softness={0.7}
-							linger={1.5}
-							rimColor="#ff3366"
-							rim={0.12}
-							wander
-							className="size-full"
-						/>
-					</div>
-					<div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/70 to-background" />
-				</div>
+				<>
+					<div
+						aria-hidden
+						className="ui-hero-glow pointer-events-none absolute inset-x-0 top-0 h-[40rem]"
+					/>
+					<AsciiBackdrop
+						className="inset-x-0 top-0 h-[34rem] opacity-40 dark:opacity-50"
+						colors={["#1e1b4b", "#4338ca", "#818cf8", "#e0e7ff"]}
+						shape="horizon"
+						cellSize={20}
+						density={0.45}
+						glow={0.2}
+						gradientOpacity={0.45}
+						glyphOpacity={0.5}
+						speed={0.35}
+					/>
+				</>
 			)}
-			<div className="absolute inset-0 -z-10 bg-gradient-to-b from-muted/30 via-transparent to-muted/30" />
 
-			<div className="max-w-6xl mx-auto w-full relative z-10 px-4 sm:px-6">
+			<div className="relative z-10 mx-auto w-full max-w-[75rem] px-5 sm:px-6">
 				{!hideIntro && (
 					<>
-						<Breadcrumb className="justify-center mb-8">
-							<BreadcrumbList>
-								<BreadcrumbItem>
-									<BreadcrumbLink asChild>
-										<Link to="/">Home</Link>
-									</BreadcrumbLink>
-								</BreadcrumbItem>
-								<BreadcrumbSeparator />
-								<BreadcrumbItem>
-									<BreadcrumbPage>About</BreadcrumbPage>
-								</BreadcrumbItem>
-							</BreadcrumbList>
-						</Breadcrumb>
+						<AboutHero />
 
-						<SectionHeading
-							className="mb-12"
-							eyebrow="About me"
-							title={
-								<>
-									Who <span className="accent-gradient-text">I Am</span>
-								</>
-							}
-							description="Software engineer crafting accessible, performant web applications with modern technologies and clean architecture."
-						/>
-
-						<div className="grid md:grid-cols-2 gap-6 mb-6">
-							<div
-								data-reveal
-								className="relative h-[260px] sm:h-[320px] md:h-[380px] rounded-2xl border border-border/50 overflow-hidden bg-muted/20"
-							>
-								<DriftWall
-									items={driftItems}
-									columns={3}
-									tileWidth={140}
-									tileHeight={110}
-									gap={10}
-									tilt={10}
-									turn={-8}
-									perspective={1000}
-									depth={60}
-									speed={25}
-									direction="up"
-									variance={0.3}
-									parallax={0.4}
-									lift={40}
-									fade={0.5}
-									dim={0.55}
-									overlayColor="var(--background)"
-								/>
+						<div className="mt-14 grid grid-cols-1 gap-10 lg:mt-20 lg:grid-cols-12 lg:gap-16">
+							<div className="lg:col-span-5">
+								<PortraitCard />
 							</div>
-
-							<div
-								data-reveal
-								style={{ "--reveal-delay": "90ms" } as CSSProperties}
-								className="rounded-2xl border border-border/50 bg-muted/20 p-6 md:p-8 flex flex-col justify-center"
-							>
-								<div className="space-y-6">
-									<div className="space-y-3">
-										<h3 className="text-lg font-semibold text-foreground">
-											A bit about me
-										</h3>
-										<p className="text-muted-foreground text-sm leading-relaxed">
-											I focus on building interfaces that are fast, accessible,
-											and visually clean. I enjoy working across the full stack
-											— from pixel-perfect frontends to robust backends.
-										</p>
-									</div>
-									<div className="h-px bg-border/50" />
-									<div className="grid grid-cols-1 sm:grid-cols-2 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
-										<AnimatedStat
-											icon={Code2}
-											value={2.5}
-											suffix="+"
-											label="Years Experience"
-											decimals={1}
-										/>
-										<AnimatedStat
-											icon={Globe}
-											value={10}
-											suffix="+"
-											label="Projects Delivered"
-										/>
-									</div>
-									<div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/10">
-										<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10 text-primary shrink-0">
-											<Sparkles className="size-4" />
-										</div>
-										<p className="text-sm text-muted-foreground">
-											Always learning, always building.
-										</p>
-									</div>
-								</div>
+							<div className="lg:col-span-7">
+								<BioCard />
 							</div>
 						</div>
 					</>
 				)}
+
 				<ExperienceSection />
 				<EducationSection />
 			</div>

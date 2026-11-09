@@ -572,6 +572,197 @@ code {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Premium surface tokens
+   Shared by the home hero and the About page. Dark-first palette with a single
+   restrained indigo accent; light mode uses a white canvas with soft grey
+   surfaces so the theme toggle keeps working.
+--------------------------------------------------------------------------- */
+:root {
+  --ui-bg: #ffffff;
+  --ui-surface: #f7f7f9;
+  --ui-surface-soft: rgba(9, 9, 11, 0.035);
+  --ui-border: rgba(9, 9, 11, 0.08);
+  --ui-border-strong: rgba(9, 9, 11, 0.16);
+  --ui-text: #09090b;
+  --ui-text-muted: rgba(9, 9, 11, 0.68);
+  --ui-text-subtle: rgba(9, 9, 11, 0.55);
+  --ui-accent: #4f46e5;
+  --ui-accent-contrast: #ffffff;
+  --ui-accent-soft: rgba(79, 70, 229, 0.1);
+  --ui-glow: rgba(79, 70, 229, 0.12);
+  --ui-vignette: rgba(9, 9, 11, 0.18);
+  --ui-shadow: 0 24px 60px -32px rgba(9, 9, 11, 0.18);
+  --ui-radius: 24px;
+}
+
+.dark {
+  --ui-bg: #09090b;
+  --ui-surface: #111114;
+  --ui-surface-soft: rgba(255, 255, 255, 0.04);
+  --ui-border: rgba(255, 255, 255, 0.06);
+  --ui-border-strong: rgba(255, 255, 255, 0.14);
+  --ui-text: #fafafa;
+  --ui-text-muted: rgba(255, 255, 255, 0.68);
+  --ui-text-subtle: rgba(255, 255, 255, 0.55);
+  --ui-accent: #818cf8;
+  --ui-accent-contrast: #0b0b0f;
+  --ui-accent-soft: rgba(129, 140, 248, 0.12);
+  --ui-glow: rgba(99, 102, 241, 0.2);
+  --ui-vignette: rgba(0, 0, 0, 0.55);
+  --ui-shadow: 0 32px 80px -32px rgba(0, 0, 0, 0.75);
+}
+
+@layer components {
+  .about-shell,
+  .hero-shell {
+    background-color: var(--ui-bg);
+    color: var(--ui-text);
+  }
+
+  .ui-hero-glow {
+    background:
+      radial-gradient(52% 60% at 50% 0%, var(--ui-glow) 0%, transparent 70%),
+      radial-gradient(30% 42% at 86% 14%, var(--ui-accent-soft) 0%, transparent 72%);
+  }
+
+  .ui-card {
+    border-radius: var(--ui-radius);
+    border: 1px solid var(--ui-border);
+    background-color: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .ui-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--ui-border-strong);
+  }
+
+  .ui-card-flat {
+    box-shadow: none;
+  }
+
+  .ui-thumb {
+    overflow: hidden;
+    border-radius: 0.875rem;
+    border: 1px solid var(--ui-border);
+    background-color: var(--ui-surface);
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .ui-thumb:hover {
+    transform: translateY(-2px);
+    border-color: var(--ui-border-strong);
+  }
+
+  .ui-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 9999px;
+    border: 1px solid var(--ui-border);
+    background-color: var(--ui-surface-soft);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ui-text-muted);
+  }
+
+  .ui-icon-chip {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--ui-accent-soft);
+    color: var(--ui-accent);
+  }
+
+  .ui-divider {
+    height: 1px;
+    width: 100%;
+    background-color: var(--ui-border);
+  }
+
+  .ui-button {
+    display: inline-flex;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.875rem;
+    padding-inline: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .ui-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .ui-button-primary {
+    background-color: var(--ui-accent);
+    color: var(--ui-accent-contrast);
+    box-shadow: 0 12px 32px -14px var(--ui-accent);
+  }
+
+  .ui-button-ghost {
+    border: 1px solid var(--ui-border);
+    background-color: var(--ui-surface);
+    color: var(--ui-text);
+  }
+
+  .ui-button-ghost:hover {
+    border-color: var(--ui-border-strong);
+    background-color: var(--ui-surface-soft);
+  }
+
+  .ui-focusable:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: 3px;
+  }
+}
+
+/* Tighter, 12px fade-up used by the hero and About page. */
+.about-shell [data-reveal],
+.hero-shell [data-reveal] {
+  --reveal-y: 12px;
+}
+
+.about-shell [data-reveal].reveal-in,
+.hero-shell [data-reveal].reveal-in {
+  animation-duration: 0.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-card,
+  .ui-thumb,
+  .ui-button {
+    transition: none;
+  }
+
+  .ui-card:hover,
+  .ui-thumb:hover,
+  .ui-button:hover {
+    transform: none;
+  }
+}
+
 /* Respect users who prefer reduced motion: no entrance animations at all. */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal].reveal-init {
