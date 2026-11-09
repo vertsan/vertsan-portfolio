@@ -16,6 +16,9 @@ interface AsciiBackdropProps {
 	speed?: number;
 	intro?: boolean;
 	variation?: number;
+	/** Scramble the characters under the cursor as it moves. */
+	mouseInteraction?: boolean;
+	clickEffect?: GradientASCIIProps["clickEffect"];
 	/** Fade the bottom edge into the section background. */
 	fade?: boolean;
 }
@@ -32,6 +35,8 @@ export default function AsciiBackdrop({
 	speed = 0.45,
 	intro = false,
 	variation = 0,
+	mouseInteraction = true,
+	clickEffect = "wave",
 	fade = true,
 }: AsciiBackdropProps) {
 	const isDark = useIsDark();
@@ -70,8 +75,8 @@ export default function AsciiBackdrop({
 				speed={speed}
 				grain={0.05}
 				variation={variation}
-				mouseInteraction={false}
-				clickEffect="none"
+				mouseInteraction={mouseInteraction}
+				clickEffect={clickEffect}
 				intro={intro}
 				lightMode={!isDark}
 				className="size-full"
