@@ -1,14 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Calendar, Smartphone, Table2, Globe, Github } from "lucide-react";
+import {
+	ArrowLeft,
+	Calendar,
+	Github,
+	Globe,
+	Smartphone,
+	Table2,
+} from "lucide-react";
 import { marked } from "marked";
 import { useEffect, useMemo, useState } from "react";
+import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Badge } from "#/components/ui/badge";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "#/components/ui/breadcrumb";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "#/components/ui/breadcrumb";
 import { Button } from "#/components/ui/button";
 import { Skeleton } from "#/components/ui/skeleton";
 import { getCache, setCache } from "#/lib/useLiveContent";
-
-import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import "#/lib/markdown";
 
 interface Project {
@@ -43,7 +56,9 @@ function ProjectDetail() {
 
 	useEffect(() => {
 		const cached = getCache<Project>("projects");
-		const foundInCache = cached ? cached.find((p) => p.slug === projectId) : undefined;
+		const foundInCache = cached
+			? cached.find((p) => p.slug === projectId)
+			: undefined;
 
 		if (foundInCache) {
 			setProject(foundInCache);
@@ -149,11 +164,18 @@ function ProjectDetail() {
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
-								<BreadcrumbPage className="truncate max-w-[120px] sm:max-w-[180px]">{project.title}</BreadcrumbPage>
+								<BreadcrumbPage className="truncate max-w-[120px] sm:max-w-[180px]">
+									{project.title}
+								</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
-					<Button variant="ghost" size="sm" asChild className="-ml-2 w-full sm:ml-0 sm:w-auto justify-center">
+					<Button
+						variant="ghost"
+						size="sm"
+						asChild
+						className="-ml-2 w-full sm:ml-0 sm:w-auto justify-center"
+					>
 						<Link to="/projects" className="gap-2">
 							<ArrowLeft className="size-4" />
 							Back
@@ -169,7 +191,9 @@ function ProjectDetail() {
 									{project.title}
 								</h1>
 								<Badge
-									variant={project.status === "Completed" ? "default" : "secondary"}
+									variant={
+										project.status === "Completed" ? "default" : "secondary"
+									}
 									className="shrink-0"
 								>
 									{project.status}
@@ -187,7 +211,13 @@ function ProjectDetail() {
 									<span className="size-2.5 sm:size-3 rounded-full bg-[#ffbd44]" />
 									<span className="size-2.5 sm:size-3 rounded-full bg-[#00ca4e]" />
 								</div>
-								<img src={project.image} alt={project.title} className="w-full" loading="lazy" decoding="async" />
+								<img
+									src={project.image}
+									alt={project.title}
+									className="w-full"
+									loading="lazy"
+									decoding="async"
+								/>
 							</div>
 						)}
 
@@ -205,7 +235,9 @@ function ProjectDetail() {
 								<Calendar className="size-4 shrink-0" />
 								<time dateTime={project.startDate}>{project.startDate}</time>
 								<span>—</span>
-								<time dateTime={project.endDate || undefined}>{project.endDate || "Present"}</time>
+								<time dateTime={project.endDate || undefined}>
+									{project.endDate || "Present"}
+								</time>
 							</div>
 
 							{project.tags.length > 0 && (
@@ -218,26 +250,48 @@ function ProjectDetail() {
 								</div>
 							)}
 
-							{(project.downloadAndroid || project.downloadIos || project.github || project.link) && (
+							{(project.downloadAndroid ||
+								project.downloadIos ||
+								project.github ||
+								project.link) && (
 								<div className="space-y-1.5">
 									{project.downloadAndroid && (
-										<Button variant="default" size="sm" className="gap-2 w-full justify-start" asChild>
-											<a href={`/api/download?url=${encodeURIComponent(project.downloadAndroid)}`}>
+										<Button
+											variant="default"
+											size="sm"
+											className="gap-2 w-full justify-start"
+											asChild
+										>
+											<a
+												href={`/api/download?url=${encodeURIComponent(project.downloadAndroid)}`}
+											>
 												<Smartphone className="size-4" />
 												Download APK
 											</a>
 										</Button>
 									)}
 									{project.downloadIos && (
-										<Button variant="default" size="sm" className="gap-2 w-full justify-start" asChild>
-											<a href={`/api/download?url=${encodeURIComponent(project.downloadIos)}`}>
+										<Button
+											variant="default"
+											size="sm"
+											className="gap-2 w-full justify-start"
+											asChild
+										>
+											<a
+												href={`/api/download?url=${encodeURIComponent(project.downloadIos)}`}
+											>
 												<Table2 className="size-4" />
 												Download iOS
 											</a>
 										</Button>
 									)}
 									{project.github && (
-										<Button variant="secondary" size="sm" className="gap-2 w-full justify-start" asChild>
+										<Button
+											variant="secondary"
+											size="sm"
+											className="gap-2 w-full justify-start"
+											asChild
+										>
 											<a href={project.github} target="_blank" rel="noreferrer">
 												<Github className="size-4" />
 												Source Code
@@ -245,7 +299,12 @@ function ProjectDetail() {
 										</Button>
 									)}
 									{project.link && (
-										<Button variant="secondary" size="sm" className="gap-2 w-full justify-start" asChild>
+										<Button
+											variant="secondary"
+											size="sm"
+											className="gap-2 w-full justify-start"
+											asChild
+										>
 											<a href={project.link} target="_blank" rel="noreferrer">
 												<Globe className="size-4" />
 												Live Site
