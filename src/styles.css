@@ -581,6 +581,7 @@ code {
 :root {
   --ui-bg: #ffffff;
   --ui-surface: #f7f7f9;
+  --ui-surface-raised: #ffffff;
   --ui-surface-soft: rgba(9, 9, 11, 0.035);
   --ui-border: rgba(9, 9, 11, 0.08);
   --ui-border-strong: rgba(9, 9, 11, 0.16);
@@ -599,6 +600,7 @@ code {
 .dark {
   --ui-bg: #09090b;
   --ui-surface: #111114;
+  --ui-surface-raised: #16161b;
   --ui-surface-soft: rgba(255, 255, 255, 0.04);
   --ui-border: rgba(255, 255, 255, 0.06);
   --ui-border-strong: rgba(255, 255, 255, 0.14);
@@ -643,6 +645,7 @@ code {
   }
 
   .ui-card-flat {
+    background-color: var(--ui-surface-raised);
     box-shadow: none;
   }
 
