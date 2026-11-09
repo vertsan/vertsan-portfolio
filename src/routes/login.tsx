@@ -1,9 +1,8 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { Lock, LogIn, ArrowLeft } from "lucide-react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, Lock, LogIn } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Button } from "#/components/ui/button";
-import { Link } from "@tanstack/react-router";
-import { FlickeringGrid } from "#/registry/magicui/flickering-grid";
 
 export const Route = createFileRoute("/login")({
 	component: LoginPage,
@@ -12,13 +11,16 @@ export const Route = createFileRoute("/login")({
 function InteractiveSide() {
 	return (
 		<div className="hidden lg:flex relative w-[55%] shrink-0 overflow-hidden bg-linear-to-br from-primary/[0.07] via-primary/[0.02] to-background">
-			<FlickeringGrid
-				className="absolute inset-0 size-full"
-				squareSize={6}
-				gridGap={8}
-				color="rgb(14, 165, 233)"
-				maxOpacity={0.08}
-				flickerChance={0.4}
+			<AsciiBackdrop
+				className="inset-0 size-full"
+				shape="eclipse"
+				cellSize={20}
+				density={0.45}
+				glow={0.3}
+				gradientOpacity={0.5}
+				glyphOpacity={0.5}
+				speed={0.35}
+				fade={false}
 			/>
 
 			<div className="absolute inset-0 bg-linear-to-t from-background/50 via-transparent to-background/20" />
@@ -28,7 +30,9 @@ function InteractiveSide() {
 					<div className="inline-flex size-16 rounded-2xl bg-primary/5 border border-primary/10 items-center justify-center mb-2">
 						<Lock className="size-7 text-primary/70" />
 					</div>
-					<h1 className="text-4xl font-bold text-foreground tracking-tight">vert</h1>
+					<h1 className="text-4xl font-bold text-foreground tracking-tight">
+						vert
+					</h1>
 					<p className="text-muted-foreground/60 text-lg max-w-sm mx-auto leading-relaxed">
 						Content Management System
 					</p>
@@ -173,7 +177,7 @@ function LoginPage() {
 							<LogIn className="size-4" />
 							{loading ? "Please wait..." : "Sign In"}
 						</Button>
-					</form>	
+					</form>
 				</div>
 			</div>
 		</div>
