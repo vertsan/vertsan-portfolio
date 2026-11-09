@@ -96,25 +96,38 @@ const driftItems = [
 	{ image: "/profile5.webp", title: "Vert San profile 5" },
 ];
 
-export default function AboutSection() {
+export default function AboutSection({
+	hideIntro = false,
+}: {
+	/** Home already tells this story inside the hero. */
+	hideIntro?: boolean;
+}) {
 	return (
 		<section
 			id="about"
-			className="relative min-h-screen flex flex-col justify-center py-16 md:py-24 scroll-mt-20"
+			className={
+				hideIntro
+					? "relative scroll-mt-20"
+					: "relative min-h-screen flex flex-col justify-center py-16 md:py-24 scroll-mt-20"
+			}
 		>
-			<FlickeringGrid
-				className="absolute inset-0 z-0 h-48 md:h-64"
-				squareSize={4}
-				gridGap={6}
-				color="#4ade80"
-				maxOpacity={0.14}
-				flickerChance={0.1}
-				width={1400}
-				height={200}
-			/>
+			{!hideIntro && (
+				<FlickeringGrid
+					className="absolute inset-0 z-0 h-48 md:h-64"
+					squareSize={4}
+					gridGap={6}
+					color="#4ade80"
+					maxOpacity={0.14}
+					flickerChance={0.1}
+					width={1400}
+					height={200}
+				/>
+			)}
 			<div className="absolute inset-0 -z-10 bg-gradient-to-b from-muted/30 via-transparent to-muted/30" />
 
 			<div className="max-w-6xl mx-auto w-full relative z-10 px-4 sm:px-6">
+				{!hideIntro && (
+					<>
 				<Breadcrumb className="justify-center mb-8">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -209,7 +222,8 @@ export default function AboutSection() {
 						</div>
 					</div>
 				</div>
-
+					</>
+				)}
 				<ExperienceSection />
 				<EducationSection />
 			</div>

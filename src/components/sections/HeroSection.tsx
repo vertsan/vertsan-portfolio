@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import {
-	ArrowDown,
 	ArrowUpRight,
 	Award,
 	Check,
@@ -37,36 +36,40 @@ const socials = [
 	{ href: "mailto:itsanvert@gmail.com", label: "Email", icon: Mail },
 ];
 
-function StatCard({
+const focus = ["Full stack", "Accessible UI", "Clean architecture"];
+
+const portraits = [
+	{ src: "/profile.webp", alt: "Portrait of Vert San" },
+	{ src: "/profile1.webp", alt: "Vert San" },
+	{ src: "/profile2.webp", alt: "Vert San" },
+];
+
+function StatTile({
 	icon: Icon,
 	label,
 	value,
-	href,
 }: {
 	icon: React.ComponentType<{ className?: string }>;
 	label: string;
 	value: string | null;
-	href?: string;
 }) {
 	return (
-		<div className="group flex items-center gap-3 rounded-xl p-1 transition-all duration-200 hover:opacity-90">
-			<div className="flex size-9.5 items-center justify-center rounded-lg border border-black/10 bg-white/60 text-black/70 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover:border-black/25 group-hover:bg-white/90 group-hover:text-black group-hover:shadow-md dark:border-white/15 dark:bg-white/5 dark:text-white/80 dark:shadow-none dark:group-hover:border-white/35 dark:group-hover:bg-white/10 dark:group-hover:text-white">
+		<div className="group flex min-w-0 items-center gap-3 rounded-2xl border border-black/8 bg-white/60 px-3.5 py-3 shadow-sm backdrop-blur-md transition-colors duration-200 hover:border-black/15 hover:bg-white/80 dark:border-white/10 dark:bg-white/6 dark:shadow-none dark:hover:border-white/20 dark:hover:bg-white/10">
+			<div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-black/5 text-black/70 dark:bg-white/8 dark:text-white/80">
 				<Icon className="size-4" />
 			</div>
-			<div className="text-left leading-tight">
+			<div className="min-w-0 leading-tight">
 				{value === null ? (
-					<p className="text-base font-semibold text-[#0b0e17] tabular-nums dark:text-white dark:[text-shadow:0_1px_10px_rgba(0,0,0,0.8)]">
-						<span className="inline-block h-4 w-10 animate-pulse rounded-sm bg-black/20 align-middle dark:bg-white/20" />
-					</p>
+					<span className="inline-block h-4 w-10 animate-pulse rounded-sm bg-black/15 align-middle dark:bg-white/20" />
 				) : (
-					<p className="flex items-center gap-1 text-base font-semibold text-[#0b0e17] tabular-nums dark:text-white dark:[text-shadow:0_1px_10px_rgba(0,0,0,0.8)]">
+					<p className="flex items-center gap-1 text-base font-semibold tabular-nums text-[#0b0e17] dark:text-white">
 						{value}
-						{href && (
-							<ArrowUpRight className="size-3 text-black/40 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-black/70 dark:text-white/40 dark:group-hover:text-white/80" />
-						)}
+						<ArrowUpRight className="size-3 text-black/35 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-black/70 dark:text-white/40 dark:group-hover:text-white/80" />
 					</p>
 				)}
-				<p className="text-xs text-black/60 dark:text-white/60">{label}</p>
+				<p className="truncate text-xs text-black/55 dark:text-white/55">
+					{label}
+				</p>
 			</div>
 		</div>
 	);
@@ -116,13 +119,13 @@ export default function HeroSection() {
 	const stats = [
 		{
 			icon: Sparkles,
-			label: "Years of Experience",
+			label: "Years of experience",
 			value: "2.5+",
 			href: "/about",
 		},
 		{
 			icon: FolderKanban,
-			label: "Projects Delivered",
+			label: "Projects delivered",
 			value: resolveCount(projects.length, projectsLoading, projectsError),
 			href: "/projects",
 		},
@@ -140,8 +143,7 @@ export default function HeroSection() {
 
 	return (
 		<section className="relative w-full px-3 pt-3 sm:px-4 sm:pt-4">
-			<div className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl bg-[#eef0f4] ring-1 ring-black/5 min-h-[580px] sm:min-h-[520px] md:h-[72svh] sm:rounded-3xl shadow-2xl shadow-black/10 dark:bg-[#05070f] dark:ring-white/10 dark:shadow-black/40">
-				{/* Background Dither Canvas / Fallback image */}
+			<div className="relative flex min-h-[calc(100svh-5.25rem)] w-full flex-col overflow-hidden rounded-[1.75rem] bg-[#eef0f4] shadow-2xl shadow-black/10 ring-1 ring-black/5 dark:bg-[#05070f] dark:shadow-black/40 dark:ring-white/10">
 				<div aria-hidden className="absolute inset-0 z-0 overflow-hidden">
 					{reducedMotion ? (
 						<img
@@ -174,40 +176,31 @@ export default function HeroSection() {
 					)}
 				</div>
 
-				{/* Atmospheric Vignette & Contrast Overlay Gradients (let pointer events pass through to DitherVeil) */}
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-t from-[#eef0f4] via-[#eef0f4]/50 to-transparent dark:from-[#05070f] dark:via-[#05070f]/50"
+					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-t from-[#eef0f4] via-[#eef0f4]/45 to-transparent dark:from-[#05070f] dark:via-[#05070f]/55"
 				/>
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-r from-[#eef0f4]/90 via-[#eef0f4]/40 to-transparent lg:w-3/5 dark:from-[#05070f]/90 dark:via-[#05070f]/40"
+					className="pointer-events-none absolute inset-0 z-1 bg-gradient-to-r from-[#eef0f4] via-[#eef0f4]/72 to-transparent lg:via-[#eef0f4]/35 dark:from-[#05070f] dark:via-[#05070f]/78 dark:lg:via-[#05070f]/40"
 				/>
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_top_right,rgba(168,85,247,0.15),transparent_60%)]"
+					className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_top_right,rgba(168,85,247,0.14),transparent_58%)]"
 				/>
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.18),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.07),transparent_55%)]"
-				/>
-				<div
-					aria-hidden
-					className="pointer-events-none absolute inset-x-0 top-0 z-1 h-44 bg-gradient-to-b from-white/50 to-transparent dark:from-white/0"
+					className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.16),transparent_52%)] dark:bg-[radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.07),transparent_52%)]"
 				/>
 
-				{/* Main Content Container */}
-				<div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-between gap-8 px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-6 lg:px-8 pointer-events-none">
-					{/* Top Utility Bar */}
+				<div className="pointer-events-none relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-between gap-10 px-5 py-6 sm:px-8 sm:py-8 lg:px-10">
 					<div className="flex w-full items-center justify-between gap-3">
-						{/* Location / Status Pill */}
-						<div className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs text-black/70 shadow-sm backdrop-blur-md pointer-events-auto dark:border-white/10 dark:bg-black/30 dark:text-white/70 dark:shadow-none">
+						<div className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs text-black/70 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-black/30 dark:text-white/70 dark:shadow-none">
 							<MapPin className="size-3 text-black/50 dark:text-white/50" />
 							<span>Phnom Penh, Cambodia</span>
 						</div>
 
-						{/* Open to opportunities status badge */}
-						<div className="group relative flex w-fit items-center justify-center gap-2 rounded-full px-3.5 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-all duration-300 hover:scale-[1.02] hover:shadow-[inset_0_-5px_10px_#8fdfff3f] sm:px-4 sm:py-2 bg-white/70 backdrop-blur-md border border-black/10 pointer-events-auto dark:bg-black/30 dark:border-white/10">
+						<div className="pointer-events-auto group relative flex w-fit items-center justify-center gap-2 rounded-full border border-black/10 bg-white/70 px-3.5 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] backdrop-blur-md transition-all duration-300 hover:shadow-[inset_0_-5px_10px_#8fdfff3f] dark:border-white/10 dark:bg-black/30">
 							<span
 								className={cn(
 									"animate-gradient absolute inset-0 block h-full w-full rounded-[inherit] bg-linear-to-r from-[#ffaa40]/40 via-[#9c40ff]/40 to-[#ffaa40]/40 bg-size-[300%_100%] p-px",
@@ -234,77 +227,66 @@ export default function HeroSection() {
 						</div>
 					</div>
 
-					{/* Bottom Main Content */}
-					<div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
-						{/* Left: Headline & Actions */}
-						<div className="flex w-full max-w-2xl flex-col items-start gap-5 sm:gap-6 pointer-events-auto">
-							<div className="space-y-3">
-								
-
-								<h1 className="text-balance text-4xl font-light leading-[1.08] tracking-tight text-[#0b0e17] sm:text-6xl md:text-7xl [text-shadow:0_2px_30px_rgba(255,255,255,0.7)] dark:text-white dark:[text-shadow:0_2px_30px_rgba(0,0,0,0.8)]">
-									I'm{" "}
-									<span className="font-semibold bg-gradient-to-r from-[#0b0e17] via-[#0b0e17]/95 to-[#0b0e17]/70 bg-clip-text text-transparent dark:from-white dark:via-white/95 dark:to-white/70">
-										Vert San
-									</span>
+					<div className="grid items-end gap-8 lg:grid-cols-[minmax(0,34rem)_minmax(16rem,22rem)] lg:justify-between lg:gap-12">
+						<div className="pointer-events-auto flex max-w-xl flex-col items-start gap-6">
+							<div className="space-y-4">
+								<p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-black/45 dark:text-white/45">
+									Software engineer
+								</p>
+								<h1 className="text-balance text-[2.65rem] font-light leading-[0.98] tracking-tight text-[#0b0e17] sm:text-6xl md:text-7xl dark:text-white">
+									Vert{" "}
+									<span className="font-semibold">San</span>
 								</h1>
-
-								<p className="max-w-xl text-balance text-sm leading-relaxed text-[#0b0e17]/75 sm:text-base md:text-lg [text-shadow:0_1px_14px_rgba(255,255,255,0.7)] dark:text-white/75 dark:[text-shadow:0_1px_14px_rgba(0,0,0,0.9)]">
-									I build accessible, scalable, and secure web & mobile
-									applications with modern architecture and thoughtful UX.
+								<p className="max-w-md text-base leading-relaxed text-[#0b0e17]/75 sm:text-lg dark:text-white/75">
+									I build accessible, scalable, and secure web and mobile
+									applications — with modern architecture and thoughtful UX.
 								</p>
 							</div>
 
-							{/* Call to Actions & Fast Email Copy */}
-							<div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:justify-start">
+							<div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
 								<RainbowButton
 									size="lg"
-									className="w-full justify-center gap-2 sm:w-auto font-medium shadow-lg shadow-black/20 pointer-events-auto dark:shadow-black/40"
+									className="w-full justify-center gap-2 font-medium shadow-lg shadow-black/15 sm:w-auto dark:shadow-black/40"
 									asChild
 								>
 									<Link to="/projects">
-										Explore Projects
-										<ArrowDown className="size-4 transition-transform group-hover:translate-y-0.5" />
+										Explore projects
+										<ArrowUpRight className="size-4" />
 									</Link>
 								</RainbowButton>
 
-								<RainbowButton
-									variant="outline"
-									size="lg"
-									className="w-full justify-center gap-2 sm:w-auto border-black/15 bg-white/70 text-[#0b0e17] shadow-sm backdrop-blur-md hover:bg-white/90 hover:border-black/30 pointer-events-auto dark:border-white/20 dark:bg-white/5 dark:text-white dark:shadow-none dark:hover:bg-white/10 dark:hover:border-white/40"
-									asChild
+								<a
+									href="/resume.pdf"
+									download
+									className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/75 px-5 text-sm font-medium text-[#0b0e17] shadow-sm backdrop-blur-md transition-colors hover:border-black/20 hover:bg-white sm:w-auto dark:border-white/15 dark:bg-white/8 dark:text-white dark:shadow-none dark:hover:border-white/30 dark:hover:bg-white/12"
 								>
-									<a href="/resume.pdf" download>
-										<Download className="size-4" />
-										Download Resume
-									</a>
-								</RainbowButton>
+									<Download className="size-4" />
+									Download resume
+								</a>
 
-								{/* Quick copy email button */}
 								<button
 									type="button"
 									onClick={handleCopyEmail}
 									title="Copy email address"
-									className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-black/15 bg-white/70 px-3.5 text-xs font-medium text-black/80 shadow-sm backdrop-blur-sm transition-all duration-200 hover:border-black/30 hover:bg-white/90 hover:text-black pointer-events-auto dark:border-white/15 dark:bg-white/5 dark:text-white/80 dark:shadow-none dark:hover:border-white/30 dark:hover:bg-white/10 dark:hover:text-white"
+									className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/75 px-3.5 text-xs font-medium text-black/75 shadow-sm backdrop-blur-md transition-colors hover:border-black/20 hover:bg-white hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:shadow-none dark:hover:border-white/30 dark:hover:bg-white/12 dark:hover:text-white"
 								>
 									{copied ? (
 										<>
-											<Check className="size-3.5 text-emerald-400" />
-											<span className="text-emerald-400">Copied!</span>
+											<Check className="size-3.5 text-emerald-500" />
+											<span className="text-emerald-600 dark:text-emerald-400">
+												Copied
+											</span>
 										</>
 									) : (
 										<>
-											<Copy className="size-3.5 text-black/60 dark:text-white/60" />
-											<span className="hidden sm:inline">Copy Email</span>
+											<Copy className="size-3.5" />
+											<span className="hidden sm:inline">Copy email</span>
 										</>
 									)}
 								</button>
 							</div>
-						</div>
 
-						{/* Right: Socials & Interactive Stat Counters */}
-						<div className="flex flex-row flex-wrap items-center justify-start gap-x-8 gap-y-6 lg:w-auto lg:flex-col lg:items-end lg:gap-6 pointer-events-auto">
-							{/* Social links */}
-							<div className="flex items-center gap-2.5">
+							<div className="flex items-center gap-2">
 								{socials.map(({ href, label, icon: Icon }) => (
 									<a
 										key={label}
@@ -313,41 +295,74 @@ export default function HeroSection() {
 										rel="noreferrer"
 										aria-label={label}
 										title={label}
-										className="group relative flex size-10 items-center justify-center rounded-full border border-black/15 bg-white/70 text-black/80 shadow-sm backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:border-black/40 hover:bg-white/90 hover:text-black hover:shadow-lg hover:shadow-black/10 dark:border-white/20 dark:bg-white/5 dark:text-white/80 dark:shadow-none dark:hover:border-white/50 dark:hover:bg-white/15 dark:hover:text-white dark:hover:shadow-black/30"
+										className="flex size-10 items-center justify-center rounded-full border border-black/10 bg-white/70 text-black/75 shadow-sm backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-black/25 hover:bg-white hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:shadow-none dark:hover:border-white/40 dark:hover:bg-white/15 dark:hover:text-white"
 									>
-										<Icon className="size-4 transition-transform duration-200 group-hover:scale-110" />
-										<span className="sr-only">{label}</span>
+										<Icon className="size-4" />
 									</a>
 								))}
 							</div>
-
-							{/* Stats cards */}
-							<div className="flex flex-wrap items-center gap-x-6 gap-y-4 sm:gap-x-8">
-								{stats.map(({ icon, label, value, href }) =>
-									href ? (
-										<Link
-											key={label}
-											to={href}
-											className="outline-none focus-visible:ring-2 focus-visible:ring-black/20 rounded-xl dark:focus-visible:ring-white/30"
-										>
-											<StatCard
-												icon={icon}
-												label={label}
-												value={value}
-												href={href}
-											/>
-										</Link>
-									) : (
-										<StatCard
-											key={label}
-											icon={icon}
-											label={label}
-											value={value}
-										/>
-									),
-								)}
-							</div>
 						</div>
+
+						<aside className="pointer-events-auto w-full max-w-md rounded-3xl border border-black/8 bg-white/62 p-5 shadow-xl shadow-black/5 backdrop-blur-xl sm:p-6 dark:border-white/10 dark:bg-[#0b0e17]/55 dark:shadow-black/30">
+							<div className="flex items-center justify-between gap-3">
+								<p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-black/45 dark:text-white/45">
+									About
+								</p>
+								<Link
+									to="/about"
+									className="inline-flex items-center gap-1 text-xs font-medium text-black/55 transition-colors hover:text-black dark:text-white/55 dark:hover:text-white"
+								>
+									Full story
+									<ArrowUpRight className="size-3" />
+								</Link>
+							</div>
+
+							<p className="mt-4 text-sm leading-relaxed text-[#0b0e17]/80 sm:text-[0.95rem] dark:text-white/80">
+								I focus on interfaces that are fast, accessible, and visually
+								clean. I work across the full stack — from pixel-perfect
+								frontends to robust backends.
+							</p>
+
+							<ul className="mt-4 flex flex-wrap gap-2">
+								{focus.map((item) => (
+									<li
+										key={item}
+										className="rounded-full border border-black/8 bg-black/4 px-2.5 py-1 text-[0.7rem] font-medium text-black/65 dark:border-white/10 dark:bg-white/6 dark:text-white/70"
+									>
+										{item}
+									</li>
+								))}
+							</ul>
+
+							<div className="mt-5 flex items-center gap-3">
+								<div className="flex -space-x-2">
+									{portraits.map((portrait) => (
+										<img
+											key={portrait.src}
+											src={portrait.src}
+											alt={portrait.alt}
+											className="size-10 rounded-full border-2 border-white object-cover dark:border-[#0b0e17]"
+											decoding="async"
+										/>
+									))}
+								</div>
+								<p className="text-xs leading-snug text-black/55 dark:text-white/55">
+									Always learning, always building.
+								</p>
+							</div>
+						</aside>
+					</div>
+
+					<div className="pointer-events-auto grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+						{stats.map(({ icon, label, value, href }) => (
+							<Link
+								key={label}
+								to={href}
+								className="rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/30"
+							>
+								<StatTile icon={icon} label={label} value={value} />
+							</Link>
+						))}
 					</div>
 				</div>
 			</div>
