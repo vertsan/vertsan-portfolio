@@ -91,7 +91,7 @@ function SpotlightCard({ item, index }: { item: GalleryItem; index: number }) {
 				}}
 			/>
 
-			<div className="relative h-[clamp(180px,30svh,300px)] overflow-hidden border-b border-[var(--i-line)]">
+			<div className="relative h-[clamp(150px,22svh,250px)] overflow-hidden border-b border-[var(--i-line)]">
 				<img
 					src={item.image}
 					alt={`${item.title} preview`}
@@ -237,13 +237,17 @@ export default function ProjectsGallery() {
 			const track = trackRef.current;
 			if (!track) return;
 			const overflow = track.scrollWidth - window.innerWidth;
-			setShift(Math.max(0, overflow + 48));
+			setShift(Math.max(0, overflow + 64));
 		};
-		measure();
+
+		// Run after paint and observe layout changes
+		const frame = requestAnimationFrame(measure);
 		const observer = new ResizeObserver(measure);
 		if (trackRef.current) observer.observe(trackRef.current);
 		window.addEventListener("resize", measure);
+
 		return () => {
+			cancelAnimationFrame(frame);
 			observer.disconnect();
 			window.removeEventListener("resize", measure);
 		};
@@ -253,78 +257,118 @@ export default function ProjectsGallery() {
 		target: pinRef,
 		offset: ["start start", "end end"],
 	});
-	const x = useSpring(useTransform(scrollYProgress, [0, 1], [0, -shift]), {
-		stiffness: 110,
-		damping: 28,
-		restDelta: 0.4,
+
+	// Fast-response spring that tracks Lenis scroll without floaty double-lag
+	const rawX = useTransform(scrollYProgress, [0, 1], [0, -shift]);
+	const x = useSpring(rawX, {
+		stiffness: 260,
+		damping: 32,
+		mass: 0.2,
 	});
+
+	// Allow horizontal trackpad gestures to advance the pinned scroll
+	useEffect(() => {
+		if (!pinned) return;
+		const track = trackRef.current;
+		if (!track) return;
+
+		const onWheel = (e: WheelEvent) => {
+			if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
+				window.scrollBy({ top: e.deltaX });
+			}
+		};
+
+		track.addEventListener("wheel", onWheel, { passive: true });
+		return () => track.removeEventListener("wheel", onWheel);
+	}, [pinned]);
 
 	return (
 		<section
 			ref={sectionRef}
 			id="projects"
 			aria-labelledby="projects-heading"
-			className="relative overflow-hidden pt-24 sm:pt-32"
+			className="relative overflow-visible"
 		>
-			<Glow className="right-0 top-0 size-[34rem] opacity-60" color="rgba(45,212,191,0.16)" />
-
-			<Container>
-				<div className="flex flex-wrap items-end justify-between gap-6">
-					<div>
-						<SectionLabel>Featured projects</SectionLabel>
-						<h2
-							id="projects-heading"
-							className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-[-0.03em] sm:text-5xl"
-						>
-							<Reveal>Selected work,</Reveal>
-							<Reveal delay={0.08}>
-								<span className="immersive-gradient-text">start to ship.</span>
-							</Reveal>
-						</h2>
-					</div>
-					<p className="mono-label hidden text-[var(--i-subtle)] sm:block">
-						{pinned ? "Scroll to explore" : "Swipe to explore"}
-					</p>
-				</div>
-			</Container>
+			<Glow
+				className="pointer-events-none right-0 top-1/4 size-[34rem] opacity-60"
+				color="rgba(45,212,191,0.16)"
+			/>
 
 			<div
 				ref={pinRef}
-				className="relative mt-12"
+				className="relative"
 				style={{ height: pinned ? `calc(100svh + ${shift}px)` : undefined }}
 			>
 				<div
 					className={cn(
-						"relative overflow-hidden",
-						pinned && "sticky top-0 flex h-[100svh] items-center",
+						"relative",
+						pinned
+							? "sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden"
+							: "py-24 sm:py-32",
 					)}
 				>
-					<motion.div
-						ref={trackRef}
-						style={pinned ? { x } : undefined}
-						className={cn(
-							"flex gap-5 py-4",
-							pinned
-								? "px-[max(1.5rem,calc((100vw-1280px)/2+3rem))]"
-								: "snap-x snap-mandatory overflow-x-auto px-5 pb-6 no-scrollbar sm:px-8 lg:px-12",
-						)}
-					>
-						{gallery.map((item, index) => (
-							<SpotlightCard key={item.slug} item={item} index={index} />
-						))}
+					<Container className={cn(pinned && "mb-6 shrink-0")}>
+						<div className="flex flex-wrap items-end justify-between gap-6">
+							<div>
+								<SectionLabel>Featured projects</SectionLabel>
+								<h2
+									id="projects-heading"
+									className="mt-4 font-display text-3xl font-semibold leading-[1.05] tracking-[-0.03em] sm:text-5xl"
+								>
+									<Reveal>Selected work,</Reveal>
+									<Reveal delay={0.08}>
+										<span className="immersive-gradient-text">start to ship.</span>
+									</Reveal>
+								</h2>
+							</div>
 
-						{/* End card keeps the horizontal travel from feeling abrupt. */}
-						<Link
-							to="/projects"
-							className="flex w-[min(60vw,300px)] shrink-0 snap-center flex-col justify-between rounded-3xl border border-dashed border-[var(--i-line-strong)] bg-[var(--i-card)] p-6 transition-colors hover:border-[var(--i-fg)]/40 hover:bg-[var(--i-card-strong)]"
+							<div className="flex items-center gap-4">
+								{pinned && (
+									<div className="hidden items-center gap-3 sm:flex">
+										<span className="mono-label text-[var(--i-subtle)]">Progress</span>
+										<div className="h-1 w-24 overflow-hidden rounded-full bg-white/10">
+											<motion.div
+												style={{ scaleX: scrollYProgress }}
+												className="h-full w-full origin-left bg-gradient-to-r from-indigo-500 via-teal-400 to-emerald-400"
+											/>
+										</div>
+									</div>
+								)}
+								<p className="mono-label hidden text-[var(--i-subtle)] sm:block">
+									{pinned ? "Scroll to explore" : "Swipe to explore"}
+								</p>
+							</div>
+						</div>
+					</Container>
+
+					<div className={cn(pinned && "w-full overflow-hidden")}>
+						<motion.div
+							ref={trackRef}
+							style={pinned ? { x } : undefined}
+							className={cn(
+								"flex gap-5 py-2",
+								pinned
+									? "px-[max(1.5rem,calc((100vw-1280px)/2+3rem))]"
+									: "mt-8 snap-x snap-mandatory overflow-x-auto px-5 pb-6 no-scrollbar sm:px-8 lg:px-12",
+							)}
 						>
-							<span className="mono-label text-[var(--i-subtle)]">All work</span>
-							<span className="mt-8 font-display text-2xl font-medium leading-tight tracking-[-0.02em]">
-								See every project
-								<ArrowUpRight aria-hidden className="mt-3 size-6 text-[#6ee7b7]" />
-							</span>
-						</Link>
-					</motion.div>
+							{gallery.map((item, index) => (
+								<SpotlightCard key={item.slug} item={item} index={index} />
+							))}
+
+							{/* End card keeps the horizontal travel from feeling abrupt. */}
+							<Link
+								to="/projects"
+								className="flex w-[min(70vw,320px)] shrink-0 snap-center flex-col justify-between rounded-3xl border border-dashed border-[var(--i-line-strong)] bg-[var(--i-card)] p-7 transition-colors hover:border-[var(--i-fg)]/40 hover:bg-[var(--i-card-strong)]"
+							>
+								<span className="mono-label text-[var(--i-subtle)]">Archive</span>
+								<span className="mt-8 font-display text-2xl font-medium leading-tight tracking-[-0.02em]">
+									See all projects
+									<ArrowUpRight aria-hidden className="mt-3 size-6 text-[#6ee7b7]" />
+								</span>
+							</Link>
+						</motion.div>
+					</div>
 				</div>
 			</div>
 		</section>
