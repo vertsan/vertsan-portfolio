@@ -26,8 +26,7 @@ export default function SceneCanvas() {
 
 	useEffect(() => {
 		if (reduced) return;
-		const idleWindow = window as IdleWindow;
-		let handle: number;
+		const idleWindow = window as IdleWindow;		let handle: number;
 
 		if (typeof idleWindow.requestIdleCallback === "function") {
 			handle = idleWindow.requestIdleCallback(() => setMounted(true), {
@@ -44,6 +43,8 @@ export default function SceneCanvas() {
 			window.clearTimeout(handle);
 		};
 	}, [reduced]);
+
+	if (reduced) return null;
 
 	if (reduced) return null;
 
