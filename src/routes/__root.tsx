@@ -10,7 +10,6 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import SmoothScroll from "../components/immersive/SmoothScroll";
 import RouteProgress from "../components/RouteProgress";
 import ScrollReveal from "../components/ScrollReveal";
 import ScrollToTop from "../components/ScrollToTop";
@@ -132,7 +131,7 @@ export const Route = createRootRoute({
 			},
 			{
 				rel: "stylesheet",
-				href: "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Maven+Pro:wght@400..900&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+				href: "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Maven+Pro:wght@400..900&display=swap",
 			},
 		],
 	}),
@@ -218,7 +217,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				/>
 				<ScrollReveal />
 				<RouteProgress />
-				<SmoothScroll enabled={!isAdmin} />
 				{!isAdmin ? (
 					<div className="min-h-screen bg-card overflow-x-clip pb-[env(safe-area-inset-bottom)]">
 						<Header />
