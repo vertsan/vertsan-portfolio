@@ -85,6 +85,7 @@ CONTEXT: You are helping evaluate this candidate's qualifications for potential 
 
 					const stream = chat({
 						adapter,
+						threadId: "resume-assistant",
 						tools: [
 							getJobsBySkill,
 							getAllJobs,

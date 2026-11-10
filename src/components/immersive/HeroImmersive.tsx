@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { profile } from "#/data/profile";
-import { useSceneSection } from "./scene/SceneContext";
 import { scrollToId } from "./SmoothScroll";
+import { useScene, useSceneSection } from "./scene/SceneContext";
 import { Container, EASE, Magnetic, SplitText } from "./ui";
 
 const socials = [
@@ -25,6 +25,7 @@ export default function HeroImmersive() {
 	const sectionRef = useRef<HTMLElement>(null);
 	const reduced = useReducedMotion();
 	const [roleIndex, setRoleIndex] = useState(0);
+	const { ready: sceneReady } = useScene();
 
 	useSceneSection(sectionRef, "hero", "#818cf8");
 
@@ -75,6 +76,18 @@ export default function HeroImmersive() {
 								<MapPin className="size-3" aria-hidden />
 								{profile.location}
 							</span>
+							{!reduced && (
+								<output
+									aria-live="polite"
+									className="mono-label inline-flex items-center gap-1.5 text-[var(--i-subtle)]"
+								>
+									<span
+										aria-hidden
+										className={`size-1.5 rounded-full ${sceneReady ? "bg-[#6ee7b7]" : "animate-pulse bg-[var(--i-subtle)]"}`}
+									/>
+									{sceneReady ? "Scene ready" : "Loading scene"}
+								</output>
+							)}
 						</motion.div>
 
 						<h1 className="mt-7 font-display text-[clamp(3.5rem,10vw,9rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-[var(--i-fg)]">
@@ -183,7 +196,10 @@ export default function HeroImmersive() {
 						<Icon aria-hidden className="size-4" />
 					</a>
 				))}
-				<span aria-hidden className="h-16 w-px bg-gradient-to-b from-[var(--i-line-strong)] to-transparent" />
+				<span
+					aria-hidden
+					className="h-16 w-px bg-gradient-to-b from-[var(--i-line-strong)] to-transparent"
+				/>
 			</div>
 
 			<div className="pointer-events-none absolute inset-x-0 bottom-7 flex justify-center">
@@ -200,7 +216,11 @@ export default function HeroImmersive() {
 					<motion.span
 						aria-hidden
 						animate={reduced ? undefined : { y: [0, 6, 0] }}
-						transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+						transition={{
+							duration: 2,
+							repeat: Number.POSITIVE_INFINITY,
+							ease: "easeInOut",
+						}}
 					>
 						<ArrowDown className="size-4" />
 					</motion.span>
