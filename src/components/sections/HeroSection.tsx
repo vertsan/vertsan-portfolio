@@ -57,7 +57,7 @@ export default function HeroSection() {
 							Vert San
 						</h1>
 
-						<p className="mt-3 text-base font-medium text-black/55 sm:text-lg dark:text-white/55">
+						<p className="mt-3 text-lg font-medium text-black/60 sm:text-xl dark:text-white/60">
 							Software engineer
 						</p>
 
@@ -117,26 +117,32 @@ export default function HeroSection() {
 										className="size-full object-contain p-5 sm:p-6"
 									/>
 								) : (
-									<DitherVeil
-										src="/hero-portrait-cutout.png"
-										fit="contain"
-										pattern="floyd"
-										pixelSize={3}
-										levels={3}
-										palette="duotone"
-										inkColor={isDark ? "#0b0e17" : "#ffffff"}
-										paperColor={isDark ? "#f8fafc" : "#0b0e17"}
-										contrast={1.35}
-										brightness={isDark ? 0.12 : 0.02}
-										revealRadius={340}
-										softness={0.9}
-										linger={1.6}
-										rimColor={isDark ? "#818cf8" : "#4f46e5"}
-										rim={0.12}
-										wander={true}
-										clickBurst={true}
+									<div
+										role="img"
+										aria-label="Portrait of Vert San"
 										className="size-full"
-									/>
+									>
+										<DitherVeil
+											src="/hero-portrait-cutout.png"
+											fit="contain"
+											pattern="floyd"
+											pixelSize={3}
+											levels={3}
+											palette="duotone"
+											inkColor={isDark ? "#0b0e17" : "#ffffff"}
+											paperColor={isDark ? "#f8fafc" : "#0b0e17"}
+											contrast={1.35}
+											brightness={isDark ? 0.12 : 0.02}
+											revealRadius={340}
+											softness={0.9}
+											linger={1.6}
+											rimColor={isDark ? "#818cf8" : "#4f46e5"}
+											rim={0.12}
+											wander={true}
+											clickBurst={true}
+											className="size-full"
+										/>
+									</div>
 								)}
 
 								<div
