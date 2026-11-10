@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 const SESSION_KEY = "vrt_session";
 const NAME_KEY = "vrt_name";
@@ -21,6 +21,56 @@ type PresenceResponse = {
 	recentViews: { name: string | null; firstSeenAt: string | Date }[];
 };
 
+type PresenceState = {
+	online: number | null;
+	totalViews: number | null;
+	onlineUsers: PresenceUser[];
+	recentViews: PresenceView[];
+};
+
+const INITIAL: PresenceState = {
+	online: null,
+	totalViews: null,
+	onlineUsers: [],
+	recentViews: [],
+};
+
+/*
+ * One shared presence store for the whole page.
+ *
+ * The header badge and the footer counter both read this hook. Keeping the
+ * poller at module scope means one heartbeat and — more importantly — one
+ * "view" event per page load, instead of one per mounted component.
+ */
+let state: PresenceState = INITIAL;
+let sessionId = "";
+let viewSent = false;
+let activeConsumers = 0;
+let intervalId: ReturnType<typeof setInterval> | null = null;
+
+const listeners = new Set<() => void>();
+
+function emit() {
+	for (const listener of listeners) listener();
+}
+
+function apply(data: PresenceResponse | null) {
+	if (!data) return;
+	state = {
+		online: data.online,
+		totalViews: data.totalViews,
+		onlineUsers: (data.onlineUsers ?? []).map((user) => ({
+			name: user.name,
+			lastSeenAt: new Date(user.lastSeenAt),
+		})),
+		recentViews: (data.recentViews ?? []).map((view) => ({
+			name: view.name,
+			firstSeenAt: new Date(view.firstSeenAt),
+		})),
+	};
+	emit();
+}
+
 function getSessionId(): string {
 	if (typeof window === "undefined") return "";
 	try {
@@ -39,90 +89,85 @@ function getSessionId(): string {
 }
 
 async function ping(
-	sessionId: string,
+	id: string,
 	event: "view" | "heartbeat",
 	name: string | null,
 ) {
-	if (!sessionId) return null;
+	if (!id) return null;
 	try {
 		const res = await fetch("/api/presence", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ sessionId, event, name }),
+			body: JSON.stringify({ sessionId: id, event, name }),
 		});
 		if (!res.ok) return null;
-		const data = (await res.json()) as PresenceResponse;
-		return {
-			online: data.online,
-			totalViews: data.totalViews,
-			onlineUsers: (data.onlineUsers ?? []).map((u) => ({
-				name: u.name,
-				lastSeenAt: new Date(u.lastSeenAt),
-			})) satisfies PresenceUser[],
-			recentViews: (data.recentViews ?? []).map((v) => ({
-				name: v.name,
-				firstSeenAt: new Date(v.firstSeenAt),
-			})) satisfies PresenceView[],
-		};
+		return (await res.json()) as PresenceResponse;
 	} catch {
 		return null;
 	}
 }
 
-export function usePresence() {
-	const [online, setOnline] = useState<number | null>(null);
-	const [totalViews, setTotalViews] = useState<number | null>(null);
-	const [onlineUsers, setOnlineUsers] = useState<PresenceUser[]>([]);
-	const [recentViews, setRecentViews] = useState<PresenceView[]>([]);
-	const sessionRef = useRef<string | null>(null);
-	const viewSentRef = useRef(false);
+function readName(): string | null {
+	try {
+		return window.localStorage.getItem(NAME_KEY);
+	} catch {
+		return null;
+	}
+}
 
-	const send = useCallback(() => {
-		const sessionId = sessionRef.current ?? "";
-		if (!sessionId) return;
-		const name = window.localStorage.getItem(NAME_KEY);
-		void ping(sessionId, "heartbeat", name).then((data) => {
-			if (data) {
-				setOnline(data.online);
-				setTotalViews(data.totalViews);
-				setOnlineUsers(data.onlineUsers);
-				setRecentViews(data.recentViews);
-			}
-		});
-	}, []);
+function heartbeat() {
+	void ping(sessionId, "heartbeat", readName()).then(apply);
+}
+
+function onVisibility() {
+	if (document.visibilityState === "visible") heartbeat();
+}
+
+function start() {
+	activeConsumers += 1;
+	if (activeConsumers > 1) return;
+
+	sessionId = getSessionId();
+	const name = readName();
+
+	// Count a view once per page load, no matter how many components subscribe.
+	if (!viewSent) {
+		viewSent = true;
+		void ping(sessionId, "view", name).then(apply);
+	} else {
+		heartbeat();
+	}
+
+	intervalId = setInterval(heartbeat, HEARTBEAT_MS);
+	document.addEventListener("visibilitychange", onVisibility);
+}
+
+function stop() {
+	activeConsumers = Math.max(0, activeConsumers - 1);
+	if (activeConsumers > 0) return;
+	if (intervalId) clearInterval(intervalId);
+	intervalId = null;
+	document.removeEventListener("visibilitychange", onVisibility);
+}
+
+function subscribe(listener: () => void) {
+	listeners.add(listener);
+	return () => {
+		listeners.delete(listener);
+	};
+}
+
+export function usePresence() {
+	const snapshot = useSyncExternalStore(
+		subscribe,
+		() => state,
+		() => INITIAL,
+	);
 
 	useEffect(() => {
-		const sessionId = getSessionId();
-		sessionRef.current = sessionId;
-		const name = window.localStorage.getItem(NAME_KEY);
+		start();
+		return stop;
+	}, []);
 
-		// Count a view once per page load.
-		if (!viewSentRef.current) {
-			viewSentRef.current = true;
-			void ping(sessionId, "view", name).then((data) => {
-				if (data) {
-					setOnline(data.online);
-					setTotalViews(data.totalViews);
-					setOnlineUsers(data.onlineUsers);
-					setRecentViews(data.recentViews);
-				}
-			});
-		}
-
-		send();
-
-		const interval = setInterval(send, HEARTBEAT_MS);
-
-		const onVisibility = () => {
-			if (document.visibilityState === "visible") send();
-		};
-		document.addEventListener("visibilitychange", onVisibility);
-
-		return () => {
-			clearInterval(interval);
-			document.removeEventListener("visibilitychange", onVisibility);
-		};
-	}, [send]);
-
-	return { online, totalViews, onlineUsers, recentViews };
+	return snapshot;
 }
