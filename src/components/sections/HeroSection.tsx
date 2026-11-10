@@ -2,16 +2,17 @@ import { Link } from "@tanstack/react-router";
 import { Download, Github, Linkedin, Mail, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import DitherVeil from "#/components/DitherVeil";
+import { profile } from "#/data/profile";
 import { useIsDark } from "#/lib/useIsDark";
 
 const socials = [
-	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
+	{ href: profile.socials.github, label: "GitHub", icon: Github },
 	{
-		href: "https://linkedin.com/in/vertsan",
+		href: profile.socials.linkedin,
 		label: "LinkedIn",
 		icon: Linkedin,
 	},
-	{ href: "mailto:itsanvert@gmail.com", label: "Email", icon: Mail },
+	{ href: `mailto:${profile.email}`, label: "Email", icon: Mail },
 ];
 
 export default function HeroSection() {
@@ -41,7 +42,7 @@ export default function HeroSection() {
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-black/55 dark:text-white/55">
 							<span className="inline-flex items-center gap-2">
 								<span className="size-2 rounded-full bg-emerald-500" />
-								Open to opportunities
+								{profile.availability}
 							</span>
 							<span
 								aria-hidden
@@ -49,22 +50,20 @@ export default function HeroSection() {
 							/>
 							<span className="inline-flex items-center gap-1.5">
 								<MapPin className="size-3.5" />
-								Phnom Penh, Cambodia
+								{profile.location}
 							</span>
 						</div>
 
 						<h1 className="mt-6 font-heading text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-[#0b0e17] sm:text-6xl lg:text-7xl dark:text-white">
-							Vert San
+							{profile.name}
 						</h1>
 
 						<p className="mt-3 text-lg font-medium text-black/60 sm:text-xl dark:text-white/60">
-							Software engineer
+							{profile.role}
 						</p>
 
 						<p className="mt-5 max-w-xl text-pretty text-sm leading-relaxed text-black/65 sm:text-base dark:text-white/65">
-							I build accessible, scalable, and secure web and mobile
-							applications, from pixel-perfect interfaces to the systems behind
-							them.
+							{profile.statement}
 						</p>
 
 						<div className="mt-8 flex flex-wrap items-center gap-3">
@@ -76,12 +75,19 @@ export default function HeroSection() {
 							</Link>
 
 							<a
-								href="/resume.pdf"
+								href={profile.resume}
 								download
 								className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/60 px-5 text-sm font-medium text-[#0b0e17] transition-colors hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4f46e5] dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
 							>
 								<Download className="size-4" />
 								Download resume
+							</a>
+							<a
+								href={`mailto:${profile.email}`}
+								className="inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium text-black/65 transition-colors hover:text-[#0b0e17] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4f46e5] dark:text-white/65 dark:hover:text-white"
+							>
+								<Mail className="size-4" />
+								Contact Vert
 							</a>
 						</div>
 
