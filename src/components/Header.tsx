@@ -8,7 +8,11 @@ import {
 } from "framer-motion";
 import { ArrowUpRight, LogIn, Menu, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { scrollToId, scrollToTop } from "#/components/immersive/SmoothScroll";
+import {
+	scrollToId,
+	scrollToTop,
+	setSmoothScrollLocked,
+} from "#/components/immersive/SmoothScroll";
 import { EASE } from "#/components/immersive/ui";
 import PresenceBadge from "./PresenceBadge";
 import ThemeToggle from "./ThemeToggle";
@@ -34,7 +38,13 @@ function useScrollLock(locked: boolean) {
 	useEffect(() => {
 		const root = document.documentElement;
 		root.classList.toggle(MENU_OPEN_CLASS, locked);
-		return () => root.classList.remove(MENU_OPEN_CLASS);
+		// Keep Lenis in sync with the CSS lock so wheel input while the menu is
+		// open doesn't desync the smooth scroller from the native position.
+		setSmoothScrollLocked(locked);
+		return () => {
+			root.classList.remove(MENU_OPEN_CLASS);
+			setSmoothScrollLocked(false);
+		};
 	}, [locked]);
 }
 

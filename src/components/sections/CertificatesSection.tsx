@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { ArrowUpRight, Award, Calendar, ExternalLink } from "lucide-react";
 import { type CSSProperties, useState } from "react";
+import { scrollToId } from "#/components/immersive/SmoothScroll";
 import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
@@ -84,9 +85,7 @@ export default function CertificatesSection() {
 
 	const handlePageChange = (nextPage: number) => {
 		setPage(nextPage);
-		document
-			.getElementById("certificates")
-			?.scrollIntoView({ behavior: "smooth", block: "start" });
+		scrollToId("certificates");
 	};
 
 	return (

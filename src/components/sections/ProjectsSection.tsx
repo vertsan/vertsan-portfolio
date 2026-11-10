@@ -2,6 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import { marked } from "marked";
 import { type CSSProperties, memo, useMemo, useState } from "react";
+import { scrollToId } from "#/components/immersive/SmoothScroll";
 import AsciiBackdrop from "#/components/ui/ascii-backdrop";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
@@ -228,9 +229,7 @@ export default function ProjectsSection() {
 
 	const handlePageChange = (nextPage: number) => {
 		setPage(nextPage);
-		document
-			.getElementById("projects")
-			?.scrollIntoView({ behavior: "smooth", block: "start" });
+		scrollToId("projects");
 	};
 
 	if (loading && projects.length === 0) return <ProjectsShimmer />;

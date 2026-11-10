@@ -19,6 +19,9 @@ const customLogger = {
 
 const config = defineConfig({
 	resolve: { tsconfigPaths: true },
+	optimizeDeps: {
+		include: ["react", "react-dom"],
+	},
 	assetsInclude: ["**/*.glb"],
 	customLogger,
 	ssr: { noExternal: ["gsap"] },

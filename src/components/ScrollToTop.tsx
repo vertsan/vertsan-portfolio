@@ -1,5 +1,6 @@
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { scrollToTop } from "#/components/immersive/SmoothScroll";
 import { cn } from "#/lib/utils";
 
 export default function ScrollToTop() {
@@ -12,9 +13,7 @@ export default function ScrollToTop() {
 		return () => window.removeEventListener("scroll", onScroll);
 	}, []);
 
-	const scrollTop = () => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	};
+	const scrollTop = () => scrollToTop();
 
 	return (
 		<button
