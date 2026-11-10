@@ -5,7 +5,6 @@ const year = new Date().getFullYear();
 
 const footerLinks = [
 	{ to: "/" as const, label: "Home" },
-	{ to: "/about" as const, label: "About" },
 	{ to: "/projects" as const, label: "Projects" },
 	{ to: "/certificates" as const, label: "Certificates" },
 	{ to: "/visitors" as const, label: "Visitors" },

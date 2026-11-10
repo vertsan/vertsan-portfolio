@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Award, FolderKanban, Home, LogIn, UserRound } from "lucide-react";
+import { Award, FolderKanban, Home, LogIn } from "lucide-react";
 import {
 	startTransition,
 	useCallback,
@@ -22,7 +22,6 @@ import ThemeToggle from "./ThemeToggle";
 
 const navItems = [
 	{ name: "Home", link: "/", icon: Home },
-	{ name: "About", link: "/about", icon: UserRound },
 	{ name: "Projects", link: "/projects", icon: FolderKanban },
 	{ name: "Certificates", link: "/certificates", icon: Award },
 ];
