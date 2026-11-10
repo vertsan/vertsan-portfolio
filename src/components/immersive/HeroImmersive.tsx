@@ -97,13 +97,14 @@ export default function HeroImmersive() {
 			ref={sectionRef}
 			id="top"
 			aria-label="Introduction"
-			className="relative min-h-[100svh] overflow-visible pt-28 pb-20 sm:pt-36 lg:pt-32"
+			className="relative flex min-h-[100svh] flex-col justify-end overflow-visible pt-32 pb-12 sm:pb-16 lg:pb-20"
 		>
 			{/* ==================================================================== */}
 			{/* REACT BITS <GradientASCII /> HERO CANVAS                             */}
+			{/* Spans the full hero area so ASCII ripples & glows spread freely      */}
 			{/* ==================================================================== */}
 			<div
-				className="pointer-events-auto absolute inset-x-0 top-0 h-[640px] sm:h-[740px] lg:h-[860px] w-full overflow-hidden select-none"
+				className="pointer-events-auto absolute inset-0 size-full overflow-hidden select-none"
 				aria-hidden="true"
 			>
 				<GradientASCII
@@ -116,7 +117,7 @@ export default function HeroImmersive() {
 					gradientOpacity={0.92}
 					glow={0.25}
 					softness={0.48}
-					scale={1.05}
+					scale={1.1}
 					flow={0.52}
 					speed={reduced ? 0 : 0.85}
 					grain={0.07}
@@ -126,27 +127,28 @@ export default function HeroImmersive() {
 					className="size-full"
 				/>
 
-				{/* Smooth gradient fade to pitch black bottom (#05070d) */}
-				<div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[var(--i-bg)] via-[var(--i-bg)]/80 to-transparent" />
+				{/* Smooth gradient fade towards the bottom so content has pristine contrast */}
+				<div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-[var(--i-bg)] via-[var(--i-bg)]/85 to-transparent" />
 
-				{/* Side vignettes to frame the viewport */}
-				<div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[var(--i-bg)]/60 to-transparent" />
-				<div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[var(--i-bg)]/60 to-transparent" />
+				{/* Subtle side vignettes to frame the viewport */}
+				<div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[var(--i-bg)]/50 to-transparent" />
+				<div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[var(--i-bg)]/50 to-transparent" />
 			</div>
 
 			{/* ==================================================================== */}
-			{/* HERO FOREGROUND CONTENT                                             */}
+			{/* HERO CONTENT: ANCHORED AT BOTTOM-LEFT                                */}
+			{/* Gives the top glowing ASCII field room to breathe cleanly           */}
 			{/* ==================================================================== */}
-			<Container className="relative z-10 pointer-events-none">
-				<div className="max-w-4xl">
-					{/* Top status badges */}
+			<Container className="relative z-10 pointer-events-none w-full">
+				<div className="max-w-3xl text-left">
+					{/* Status badges */}
 					<motion.div
-						initial={reduced ? false : { opacity: 0, y: 14 }}
+						initial={reduced ? false : { opacity: 0, y: 12 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, ease: EASE }}
-						className="flex flex-wrap items-center gap-2.5 sm:gap-3"
+						transition={{ duration: 0.5, ease: EASE }}
+						className="flex flex-wrap items-center gap-2 sm:gap-2.5"
 					>
-						<span className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3.5 py-1.5 backdrop-blur-md shadow-sm">
+						<span className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 py-1 backdrop-blur-md shadow-sm">
 							<span className="relative flex size-2">
 								<span className="absolute inline-flex size-full animate-ping rounded-full bg-[#6ee7b7] opacity-60" />
 								<span className="relative inline-flex size-2 rounded-full bg-[#6ee7b7]" />
@@ -156,15 +158,15 @@ export default function HeroImmersive() {
 							</span>
 						</span>
 
-						<span className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-black/30 px-3 py-1.5 font-mono text-xs text-white/60 backdrop-blur-md">
+						<span className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-black/40 px-3 py-1 font-mono text-xs text-white/60 backdrop-blur-md">
 							<MapPin className="size-3 text-[#38bdf8]" aria-hidden />
 							{profile.location}
 						</span>
 
-						{/* Scene ready badge */}
+						{/* 3D Scene status */}
 						<span
-							className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-black/30 px-3 py-1.5 font-mono text-xs text-white/50 backdrop-blur-md"
-							title={sceneReady ? "3D Scene loaded" : "Loading 3D assets"}
+							className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-black/40 px-2.5 py-1 font-mono text-xs text-white/50 backdrop-blur-md"
+							title={sceneReady ? "3D Scene ready" : "Loading 3D assets"}
 						>
 							<span
 								aria-hidden
@@ -179,7 +181,7 @@ export default function HeroImmersive() {
 						<button
 							type="button"
 							onClick={() => setShowControls((prev) => !prev)}
-							className="pointer-events-auto group inline-flex items-center gap-1.5 rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3 py-1.5 font-mono text-xs text-[#a5d8ff] backdrop-blur-md transition-all hover:border-[#38bdf8]/60 hover:bg-[#38bdf8]/20"
+							className="pointer-events-auto group inline-flex items-center gap-1.5 rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3 py-1 font-mono text-xs text-[#a5d8ff] backdrop-blur-md transition-all hover:border-[#38bdf8]/60 hover:bg-[#38bdf8]/20"
 							aria-label="Toggle shader controls"
 							title="Customize the ASCII gradient shader"
 						>
@@ -199,7 +201,7 @@ export default function HeroImmersive() {
 								animate={{ opacity: 1, height: "auto", y: 0 }}
 								exit={{ opacity: 0, height: 0, y: -8 }}
 								transition={{ duration: 0.35, ease: EASE }}
-								className="pointer-events-auto mt-4 overflow-hidden rounded-2xl border border-white/15 bg-black/70 p-4 backdrop-blur-xl shadow-2xl"
+								className="pointer-events-auto mt-3 overflow-hidden rounded-2xl border border-white/15 bg-black/80 p-4 backdrop-blur-xl shadow-2xl"
 							>
 								<div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
 									<div className="flex items-center gap-2">
@@ -213,7 +215,7 @@ export default function HeroImmersive() {
 									</span>
 								</div>
 
-								<div className="mt-3 flex flex-wrap items-center gap-6">
+								<div className="mt-3 flex flex-wrap items-center gap-5">
 									{/* Shape Selector */}
 									<div className="flex items-center gap-2">
 										<span className="font-mono text-[11px] uppercase tracking-wider text-white/60">
@@ -269,24 +271,24 @@ export default function HeroImmersive() {
 						)}
 					</AnimatePresence>
 
-					{/* Giant confident headline (Matching React Bits layout in screenshot) */}
+					{/* Confident display headline (Anchored bottom-left, clean & punchy) */}
 					<motion.h1
-						initial={reduced ? false : { opacity: 0, y: 20 }}
+						initial={reduced ? false : { opacity: 0, y: 18 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-						className="mt-8 font-display text-[clamp(2.75rem,8vw,6.5rem)] font-bold leading-[0.98] tracking-[-0.04em] text-white"
+						transition={{ duration: 0.7, ease: EASE, delay: 0.08 }}
+						className="mt-6 font-display text-[clamp(2.5rem,6.5vw,5.25rem)] font-bold leading-[0.98] tracking-[-0.04em] text-white"
 					>
 						Building fast, immersive web &amp; mobile software.
 					</motion.h1>
 
 					{/* Author / Dynamic Role line */}
 					<motion.div
-						initial={reduced ? false : { opacity: 0, y: 16 }}
+						initial={reduced ? false : { opacity: 0, y: 14 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, ease: EASE, delay: 0.25 }}
-						className="mt-5 flex flex-wrap items-center gap-3"
+						transition={{ duration: 0.7, ease: EASE, delay: 0.18 }}
+						className="mt-4 flex flex-wrap items-center gap-2.5"
 					>
-						<span className="font-mono text-sm font-semibold uppercase tracking-wider text-[#38bdf8]">
+						<span className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#38bdf8]">
 							{profile.name}
 						</span>
 						<span className="size-1 rounded-full bg-white/30" />
@@ -294,11 +296,11 @@ export default function HeroImmersive() {
 							<AnimatePresence mode="wait" initial={false}>
 								<motion.span
 									key={role}
-									initial={reduced ? false : { opacity: 0, y: 8 }}
+									initial={reduced ? false : { opacity: 0, y: 6 }}
 									animate={{ opacity: 1, y: 0 }}
-									exit={reduced ? undefined : { opacity: 0, y: -8 }}
+									exit={reduced ? undefined : { opacity: 0, y: -6 }}
 									transition={{ duration: 0.35, ease: EASE }}
-									className="font-mono text-sm text-white/80"
+									className="font-mono text-xs sm:text-sm text-white/80"
 								>
 									{role}
 								</motion.span>
@@ -306,29 +308,29 @@ export default function HeroImmersive() {
 						</div>
 					</motion.div>
 
-					{/* Subheading / Statement paragraph (Like the screenshot subtext) */}
+					{/* Statement paragraph */}
 					<motion.p
-						initial={reduced ? false : { opacity: 0, y: 16 }}
+						initial={reduced ? false : { opacity: 0, y: 14 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, ease: EASE, delay: 0.35 }}
-						className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-white/70 sm:text-lg lg:text-xl font-normal"
+						transition={{ duration: 0.7, ease: EASE, delay: 0.28 }}
+						className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-white/70 sm:text-base lg:text-lg font-normal"
 					>
 						{profile.statement}
 					</motion.p>
 
-					{/* CTA Button row (Exact pill styling as the uploaded screenshot) */}
+					{/* Pill Action Button Row */}
 					<motion.div
-						initial={reduced ? false : { opacity: 0, y: 18 }}
+						initial={reduced ? false : { opacity: 0, y: 16 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, ease: EASE, delay: 0.48 }}
-						className="mt-10 flex flex-wrap items-center gap-3.5"
+						transition={{ duration: 0.7, ease: EASE, delay: 0.38 }}
+						className="mt-8 flex flex-wrap items-center gap-3"
 					>
-						{/* Primary solid white pill (like 'Start building >' in screenshot) */}
+						{/* Primary solid white pill */}
 						<Magnetic strength={8}>
 							<button
 								type="button"
 								onClick={() => scrollToId("projects")}
-								className="pointer-events-auto group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-7 text-sm font-semibold text-black shadow-lg shadow-white/10 transition-all duration-300 hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98]"
+								className="pointer-events-auto group inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black shadow-lg shadow-white/10 transition-all duration-300 hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98]"
 							>
 								View projects
 								<ArrowUpRight
@@ -338,28 +340,28 @@ export default function HeroImmersive() {
 							</button>
 						</Magnetic>
 
-						{/* Secondary translucent pill (like 'Browse components' in screenshot) */}
+						{/* Secondary translucent pill */}
 						<Magnetic strength={8}>
 							<a
 								href={profile.resume}
 								download
-								className="pointer-events-auto inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 text-sm font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:scale-[1.02] active:scale-[0.98]"
+								className="pointer-events-auto inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 text-sm font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:scale-[1.02] active:scale-[0.98]"
 							>
 								<Download aria-hidden className="size-4" />
 								Download CV
 							</a>
 						</Magnetic>
 
-						{/* Copy email quick interaction */}
+						{/* Copy email pill */}
 						<button
 							type="button"
 							onClick={handleCopyEmail}
-							className="pointer-events-auto inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/10 bg-black/40 px-5 text-sm font-mono text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:bg-black/60 hover:text-white"
+							className="pointer-events-auto inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 text-xs font-mono text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:bg-black/60 hover:text-white"
 							title="Click to copy email address"
 						>
 							{copied ? (
 								<>
-									<Check className="size-4 text-[#6ee7b7]" />
+									<Check className="size-3.5 text-[#6ee7b7]" />
 									<span className="text-[#6ee7b7]">Copied!</span>
 								</>
 							) : (
@@ -371,12 +373,12 @@ export default function HeroImmersive() {
 						</button>
 					</motion.div>
 
-					{/* Social icons row for mobile & tablet */}
+					{/* Mobile socials row */}
 					<motion.div
 						initial={reduced ? false : { opacity: 0 }}
 						animate={{ opacity: 1 }}
-						transition={{ duration: 0.8, delay: 0.65 }}
-						className="mt-8 flex items-center gap-2 2xl:hidden"
+						transition={{ duration: 0.8, delay: 0.55 }}
+						className="mt-6 flex items-center gap-2 2xl:hidden"
 					>
 						{socials.map(({ href, label, icon: Icon }) => (
 							<a
@@ -386,7 +388,7 @@ export default function HeroImmersive() {
 								rel="noreferrer"
 								aria-label={label}
 								title={label}
-								className="pointer-events-auto flex size-10 items-center justify-center rounded-full border border-white/10 bg-black/30 text-white/70 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
+								className="pointer-events-auto flex size-9 items-center justify-center rounded-full border border-white/10 bg-black/30 text-white/70 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
 							>
 								<Icon aria-hidden className="size-4" />
 							</a>
@@ -419,32 +421,18 @@ export default function HeroImmersive() {
 			</div>
 
 			{/* ==================================================================== */}
-			{/* BOTTOM SCROLL INDICATOR                                              */}
+			{/* RIGHT-SIDE SCROLL INDICATOR (Uncluttered, perfectly balanced)         */}
 			{/* ==================================================================== */}
-			<div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center z-10">
+			<div className="pointer-events-none absolute bottom-12 right-10 lg:right-20 hidden md:flex flex-col items-center gap-2 z-10">
 				<motion.button
 					type="button"
 					onClick={() => scrollToId("about")}
 					initial={reduced ? false : { opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ delay: 1, duration: 0.6 }}
-					className="pointer-events-auto flex flex-col items-center gap-2 text-white/50 transition-colors hover:text-white"
+					className="pointer-events-auto flex flex-col items-center gap-2 text-white/40 transition-colors hover:text-white"
 					aria-label="Scroll to about section"
 				>
-					<span className="font-mono text-xs uppercase tracking-widest">
-						Explore
-					</span>
-					<motion.span
-						aria-hidden
-						animate={reduced ? undefined : { y: [0, 6, 0] }}
-						transition={{
-							duration: 2,
-							repeat: Number.POSITIVE_INFINITY,
-							ease: "easeInOut",
-						}}
-					>
-						<ArrowDown className="size-4 text-[#38bdf8]" />
-					</motion.span>
 				</motion.button>
 			</div>
 
