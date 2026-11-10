@@ -14,15 +14,23 @@ import type { ResumeChatMessages } from "#/lib/resume-ai-hook";
 import { useResumeChat } from "#/lib/resume-ai-hook";
 import { cn } from "#/lib/utils";
 
-function Messages({ messages }: { messages: ResumeChatMessages }) {
+function Messages({
+	messages,
+}: {
+	messages: ReadonlyArray<ResumeChatMessages[number]>;
+}) {
 	const messagesContainerRef = useRef<HTMLDivElement>(null);
+	const latestMessage = messages.at(-1);
+	const latestText = latestMessage?.parts
+		.map((part) => (part.type === "text" ? part.content : ""))
+		.join("");
 
 	useEffect(() => {
-		if (messagesContainerRef.current) {
+		if (messagesContainerRef.current && latestText !== undefined) {
 			messagesContainerRef.current.scrollTop =
 				messagesContainerRef.current.scrollHeight;
 		}
-	}, [messages]);
+	}, [latestText]);
 
 	if (!messages.length) {
 		return (
@@ -48,10 +56,13 @@ function Messages({ messages }: { messages: ResumeChatMessages }) {
 					key={id}
 					className={cn("py-3", role === "assistant" && "bg-muted/30")}
 				>
-					{parts.map((part, index) => {
+					{parts.map((part) => {
 						if (part.type === "text" && part.content) {
 							return (
-								<div key={index} className="flex items-start gap-3 px-4">
+								<div
+									key={`${id}-${part.content}`}
+									className="flex items-start gap-3 px-4"
+								>
 									{role === "assistant" ? (
 										<div className="size-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
 											<Bot className="size-4 text-primary" />
@@ -80,8 +91,6 @@ export const showResumeAssistant = new Store(false);
 
 export default function ResumeAssistant() {
 	const [isOpen, setIsOpen] = useState(false);
-	const { messages, sendMessage, isLoading, error } = useResumeChat();
-	const [input, setInput] = useState("");
 
 	// Sync with store for header control
 	useEffect(() => {
@@ -91,20 +100,27 @@ export default function ResumeAssistant() {
 		return () => sub.unsubscribe();
 	}, []);
 
-	const handleToggle = () => {
-		const newState = !isOpen;
-		setIsOpen(newState);
-		showResumeAssistant.setState(() => newState);
-	};
+	if (!isOpen) return null;
+
+	return (
+		<ResumeAssistantPanel
+			onClose={() => {
+				setIsOpen(false);
+				showResumeAssistant.setState(() => false);
+			}}
+		/>
+	);
+}
+
+function ResumeAssistantPanel({ onClose }: { onClose: () => void }) {
+	const { messages, sendMessage, isLoading, error } = useResumeChat();
+	const [input, setInput] = useState("");
 
 	const handleSend = () => {
-		if (input.trim()) {
-			sendMessage(input);
-			setInput("");
-		}
+		if (!input.trim()) return;
+		sendMessage(input);
+		setInput("");
 	};
-
-	if (!isOpen) return null;
 
 	const isOffline =
 		error?.message?.includes("fetch") || error?.message?.includes("network");
@@ -129,7 +145,7 @@ export default function ResumeAssistant() {
 				<Button
 					variant="ghost"
 					size="icon"
-					onClick={handleToggle}
+					onClick={onClose}
 					aria-label="Close"
 				>
 					<X className="size-4" />

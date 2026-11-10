@@ -1,9 +1,10 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import { type SceneMode, type SceneTarget } from "./SceneContext";
 import FloatingShapes from "./FloatingShapes";
+import PortraitOrbit from "./PortraitOrbit";
 import PortraitParticles from "./PortraitParticles";
+import type { SceneMode, SceneTarget } from "./SceneContext";
 
 interface Layout {
 	/** Horizontal anchor as a fraction of the viewport width. */
@@ -75,12 +76,13 @@ export default function SceneRig({
 
 	return (
 		<group ref={group} position={[0, 0, 0]}>
-			<PortraitParticles
-				count={particleCount}
+			<PortraitParticles count={particleCount} reduced={reduced} dark={dark} />
+			<PortraitOrbit accent={target.accent} reduced={reduced} />
+			<FloatingShapes
+				accent={target.accent}
 				reduced={reduced}
-				dark={dark}
+				opacity={dark ? 0.34 : 0.24}
 			/>
-			<FloatingShapes accent={target.accent} reduced={reduced} opacity={dark ? 0.34 : 0.24} />
 			{children}
 		</group>
 	);
