@@ -44,20 +44,33 @@ function useActiveSection(enabled: boolean): string {
 
 	useEffect(() => {
 		if (!enabled) return;
-		const ids = ["about", "experience", "projects", "skills", "certificates", "contact"];
+		const ids = ["top", "about", "experience", "projects", "skills", "certificates", "contact"];
+
+		const onScroll = () => {
+			if (window.scrollY < 220) {
+				setSection("top");
+			}
+		};
+		window.addEventListener("scroll", onScroll, { passive: true });
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries) {
-					if (entry.isIntersecting) setSection(entry.target.id);
+					if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+						setSection(entry.target.id);
+					}
 				}
 			},
-			{ rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+			{ rootMargin: "-20% 0px -30% 0px", threshold: [0.1, 0.4] },
 		);
 		for (const id of ids) {
 			const element = document.getElementById(id);
 			if (element) observer.observe(element);
 		}
-		return () => observer.disconnect();
+		return () => {
+			window.removeEventListener("scroll", onScroll);
+			observer.disconnect();
+		};
 	}, [enabled]);
 
 	return section;

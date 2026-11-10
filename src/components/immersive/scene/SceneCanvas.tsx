@@ -31,10 +31,10 @@ export default function SceneCanvas() {
 
 		if (typeof idleWindow.requestIdleCallback === "function") {
 			handle = idleWindow.requestIdleCallback(() => setMounted(true), {
-				timeout: 1400,
+				timeout: 350,
 			});
 		} else {
-			handle = window.setTimeout(() => setMounted(true), 700);
+			handle = window.setTimeout(() => setMounted(true), 120);
 		}
 
 		return () => {

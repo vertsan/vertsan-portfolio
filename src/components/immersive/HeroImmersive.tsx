@@ -44,7 +44,7 @@ export default function HeroImmersive() {
 			ref={sectionRef}
 			id="top"
 			aria-label="Introduction"
-			className="relative flex min-h-[100svh] items-center overflow-hidden pt-28 pb-16 sm:pt-32 lg:pt-24"
+			className="relative flex min-h-[100svh] items-center overflow-visible pt-28 pb-16 sm:pt-32 lg:pt-24"
 		>
 			{/* One soft glow anchored behind the copy. The portrait is the only
 			    other light source, so the hero stays quiet. */}

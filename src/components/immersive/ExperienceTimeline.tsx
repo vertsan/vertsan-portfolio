@@ -101,9 +101,9 @@ function TimelineCard({
 	return (
 		<motion.div
 			ref={cardRef}
-			initial={reduced ? false : { opacity: 0, y: 28 }}
+			initial={reduced ? false : { opacity: 0, y: 24 }}
 			whileInView={{ opacity: 1, y: 0 }}
-			viewport={{ once: true, margin: "-12% 0px" }}
+			viewport={{ once: true, amount: 0.05, margin: "0px 0px 40px 0px" }}
 			transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
 			className="relative pl-9 sm:pl-12"
 		>
@@ -227,7 +227,7 @@ export default function ExperienceTimeline() {
 			ref={sectionRef}
 			id="experience"
 			aria-labelledby="experience-heading"
-			className="relative overflow-hidden py-24 sm:py-32"
+			className="relative overflow-visible py-24 sm:py-32"
 		>
 			<Glow className="-left-52 top-1/4 size-[36rem] opacity-60" />
 

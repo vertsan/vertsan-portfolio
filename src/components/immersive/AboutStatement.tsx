@@ -19,7 +19,7 @@ export default function AboutStatement() {
 	const reduced = useReducedMotion();
 	const { scrollYProgress } = useScroll({
 		target: sectionRef,
-		offset: ["start 0.85", "end 0.55"],
+		offset: ["start 0.95", "end 0.35"],
 	});
 
 	useSceneSection(sectionRef, "about", "#6366f1");
@@ -29,7 +29,7 @@ export default function AboutStatement() {
 			ref={sectionRef}
 			id="about"
 			aria-labelledby="about-heading"
-			className="relative overflow-hidden py-24 sm:py-32"
+			className="relative overflow-visible py-24 sm:py-32"
 		>
 			<Glow className="-right-40 top-24 size-[32rem] opacity-70" />
 
@@ -62,10 +62,10 @@ export default function AboutStatement() {
 						/>
 
 						<motion.div
-							initial={reduced ? false : { opacity: 0, y: 18 }}
+							initial={reduced ? false : { opacity: 0, y: 16 }}
 							whileInView={{ opacity: 1, y: 0 }}
-							viewport={{ once: true, margin: "-10% 0px" }}
-							transition={{ duration: 0.8, delay: 0.15 }}
+							viewport={{ once: true, amount: 0.05, margin: "0px 0px 40px 0px" }}
+							transition={{ duration: 0.7, delay: 0.1 }}
 							className="mt-12 max-w-xl space-y-4 text-sm leading-relaxed text-[var(--i-muted)] sm:text-base"
 						>
 							<p>
