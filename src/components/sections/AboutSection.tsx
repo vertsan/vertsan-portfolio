@@ -40,17 +40,7 @@ export default function AboutSection({
 						aria-hidden
 						className="ui-hero-glow pointer-events-none absolute inset-x-0 top-0 h-[40rem]"
 					/>
-					<AsciiBackdrop
-						className="inset-x-0 top-0 h-[34rem] opacity-40 dark:opacity-50"
-						colors={["#1e1b4b", "#4338ca", "#818cf8", "#e0e7ff"]}
-						shape="horizon"
-						cellSize={20}
-						density={0.45}
-						glow={0.2}
-						gradientOpacity={0.45}
-						glyphOpacity={0.5}
-						speed={0.35}
-					/>
+					<AsciiBackdrop className="inset-x-0 top-0 z-0 h-48 md:h-64" />
 				</>
 			)}
 
