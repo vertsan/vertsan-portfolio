@@ -29,7 +29,7 @@ html[data-menu-open] {
 
 body {
   @apply m-0;
-  font-family: 'Maven Pro', sans-serif;
+  font-family: 'Inter Tight', 'Maven Pro', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -164,8 +164,16 @@ code {
 }
 
 @theme inline {
-  --font-sans: 'Maven Pro', sans-serif;
-  --font-heading: 'Geist', 'Maven Pro', sans-serif;
+  --font-sans: 'Inter Tight', 'Maven Pro', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', 'Inter Tight', 'Maven Pro', sans-serif;
+  --font-display: 'Space Grotesk', 'Inter Tight', 'Maven Pro', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-ink: #05070d;
+  --color-ink-2: #0a0f1a;
+  --color-paper: #eef1f7;
+  --color-indigo: #6366f1;
+  --color-teal: #2dd4bf;
+  --color-mint: #6ee7b7;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -783,3 +791,133 @@ code {
   }
 }
 
+
+/* ---------------------------------------------------------------------------
+   Immersive single-page layer
+   A dark-first surface for the home experience. Every value is a local custom
+   property so the theme toggle can flip the whole scene without re-styling any
+   component. Light mode maps to a soft paper canvas with the same accents.
+--------------------------------------------------------------------------- */
+.immersive {
+  --i-bg: #05070d;
+  --i-bg-soft: #080c16;
+  --i-fg: #eef1f7;
+  --i-muted: rgba(238, 241, 247, 0.62);
+  --i-subtle: rgba(238, 241, 247, 0.42);
+  --i-line: rgba(255, 255, 255, 0.08);
+  --i-line-strong: rgba(255, 255, 255, 0.16);
+  --i-card: rgba(255, 255, 255, 0.035);
+  --i-card-strong: rgba(255, 255, 255, 0.06);
+  --i-glow: rgba(99, 102, 241, 0.28);
+  --i-glow-2: rgba(45, 212, 191, 0.16);
+  --i-shadow: 0 40px 120px -60px rgba(0, 0, 0, 0.9);
+  color-scheme: dark;
+  background-color: var(--i-bg);
+  color: var(--i-fg);
+}
+
+.light .immersive {
+  --i-bg: #f4f6fb;
+  --i-bg-soft: #eef1f8;
+  --i-fg: #0a0c14;
+  --i-muted: rgba(10, 12, 20, 0.66);
+  --i-subtle: rgba(10, 12, 20, 0.46);
+  --i-line: rgba(10, 12, 20, 0.1);
+  --i-line-strong: rgba(10, 12, 20, 0.2);
+  --i-card: rgba(255, 255, 255, 0.62);
+  --i-card-strong: rgba(255, 255, 255, 0.86);
+  --i-glow: rgba(79, 70, 229, 0.14);
+  --i-glow-2: rgba(13, 148, 136, 0.12);
+  --i-shadow: 0 40px 120px -70px rgba(10, 12, 20, 0.35);
+  color-scheme: light;
+}
+
+@utility glass {
+  border: 1px solid var(--i-line);
+  background-color: var(--i-card);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border-radius: 24px;
+}
+
+@utility glass-strong {
+  border: 1px solid var(--i-line);
+  background-color: var(--i-card-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  border-radius: 24px;
+}
+
+@utility mono-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+@utility immersive-gradient-text {
+  background-image: linear-gradient(110deg, #818cf8 0%, #a5b4fc 28%, #2dd4bf 72%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.immersive :focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 3px;
+}
+
+/* Grain: one shared, non-interactive noise plate per immersive page. */
+.immersive-noise {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+.light .immersive-noise {
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+}
+
+/* Lenis: recommended base styles. Keeps native scroll semantics intact. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Horizontal gallery keeps its own scroll context on touch devices. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immersive *,
+  .immersive *::before,
+  .immersive *::after {
+    scroll-behavior: auto !important;
+  }
+}

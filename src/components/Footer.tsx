@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Eye, Github, Linkedin, Mail, Users } from "lucide-react";
+
+import { usePresence } from "../hooks/use-presence";
 
 const year = new Date().getFullYear();
 
@@ -20,7 +22,14 @@ const socialLinks = [
 	{ href: "mailto:itsanvert@gmail.com", label: "Email", icon: Mail },
 ];
 
+function formatCount(value: number | null): string {
+	if (value === null) return "—";
+	return value.toLocaleString("en-US");
+}
+
 export default function Footer() {
+	const { online, totalViews } = usePresence();
+
 	return (
 		<footer className="border-t border-border/40 bg-background">
 			<div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
@@ -65,8 +74,26 @@ export default function Footer() {
 					</div>
 				</div>
 
-				{/* Bottom bar */}
-				<div className="flex items-center justify-center border-t border-border/30 py-4">
+				{/* Bottom bar: live presence on the left, copyright on the right. */}
+				<div className="flex flex-col items-center justify-between gap-3 border-t border-border/30 py-4 sm:flex-row">
+					<div className="flex items-center gap-4 text-xs text-muted-foreground/70">
+						<span className="inline-flex items-center gap-1.5" title="Online now">
+							<span className="relative flex size-1.5" aria-hidden>
+								<span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+								<span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+							</span>
+							<Users aria-hidden className="size-3" />
+							<span className="tabular-nums">{formatCount(online)}</span>
+							<span className="sr-only">visitors online</span>
+						</span>
+
+						<span className="inline-flex items-center gap-1.5" title="Total views">
+							<Eye aria-hidden className="size-3" />
+							<span className="tabular-nums">{formatCount(totalViews)}</span>
+							<span className="sr-only">total page views</span>
+						</span>
+					</div>
+
 					<span className="text-xs text-muted-foreground/50">
 						&copy; {year} Vert San. All rights reserved.
 					</span>
