@@ -27,7 +27,7 @@ export default function HeroSection() {
 	}, []);
 
 	return (
-		<section className="relative w-full px-3 pt-3 sm:px-4 sm:pt-4">
+		<section className="relative w-full px-3 py-3 sm:px-4 sm:py-4">
 			<div className="relative overflow-hidden rounded-2xl bg-[#eef0f4] ring-1 ring-black/5 sm:rounded-3xl dark:bg-[#05070f] dark:ring-white/10">
 				{/* One soft glow behind the portrait — the only atmospheric effect. */}
 				<div
