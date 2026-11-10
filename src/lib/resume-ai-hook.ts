@@ -5,11 +5,17 @@ import {
 	useChat,
 } from "@tanstack/ai-react";
 
-const chatOptions = createChatClientOptions({
+// Default chat options for type inference
+const defaultChatOptions = createChatClientOptions({
 	connection: fetchServerSentEvents("/api/resume-chat"),
-	threadId: "resume-assistant",
 });
 
-export type ResumeChatMessages = InferChatMessages<typeof chatOptions>;
+export type ResumeChatMessages = InferChatMessages<typeof defaultChatOptions>;
 
-export const useResumeChat = () => useChat(chatOptions);
+export const useResumeChat = () => {
+	const chatOptions = createChatClientOptions({
+		connection: fetchServerSentEvents("/api/resume-chat"),
+	});
+
+	return useChat(chatOptions);
+};

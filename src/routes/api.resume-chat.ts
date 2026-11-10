@@ -85,7 +85,6 @@ CONTEXT: You are helping evaluate this candidate's qualifications for potential 
 
 					const stream = chat({
 						adapter,
-						threadId: "resume-assistant",
 						tools: [
 							getJobsBySkill,
 							getAllJobs,
@@ -101,18 +100,15 @@ CONTEXT: You are helping evaluate this candidate's qualifications for potential 
 					});
 
 					return toServerSentEventsResponse(stream, { abortController });
-				} catch (error: unknown) {
+				} catch (error: any) {
 					console.error("Resume chat error:", error);
-					if (
-						(error instanceof Error && error.name === "AbortError") ||
-						abortController.signal.aborted
-					) {
+					if (error.name === "AbortError" || abortController.signal.aborted) {
 						return new Response(null, { status: 499 });
 					}
 					return new Response(
 						JSON.stringify({
 							error: "Failed to process chat request",
-							message: error instanceof Error ? error.message : String(error),
+							message: error.message,
 						}),
 						{
 							status: 500,
