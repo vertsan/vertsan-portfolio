@@ -101,15 +101,18 @@ CONTEXT: You are helping evaluate this candidate's qualifications for potential 
 					});
 
 					return toServerSentEventsResponse(stream, { abortController });
-				} catch (error: any) {
+				} catch (error: unknown) {
 					console.error("Resume chat error:", error);
-					if (error.name === "AbortError" || abortController.signal.aborted) {
+					if (
+						(error instanceof Error && error.name === "AbortError") ||
+						abortController.signal.aborted
+					) {
 						return new Response(null, { status: 499 });
 					}
 					return new Response(
 						JSON.stringify({
 							error: "Failed to process chat request",
-							message: error.message,
+							message: error instanceof Error ? error.message : String(error),
 						}),
 						{
 							status: 500,

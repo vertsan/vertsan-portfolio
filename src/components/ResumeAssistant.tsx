@@ -26,11 +26,11 @@ function Messages({
 		.join("");
 
 	useEffect(() => {
-		if (messagesContainerRef.current) {
+		if (messagesContainerRef.current && latestText !== undefined) {
 			messagesContainerRef.current.scrollTop =
 				messagesContainerRef.current.scrollHeight;
 		}
-	}, [latestMessage?.id, latestText]);
+	}, [latestText]);
 
 	if (!messages.length) {
 		return (
