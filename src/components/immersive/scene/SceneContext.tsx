@@ -98,7 +98,7 @@ export function useSceneSection(
 	accent: string,
 ) {
 	const { setTarget } = useScene();
-	const inView = useInView(ref, { margin: "-45% 0px -45% 0px" });
+	const inView = useInView(ref, { margin: "-15% 0px -15% 0px", amount: 0.15 });
 
 	useEffect(() => {
 		if (inView) setTarget({ mode, accent });

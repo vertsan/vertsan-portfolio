@@ -119,7 +119,7 @@ export default function CertificatesMasonry() {
 			ref={sectionRef}
 			id="certificates"
 			aria-labelledby="certificates-heading"
-			className="relative overflow-hidden py-24 sm:py-32"
+			className="relative overflow-visible py-24 sm:py-32"
 		>
 			<Glow className="-right-40 bottom-10 size-[34rem] opacity-50" color="rgba(110,231,183,0.16)" />
 

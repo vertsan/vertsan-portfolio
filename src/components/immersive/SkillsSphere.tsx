@@ -100,7 +100,7 @@ export default function SkillsSphere() {
 			ref={sectionRef}
 			id="skills"
 			aria-labelledby="skills-heading"
-			className="relative overflow-hidden py-24 sm:py-32"
+			className="relative overflow-visible py-24 sm:py-32"
 		>
 			<Glow className="left-1/3 top-10 size-[32rem] opacity-50" color="rgba(167,139,250,0.2)" />
 

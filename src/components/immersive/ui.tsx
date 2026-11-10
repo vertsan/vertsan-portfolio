@@ -75,7 +75,7 @@ export function SectionLabel({
 	);
 }
 
-/** Mask reveal: content slides up from behind a hard edge. */
+/** Fluid reveal: content smoothly emerges without hard overflow clipping or blocking spans. */
 export function Reveal({
 	children,
 	delay = 0,
@@ -87,13 +87,13 @@ export function Reveal({
 }) {
 	const reduced = useReducedMotion();
 	return (
-		<span className={cn("block overflow-hidden pb-[0.08em]", className)}>
+		<span className={cn("inline-block overflow-visible align-top", className)}>
 			<motion.span
-				className="block"
-				initial={reduced ? false : { y: "115%" }}
-				whileInView={{ y: "0%" }}
-				viewport={{ once: true, margin: "-8% 0px -8% 0px" }}
-				transition={{ duration: 0.85, ease: EASE, delay }}
+				className="inline-block will-change-[transform,opacity]"
+				initial={reduced ? false : { opacity: 0, y: 16 }}
+				whileInView={{ opacity: 1, y: 0 }}
+				viewport={{ once: true, amount: 0.05, margin: "0px 0px 60px 0px" }}
+				transition={{ duration: 0.65, ease: EASE, delay }}
 			>
 				{children}
 			</motion.span>
@@ -105,8 +105,8 @@ export function Reveal({
 export function SplitText({
 	text,
 	className,
-	stagger = 0.055,
-	delay = 0.15,
+	stagger = 0.045,
+	delay = 0.1,
 }: {
 	text: string;
 	className?: string;
@@ -123,14 +123,14 @@ export function SplitText({
 					// biome-ignore lint/suspicious/noArrayIndexKey: characters are positional
 					key={`${char}-${index}`}
 					aria-hidden
-					className="inline-block overflow-hidden align-bottom"
+					className="inline-block align-bottom"
 				>
 					<motion.span
-						className="inline-block will-change-transform"
-						initial={reduced ? false : { y: "110%", opacity: 0 }}
-						animate={{ y: "0%", opacity: 1 }}
+						className="inline-block will-change-[transform,opacity]"
+						initial={reduced ? false : { y: 14, opacity: 0 }}
+						animate={{ y: 0, opacity: 1 }}
 						transition={{
-							duration: 0.9,
+							duration: 0.7,
 							ease: EASE,
 							delay: delay + index * stagger,
 						}}
@@ -143,7 +143,7 @@ export function SplitText({
 	);
 }
 
-/** Word-by-word opacity reveal tied to scroll progress. */
+/** Word-by-word opacity reveal tied to scroll progress. Words stay legible at 0.45 min opacity. */
 export function ScrollWords({
 	text,
 	progress,
@@ -158,7 +158,7 @@ export function ScrollWords({
 		<p className={cn("flex flex-wrap", className)}>
 			{words.map((word, index) => {
 				const start = index / words.length;
-				const end = Math.min(1, start + 1.6 / words.length);
+				const end = Math.min(1, start + 1.4 / words.length);
 				return (
 					<Word key={`${word}-${index}`} progress={progress} start={start} end={end}>
 						{word}
@@ -181,7 +181,8 @@ function Word({
 	end: number;
 }) {
 	const reduced = useReducedMotion();
-	const opacity = useTransform(progress, [start, end], [0.16, 1]);
+	// Base opacity is 0.45 so text is never washed out or invisible before scroll
+	const opacity = useTransform(progress, [start, end], [0.45, 1]);
 
 	return (
 		<span className="mr-[0.28em] inline-block">
