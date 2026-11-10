@@ -52,6 +52,12 @@ const THEMES = [
 		colors: ["#7c2d12", "#ea580c", "#fb923c", "#fef08a"],
 		accent: "#fb923c",
 	},
+	{
+		id: "day-sky",
+		name: "Day Sky",
+		colors: ["#dbeafe", "#a5f3fc", "#38bdf8", "#0ea5e9"],
+		accent: "#38bdf8",
+	},
 ];
 
 const SHAPES: Array<{ id: GradientShape; label: string; icon: string }> = [
@@ -72,6 +78,19 @@ export default function HeroImmersive() {
 	const [currentShape, setCurrentShape] = useState<GradientShape>("horizon");
 	const [themeIndex, setThemeIndex] = useState(0);
 	const [showControls, setShowControls] = useState(false);
+
+	// Set theme based on OS preference
+	useEffect(() => {
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleChange = (e: MediaQueryListEvent) => {
+			setThemeIndex(e.matches ? 0 : 4);
+		};
+		// Set initial theme
+		setThemeIndex(mediaQuery.matches ? 0 : 4);
+		// Listen for changes
+		mediaQuery.addEventListener("change", handleChange);
+		return () => mediaQuery.removeEventListener("change", handleChange);
+	}, []);
 
 	useSceneSection(sectionRef, "hero", THEMES[themeIndex].accent);
 
@@ -130,9 +149,9 @@ export default function HeroImmersive() {
 				{/* Smooth gradient fade towards the bottom so content has pristine contrast */}
 				<div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-[var(--i-bg)] via-[var(--i-bg)]/85 to-transparent" />
 
-				{/* Subtle side vignettes to frame the viewport */}
-				<div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[var(--i-bg)]/50 to-transparent" />
-				<div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[var(--i-bg)]/50 to-transparent" />
+				{/* Vignettes: stronger in light mode for better framing */}
+				<div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[var(--i-bg)] to-transparent opacity-50 dark:opacity-100" />
+				<div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[var(--i-bg)] to-transparent opacity-50 dark:opacity-100" />
 			</div>
 
 			{/* ==================================================================== */}
@@ -148,30 +167,32 @@ export default function HeroImmersive() {
 						transition={{ duration: 0.5, ease: EASE }}
 						className="flex flex-wrap items-center gap-2 sm:gap-2.5"
 					>
-						<span className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 py-1 backdrop-blur-md shadow-sm">
+						<span className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-zinc-900/10 bg-zinc-900/[0.03] px-3 py-1 backdrop-blur-md shadow-sm dark:border-white/10 dark:bg-black/50">
 							<span className="relative flex size-2">
-								<span className="absolute inline-flex size-full animate-ping rounded-full bg-[#6ee7b7] opacity-60" />
-								<span className="relative inline-flex size-2 rounded-full bg-[#6ee7b7]" />
+								<span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+								<span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
 							</span>
-							<span className="font-mono text-xs text-white/90">
+							<span className="font-mono text-xs text-zinc-800 dark:text-white/90">
 								{profile.availability}
 							</span>
 						</span>
 
-						<span className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-black/40 px-3 py-1 font-mono text-xs text-white/60 backdrop-blur-md">
-							<MapPin className="size-3 text-[#38bdf8]" aria-hidden />
+						<span className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-zinc-900/10 bg-zinc-900/[0.03] px-3 py-1 font-mono text-xs text-zinc-600 backdrop-blur-md dark:border-white/5 dark:bg-black/40 dark:text-white/60">
+							<MapPin className="size-3 text-sky-500" aria-hidden />
 							{profile.location}
 						</span>
 
 						{/* 3D Scene status */}
 						<span
-							className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-black/40 px-2.5 py-1 font-mono text-xs text-white/50 backdrop-blur-md"
+							className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-zinc-900/10 bg-zinc-900/[0.03] px-2.5 py-1 font-mono text-xs text-zinc-500 backdrop-blur-md dark:border-white/5 dark:bg-black/40 dark:text-white/50"
 							title={sceneReady ? "3D Scene ready" : "Loading 3D assets"}
 						>
 							<span
 								aria-hidden
 								className={`size-1.5 rounded-full ${
-									sceneReady ? "bg-[#6ee7b7]" : "animate-pulse bg-white/40"
+									sceneReady
+										? "bg-emerald-400"
+										: "animate-pulse bg-zinc-400 dark:bg-white/40"
 								}`}
 							/>
 							<span>{sceneReady ? "3D Ready" : "Loading 3D"}</span>
@@ -181,13 +202,13 @@ export default function HeroImmersive() {
 						<button
 							type="button"
 							onClick={() => setShowControls((prev) => !prev)}
-							className="pointer-events-auto group inline-flex items-center gap-1.5 rounded-full border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-3 py-1 font-mono text-xs text-[#a5d8ff] backdrop-blur-md transition-all hover:border-[#38bdf8]/60 hover:bg-[#38bdf8]/20"
+							className="pointer-events-auto group inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 font-mono text-xs text-sky-700 backdrop-blur-md transition-all hover:border-sky-500/60 hover:bg-sky-500/20 dark:text-sky-300 dark:border-[#38bdf8]/30 dark:bg-[#38bdf8]/10 dark:hover:border-[#38bdf8]/60 dark:hover:bg-[#38bdf8]/20"
 							aria-label="Toggle shader controls"
 							title="Customize the ASCII gradient shader"
 						>
-							<Sparkles className="size-3 text-[#38bdf8] transition-transform duration-300 group-hover:rotate-45" />
+							<Sparkles className="size-3 text-sky-500 transition-transform duration-300 group-hover:rotate-45 dark:text-[#38bdf8]" />
 							<span>ASCII Shader</span>
-							<span className="rounded bg-[#38bdf8]/20 px-1.5 py-0.2 text-[10px] uppercase font-bold text-white">
+							<span className="rounded bg-sky-500/20 px-1.5 py-0.2 text-[10px] uppercase font-bold text-sky-800 dark:bg-[#38bdf8]/20 dark:text-white">
 								{currentShape}
 							</span>
 						</button>
@@ -201,16 +222,16 @@ export default function HeroImmersive() {
 								animate={{ opacity: 1, height: "auto", y: 0 }}
 								exit={{ opacity: 0, height: 0, y: -8 }}
 								transition={{ duration: 0.35, ease: EASE }}
-								className="pointer-events-auto mt-3 overflow-hidden rounded-2xl border border-white/15 bg-black/80 p-4 backdrop-blur-xl shadow-2xl"
+								className="pointer-events-auto mt-3 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-100/80 p-4 backdrop-blur-xl shadow-2xl dark:border-white/15 dark:bg-black/80"
 							>
-								<div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+								<div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 pb-3 dark:border-white/10">
 									<div className="flex items-center gap-2">
-										<Terminal className="size-4 text-[#38bdf8]" />
-										<span className="font-mono text-xs font-semibold text-white">
+										<Terminal className="size-4 text-sky-500 dark:text-[#38bdf8]" />
+										<span className="font-mono text-xs font-semibold text-zinc-900 dark:text-white">
 											React Bits {"//"} GradientASCII Controls
 										</span>
 									</div>
-									<span className="font-mono text-[11px] text-white/50">
+									<span className="font-mono text-[11px] text-zinc-500 dark:text-white/50">
 										Click background to pulse wave • Move mouse to scramble
 									</span>
 								</div>
@@ -218,10 +239,10 @@ export default function HeroImmersive() {
 								<div className="mt-3 flex flex-wrap items-center gap-5">
 									{/* Shape Selector */}
 									<div className="flex items-center gap-2">
-										<span className="font-mono text-[11px] uppercase tracking-wider text-white/60">
+										<span className="font-mono text-[11px] uppercase tracking-wider text-zinc-600 dark:text-white/60">
 											Shape:
 										</span>
-										<div className="flex rounded-lg bg-white/5 p-0.5 border border-white/10">
+										<div className="flex rounded-lg bg-zinc-900/5 p-0.5 border border-zinc-900/10 dark:bg-white/5 dark:border-white/10">
 											{SHAPES.map((s) => (
 												<button
 													key={s.id}
@@ -229,8 +250,8 @@ export default function HeroImmersive() {
 													onClick={() => setCurrentShape(s.id)}
 													className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 font-mono text-xs transition-colors ${
 														currentShape === s.id
-															? "bg-[#38bdf8] text-black font-semibold shadow-sm"
-															: "text-white/70 hover:text-white"
+															? "bg-sky-500 text-white font-semibold shadow-sm dark:bg-[#38bdf8] dark:text-black"
+															: "text-zinc-700 hover:text-zinc-900 dark:text-white/70 dark:hover:text-white"
 													}`}
 												>
 													<span>{s.icon}</span>
@@ -242,10 +263,10 @@ export default function HeroImmersive() {
 
 									{/* Theme Selector */}
 									<div className="flex items-center gap-2">
-										<span className="font-mono text-[11px] uppercase tracking-wider text-white/60">
+										<span className="font-mono text-[11px] uppercase tracking-wider text-zinc-600 dark:text-white/60">
 											Palette:
 										</span>
-										<div className="flex rounded-lg bg-white/5 p-0.5 border border-white/10">
+										<div className="flex rounded-lg bg-zinc-900/5 p-0.5 border border-zinc-900/10 dark:bg-white/5 dark:border-white/10">
 											{THEMES.map((theme, idx) => (
 												<button
 													key={theme.id}
@@ -253,8 +274,8 @@ export default function HeroImmersive() {
 													onClick={() => setThemeIndex(idx)}
 													className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 font-mono text-xs transition-colors ${
 														themeIndex === idx
-															? "bg-white/20 text-white font-semibold shadow-sm"
-															: "text-white/60 hover:text-white"
+															? "bg-zinc-200 text-zinc-900 font-semibold shadow-sm dark:bg-white/20 dark:text-white"
+															: "text-zinc-600 hover:text-zinc-900 dark:text-white/60 dark:hover:text-white"
 													}`}
 												>
 													<span
@@ -276,7 +297,7 @@ export default function HeroImmersive() {
 						initial={reduced ? false : { opacity: 0, y: 18 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.7, ease: EASE, delay: 0.08 }}
-						className="mt-6 font-display text-[clamp(2.5rem,6.5vw,5.25rem)] font-bold leading-[0.98] tracking-[-0.04em] text-white"
+						className="mt-6 font-display text-[clamp(2.5rem,6.5vw,5.25rem)] font-bold leading-[0.98] tracking-[-0.04em] text-zinc-900 dark:text-white"
 					>
 						Building fast, immersive web &amp; mobile software.
 					</motion.h1>
@@ -288,10 +309,10 @@ export default function HeroImmersive() {
 						transition={{ duration: 0.7, ease: EASE, delay: 0.18 }}
 						className="mt-4 flex flex-wrap items-center gap-2.5"
 					>
-						<span className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#38bdf8]">
+						<span className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-wider text-sky-600 dark:text-[#38bdf8]">
 							{profile.name}
 						</span>
-						<span className="size-1 rounded-full bg-white/30" />
+						<span className="size-1 rounded-full bg-zinc-400 dark:bg-white/30" />
 						<div className="flex min-h-[1.5em] items-center">
 							<AnimatePresence mode="wait" initial={false}>
 								<motion.span
@@ -300,7 +321,7 @@ export default function HeroImmersive() {
 									animate={{ opacity: 1, y: 0 }}
 									exit={reduced ? undefined : { opacity: 0, y: -6 }}
 									transition={{ duration: 0.35, ease: EASE }}
-									className="font-mono text-xs sm:text-sm text-white/80"
+									className="font-mono text-xs sm:text-sm text-zinc-700 dark:text-white/80"
 								>
 									{role}
 								</motion.span>
@@ -313,7 +334,7 @@ export default function HeroImmersive() {
 						initial={reduced ? false : { opacity: 0, y: 14 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.7, ease: EASE, delay: 0.28 }}
-						className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-white/70 sm:text-base lg:text-lg font-normal"
+						className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-zinc-600 sm:text-base lg:text-lg font-normal dark:text-white/70"
 					>
 						{profile.statement}
 					</motion.p>
@@ -330,7 +351,7 @@ export default function HeroImmersive() {
 							<button
 								type="button"
 								onClick={() => scrollToId("projects")}
-								className="pointer-events-auto group inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black shadow-lg shadow-white/10 transition-all duration-300 hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98]"
+								className="pointer-events-auto group inline-flex h-11 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 text-sm font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-300 hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-black dark:shadow-white/10 dark:hover:bg-white/95"
 							>
 								View projects
 								<ArrowUpRight
@@ -345,7 +366,7 @@ export default function HeroImmersive() {
 							<a
 								href={profile.resume}
 								download
-								className="pointer-events-auto inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 text-sm font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:scale-[1.02] active:scale-[0.98]"
+								className="pointer-events-auto inline-flex h-11 items-center justify-center gap-2 rounded-full border border-zinc-900/15 bg-zinc-900/[0.05] px-5 text-sm font-medium text-zinc-800 backdrop-blur-md transition-all duration-300 hover:border-zinc-900/30 hover:bg-zinc-900/10 hover:scale-[1.02] active:scale-[0.98] dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:border-white/40 dark:hover:bg-white/15"
 							>
 								<Download aria-hidden className="size-4" />
 								Download CV
@@ -356,17 +377,17 @@ export default function HeroImmersive() {
 						<button
 							type="button"
 							onClick={handleCopyEmail}
-							className="pointer-events-auto inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 text-xs font-mono text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:bg-black/60 hover:text-white"
+							className="pointer-events-auto inline-flex h-11 items-center justify-center gap-2 rounded-full border border-zinc-900/10 bg-zinc-900/[0.03] px-4 font-mono text-xs text-zinc-700 backdrop-blur-md transition-colors hover:border-zinc-900/25 hover:bg-zinc-900/5 hover:text-zinc-900 dark:border-white/10 dark:bg-black/40 dark:text-white/80 dark:hover:border-white/25 dark:hover:bg-black/60 dark:hover:text-white"
 							title="Click to copy email address"
 						>
 							{copied ? (
 								<>
-									<Check className="size-3.5 text-[#6ee7b7]" />
-									<span className="text-[#6ee7b7]">Copied!</span>
+									<Check className="size-3.5 text-emerald-500" />
+									<span className="text-emerald-500">Copied!</span>
 								</>
 							) : (
 								<>
-									<Copy className="size-3.5 text-white/50" />
+									<Copy className="size-3.5 text-zinc-500 dark:text-white/50" />
 									<span>{profile.email}</span>
 								</>
 							)}
@@ -388,9 +409,9 @@ export default function HeroImmersive() {
 								rel="noreferrer"
 								aria-label={label}
 								title={label}
-								className="pointer-events-auto flex size-9 items-center justify-center rounded-full border border-white/10 bg-black/30 text-white/70 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
+								className="pointer-events-auto flex size-9 items-center justify-center rounded-full border border-zinc-900/10 bg-zinc-900/[0.03] text-zinc-600 backdrop-blur-md transition-colors hover:border-zinc-900/20 hover:bg-zinc-900/5 hover:text-zinc-900 dark:border-white/10 dark:bg-black/30 dark:text-white/70 dark:hover:border-white/30 dark:hover:bg-white/10 dark:hover:text-white"
 							>
-								<Icon aria-hidden className="size-4" />
+								<Icon className="size-4" />
 							</a>
 						))}
 					</motion.div>
@@ -400,39 +421,46 @@ export default function HeroImmersive() {
 			{/* ==================================================================== */}
 			{/* FIXED DESKTOP SOCIAL RAIL                                            */}
 			{/* ==================================================================== */}
-			<div className="pointer-events-none fixed left-6 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-5 2xl:flex">
-				{socials.map(({ href, label, icon: Icon }) => (
-					<a
-						key={label}
-						href={href}
-						target={href.startsWith("mailto:") ? undefined : "_blank"}
-						rel="noreferrer"
-						aria-label={label}
-						title={label}
-						className="pointer-events-auto flex size-10 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white/70 backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-white/10 hover:text-white"
-					>
-						<Icon aria-hidden className="size-4" />
-					</a>
-				))}
-				<span
-					aria-hidden
-					className="h-16 w-px bg-gradient-to-b from-white/20 to-transparent"
-				/>
-			</div>
+			<motion.div
+				initial={{ opacity: 0, x: -20 }}
+				animate={{ opacity: 1, x: 0 }}
+				transition={{ duration: 0.8, delay: 0.6 }}
+				className="pointer-events-auto absolute top-1/2 left-6 z-20 hidden -translate-y-1/2 2xl:flex"
+			>
+				<div className="flex flex-col gap-2 rounded-full border border-zinc-900/10 bg-zinc-900/[0.03] p-1 backdrop-blur-md dark:border-white/10 dark:bg-black/50">
+					{socials.map(({ href, label, icon: Icon }) => (
+						<a
+							key={label}
+							href={href}
+							target={href.startsWith("mailto:") ? undefined : "_blank"}
+							rel="noreferrer"
+							aria-label={label}
+							title={label}
+							className="flex size-9 items-center justify-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+						>
+							<Icon className="size-4" />
+						</a>
+					))}
+				</div>
+			</motion.div>
 
 			{/* ==================================================================== */}
-			{/* RIGHT-SIDE SCROLL INDICATOR (Uncluttered, perfectly balanced)         */}
+			{/* SCROLL DOWN INDICATOR                                                */}
 			{/* ==================================================================== */}
-			<div className="pointer-events-none absolute bottom-12 right-10 lg:right-20 hidden md:flex flex-col items-center gap-2 z-10">
+			<div className="pointer-events-none absolute inset-x-0 bottom-12 z-20 flex justify-center">
 				<motion.button
 					type="button"
 					onClick={() => scrollToId("about")}
-					initial={reduced ? false : { opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ delay: 1, duration: 0.6 }}
-					className="pointer-events-auto flex flex-col items-center gap-2 text-white/40 transition-colors hover:text-white"
-					aria-label="Scroll to about section"
+					aria-label="Scroll down"
+					className="pointer-events-auto flex flex-col items-center gap-1 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-white/60 dark:hover:text-white"
+					initial={{ opacity: 0, y: -10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.5, ease: EASE, delay: 1.2 }}
 				>
+					<span className="font-mono text-[11px] tracking-widest uppercase [writing-mode:vertical-rl]">
+						Scroll
+					</span>
+					<span className="mt-2 h-10 w-px bg-zinc-400/50" />
 				</motion.button>
 			</div>
 

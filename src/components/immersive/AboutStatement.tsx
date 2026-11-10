@@ -60,11 +60,25 @@ function IlluminatedWord({
 	const start = (index / total) * 0.75;
 	const end = Math.min(1, start + 0.2);
 
+	// Theming for end color
+	const [endColor, setEndColor] = useState("rgb(24 24 27)"); // zinc-900 for light mode default
+	useEffect(() => {
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleChange = (e: MediaQueryListEvent) => {
+			setEndColor(e.matches ? "rgb(255 255 255)" : "rgb(24 24 27)");
+		};
+		// Set initial color
+		setEndColor(mediaQuery.matches ? "rgb(255 255 255)" : "rgb(24 24 27)");
+		// Listen for changes
+		mediaQuery.addEventListener("change", handleChange);
+		return () => mediaQuery.removeEventListener("change", handleChange);
+	}, []);
+
 	const opacity = useTransform(progress, [start, end], [0.38, 1]);
 	const color = useTransform(
 		progress,
 		[start, (start + end) / 2, end],
-		["#64748b", "#38bdf8", "#ffffff"],
+		["rgb(100 116 139)", "rgb(56 189 248)", endColor],
 	);
 
 	return (
@@ -181,7 +195,7 @@ export default function AboutStatement() {
 								<SectionLabel>01 {"//"} About &amp; Philosophy</SectionLabel>
 								<h2
 									id="about-heading"
-									className="mt-4 font-display text-4xl font-bold leading-[1.04] tracking-[-0.035em] sm:text-5xl lg:text-[3.25rem] text-white"
+									className="mt-4 font-display text-4xl font-bold leading-[1.04] tracking-[-0.035em] sm:text-5xl lg:text-[3.25rem] text-zinc-900 dark:text-white"
 								>
 									Quiet systems.
 									<span className="block mt-1 bg-gradient-to-r from-[#818cf8] via-[#2dd4bf] to-[#6ee7b7] bg-clip-text text-transparent">
@@ -190,9 +204,9 @@ export default function AboutStatement() {
 								</h2>
 							</div>
 
-							<p className="text-sm leading-relaxed text-white/70 max-w-sm">
+							<p className="text-sm leading-relaxed text-zinc-600 dark:text-white/70 max-w-sm">
 								Software engineer based in{" "}
-								<span className="text-white font-medium">
+								<span className="font-medium text-zinc-900 dark:text-white">
 									{profile.location}
 								</span>
 								. Architecting clean architectures that hold up under heavy
@@ -201,13 +215,13 @@ export default function AboutStatement() {
 
 							{/* Live Location & Local Time Pill */}
 							<div className="flex flex-wrap items-center gap-2 pt-1">
-								<span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-white/80 backdrop-blur-md">
-									<MapPin className="size-3 text-[#38bdf8]" aria-hidden />
+								<span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-900/10 bg-zinc-900/5 px-3 py-1 font-mono text-xs text-zinc-700 backdrop-blur-md dark:border-white/10 dark:bg-white/5 dark:text-white/80">
+									<MapPin className="size-3 text-sky-500" aria-hidden />
 									{profile.location}
 								</span>
 								{timeString && (
-									<span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-white/60 backdrop-blur-md">
-										<Clock className="size-3 text-[#2dd4bf]" aria-hidden />
+									<span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-900/10 bg-zinc-900/5 px-3 py-1 font-mono text-xs text-zinc-600 backdrop-blur-md dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+										<Clock className="size-3 text-teal-400" aria-hidden />
 										{timeString}
 									</span>
 								)}
@@ -215,23 +229,23 @@ export default function AboutStatement() {
 
 							{/* Core Engineering Principles Mini-Stack */}
 							<div className="space-y-2.5 pt-3">
-								<p className="font-mono text-[11px] uppercase tracking-wider text-white/40">
+								<p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500 dark:text-white/40">
 									Core Principles:
 								</p>
 								<div className="grid gap-2">
 									{principles.map(({ icon: Icon, title, desc }) => (
 										<div
 											key={title}
-											className="group flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.03] p-3 transition-colors hover:border-white/15 hover:bg-white/[0.06]"
+											className="group flex items-start gap-3 rounded-2xl border border-zinc-900/5 bg-zinc-100/50 p-3 transition-colors hover:border-zinc-900/10 hover:bg-zinc-100 dark:border-white/5 dark:bg-white/[0.03] dark:hover:border-white/15 dark:hover:bg-white/[0.06]"
 										>
-											<div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-black/40 text-[#38bdf8]">
+											<div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg border border-zinc-900/10 bg-zinc-900/5 text-sky-500 dark:border-white/10 dark:bg-black/40">
 												<Icon className="size-3.5" />
 											</div>
 											<div>
-												<p className="font-display text-xs font-semibold text-white/90">
+												<p className="font-display text-xs font-semibold text-zinc-800 dark:text-white/90">
 													{title}
 												</p>
-												<p className="text-[11px] leading-relaxed text-white/50">
+												<p className="text-[11px] leading-relaxed text-zinc-600 dark:text-white/50">
 													{desc}
 												</p>
 											</div>
@@ -246,19 +260,19 @@ export default function AboutStatement() {
 					<div className="col-span-12 lg:col-span-7 flex flex-col justify-between">
 						<div>
 							{/* Reading Status Pill */}
-							<div className="flex items-center justify-between pb-4 border-b border-white/10">
-								<span className="font-mono text-[11px] uppercase tracking-wider text-white/50 flex items-center gap-1.5">
-									<Sparkles className="size-3 text-[#38bdf8]" />
+							<div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-white/10">
+								<span className="font-mono text-[11px] uppercase tracking-wider text-zinc-500 dark:text-white/50 flex items-center gap-1.5">
+									<Sparkles className="size-3 text-sky-500" />
 									Statement of craft
 								</span>
 								<span
 									className={`font-mono text-xs transition-colors duration-300 flex items-center gap-1.5 ${
-										revealDone ? "text-[#6ee7b7]" : "text-white/40"
+										revealDone ? "text-emerald-400" : "text-zinc-500 dark:text-white/40"
 									}`}
 								>
 									{revealDone ? (
 										<>
-											<CheckCircle2 className="size-3.5 text-[#6ee7b7]" />
+											<CheckCircle2 className="size-3.5 text-emerald-400" />
 											Ready to scroll below
 										</>
 									) : (
@@ -269,7 +283,7 @@ export default function AboutStatement() {
 
 							{/* Large Illuminated Statement */}
 							<div ref={textRef} className="pt-6">
-								<p className="flex flex-wrap font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-medium leading-[1.28] tracking-[-0.025em]">
+								<p className="flex flex-wrap font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-medium leading-[1.28] tracking-[-0.025em] text-zinc-900 dark:text-white">
 									{words.map((word, index) => (
 										<IlluminatedWord
 											// biome-ignore lint/suspicious/noArrayIndexKey: words in statement are ordered by index
@@ -289,19 +303,19 @@ export default function AboutStatement() {
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, amount: 0.1 }}
 								transition={{ duration: 0.6, ease: EASE }}
-								className="mt-10 rounded-3xl border border-white/10 bg-black/40 p-6 sm:p-8 backdrop-blur-xl shadow-xl space-y-4"
+								className="mt-10 rounded-3xl border border-zinc-200 bg-zinc-100/80 p-6 sm:p-8 backdrop-blur-xl shadow-xl space-y-4 dark:border-white/10 dark:bg-black/40"
 							>
-								<div className="flex items-center gap-2 pb-2 text-[#38bdf8] font-mono text-xs font-semibold">
+								<div className="flex items-center gap-2 pb-2 text-sky-500 font-mono text-xs font-semibold">
 									<Terminal className="size-4" />
 									<span>Engineering Methodology</span>
 								</div>
-								<p className="text-sm leading-relaxed text-white/75 sm:text-base">
+								<p className="text-sm leading-relaxed text-zinc-700 sm:text-base dark:text-white/75">
 									I care deeply about the unglamorous parts: strict type
 									boundaries, honest loading states, intuitive keyboard
 									navigation, and database indexes that keep queries blazing
 									fast even as tables swell into the millions.
 								</p>
-								<p className="text-sm leading-relaxed text-white/75 sm:text-base">
+								<p className="text-sm leading-relaxed text-zinc-700 sm:text-base dark:text-white/75">
 									Most of my day is spent connecting ambitious visual designs
 									with rock-solid backend APIs, hardening security, tuning
 									micro-interactions, and testing edge cases before they ever
@@ -319,17 +333,17 @@ export default function AboutStatement() {
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true }}
 							transition={{ delay: 0.2, duration: 0.5 }}
-							className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4 backdrop-blur-md"
+							className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-zinc-100/80 p-4 backdrop-blur-md dark:border-white/10 dark:bg-white/[0.02]"
 						>
 							<div className="flex items-center gap-3">
-								<span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#818cf8]/15 text-[#818cf8] border border-[#818cf8]/30">
+								<span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 dark:bg-[#818cf8]/15 dark:text-[#818cf8] dark:border-[#818cf8]/30">
 									<Cpu className="size-4" />
 								</span>
 								<div>
-									<p className="font-display text-sm font-semibold text-white">
+									<p className="font-display text-sm font-semibold text-zinc-900 dark:text-white">
 										Next: Experience &amp; Career
 									</p>
-									<p className="font-mono text-[11px] text-white/50">
+									<p className="font-mono text-[11px] text-zinc-500 dark:text-white/50">
 										Detailed timeline with metrics, tech stacks &amp; impact
 									</p>
 								</div>
@@ -338,10 +352,10 @@ export default function AboutStatement() {
 							<button
 								type="button"
 								onClick={() => scrollToId("experience")}
-								className="group inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-black shadow-lg shadow-white/10 transition-all duration-300 hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98]"
+								className="group inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-300 hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-black dark:shadow-white/10 dark:hover:bg-white/95"
 							>
 								<span>Scroll to Experience</span>
-								<ArrowDown className="size-3.5 transition-transform duration-300 group-hover:translate-y-0.5 text-[#6366f1]" />
+								<ArrowDown className="size-3.5 transition-transform duration-300 group-hover:translate-y-0.5 text-indigo-400 dark:text-[#6366f1]" />
 							</button>
 						</motion.div>
 					</div>
@@ -353,36 +367,36 @@ export default function AboutStatement() {
 				<div className="mt-20 sm:mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					{stats.map((stat, i) => (
 						<TiltCard key={stat.label} max={6} className="h-full">
-							<div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-black/40 p-6 backdrop-blur-xl transition-all duration-500 hover:border-white/25 hover:bg-black/60 shadow-lg">
+							<div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100/80 p-6 backdrop-blur-xl transition-all duration-500 hover:border-zinc-300 hover:bg-zinc-100 shadow-lg dark:border-white/10 dark:bg-black/40 dark:hover:border-white/25 dark:hover:bg-black/60">
 								{/* Top tag */}
 								<div className="flex items-center justify-between">
-									<span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/60">
+									<span className="rounded-full border border-zinc-900/10 bg-zinc-900/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
 										{stat.tag}
 									</span>
-									<span className="font-mono text-[10px] text-white/30">
+									<span className="font-mono text-[10px] text-zinc-400 dark:text-white/30">
 										0{i + 1}
 									</span>
 								</div>
 
 								{/* Metric CountUp */}
 								<div className="my-6">
-									<p className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white group-hover:text-[#38bdf8] transition-colors duration-300">
+									<p className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-zinc-900 group-hover:text-sky-500 transition-colors duration-300 dark:text-white dark:group-hover:text-[#38bdf8]">
 										<CountUp value={stat.value} suffix={stat.suffix} />
 									</p>
-									<p className="font-mono text-xs uppercase tracking-wider text-white/80 mt-2 font-medium">
+									<p className="font-mono text-xs uppercase tracking-wider text-zinc-700 mt-2 font-medium dark:text-white/80">
 										{stat.label}
 									</p>
 								</div>
 
 								{/* Description footer */}
-								<p className="text-xs leading-relaxed text-white/50 border-t border-white/5 pt-3">
+								<p className="text-xs leading-relaxed text-zinc-600 border-t border-zinc-200 pt-3 dark:text-white/50 dark:border-white/5">
 									{stat.desc}
 								</p>
 
 								{/* Subtle corner glow on hover */}
 								<span
 									aria-hidden
-									className="pointer-events-none absolute -right-12 -bottom-12 size-32 rounded-full bg-gradient-to-br from-[#38bdf8]/20 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+									className="pointer-events-none absolute -right-12 -bottom-12 size-32 rounded-full bg-gradient-to-br from-sky-500/20 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 dark:from-[#38bdf8]/20"
 								/>
 							</div>
 						</TiltCard>
