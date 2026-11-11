@@ -1,7 +1,9 @@
 ﻿import AboutHero from "#/components/about/AboutHero";
 import BioCard from "#/components/about/BioCard";
 import PortraitCard from "#/components/about/PortraitCard";
-import AsciiBackdrop from "#/components/ui/ascii-backdrop";
+import GradientASCII from "#/components/GradientASCII";
+import { ASCII_FADE_MASK, GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
+import { useIsDark } from "#/lib/useIsDark";
 import { cn } from "#/lib/utils";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
@@ -26,6 +28,8 @@ export default function AboutSection({
 	/** Home already tells this story inside the hero. */
 	hideIntro?: boolean;
 }) {
+	const isDark = useIsDark();
+
 	return (
 		<section
 			id="about"
@@ -38,18 +42,35 @@ export default function AboutSection({
 				<>
 					<div
 						aria-hidden
+						className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] overflow-hidden opacity-35 dark:opacity-45"
+						style={ASCII_FADE_MASK}
+					>
+						<GradientASCII
+							colors={GRADIENT_ASCII_COLORS}
+							shape="horizon"
+							cellSize={18}
+							density={0.8}
+							glyphOpacity={0.85}
+							gradientOpacity={0.9}
+							glow={0.2}
+							softness={0.5}
+							scale={1}
+							flow={0.5}
+							speed={0.4}
+							flicker={0.2}
+							depthOfField={0}
+							grain={0.08}
+							variation={0}
+							mouseInteraction
+							clickEffect="wave"
+							intro={false}
+							lightMode={!isDark}
+							className="size-full"
+						/>
+					</div>
+					<div
+						aria-hidden
 						className="ui-hero-glow pointer-events-none absolute inset-x-0 top-0 h-[40rem]"
-					/>
-					<AsciiBackdrop
-						className="inset-x-0 top-0 h-[34rem] opacity-40 dark:opacity-50"
-						colors={["#1e1b4b", "#4338ca", "#818cf8", "#e0e7ff"]}
-						shape="horizon"
-						cellSize={20}
-						density={0.45}
-						glow={0.2}
-						gradientOpacity={0.45}
-						glyphOpacity={0.5}
-						speed={0.35}
 					/>
 				</>
 			)}

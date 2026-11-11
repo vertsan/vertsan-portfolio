@@ -5,14 +5,28 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { createLogger, defineConfig } from "vite";
 
-const isIgnorableAbortError = (msg: string): boolean =>
-	/AbortError/.test(msg) && /This operation was aborted/.test(msg);
+const isIgnorableAbortError = (
+	msg: unknown,
+	options?: Record<string, unknown>,
+): boolean => {
+	const str = `${msg} ${
+		options?.error
+			? (options.error as Error).stack || (options.error as Error).message
+			: ""
+	}`;
+	return (
+		(/AbortError/.test(str) && /This operation was aborted/.test(str)) ||
+		/aborted/i.test(str) ||
+		/ECONNRESET/i.test(str) ||
+		/abortIncoming/i.test(str)
+	);
+};
 
 const baseLogger = createLogger("info");
 const customLogger = {
 	...baseLogger,
 	error: (msg: string, options?: Record<string, unknown>) => {
-		if (isIgnorableAbortError(msg)) return;
+		if (isIgnorableAbortError(msg, options)) return;
 		baseLogger.error(msg, options);
 	},
 };

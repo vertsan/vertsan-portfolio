@@ -16,7 +16,7 @@ export default function SectionHeading({
 	className,
 }: SectionHeadingProps) {
 	return (
-		<div className={cn("section-heading", className)} data-reveal>
+		<div className={cn("section-heading", className)} data-reveal-state="done">
 			{eyebrow && <span className="section-eyebrow">{eyebrow}</span>}
 			<h2
 				className={cn(
