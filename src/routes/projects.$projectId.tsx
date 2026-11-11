@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { marked } from "marked";
 import { useEffect, useMemo, useState } from "react";
-import AsciiBackdrop from "#/components/ui/ascii-backdrop";
+import GradientASCII from "#/components/GradientASCII";
 import { Badge } from "#/components/ui/badge";
 import {
 	Breadcrumb,
@@ -21,6 +21,8 @@ import {
 } from "#/components/ui/breadcrumb";
 import { Button } from "#/components/ui/button";
 import { Skeleton } from "#/components/ui/skeleton";
+import { ASCII_FADE_MASK, GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
+import { useIsDark } from "#/lib/useIsDark";
 import { getCache, setCache } from "#/lib/useLiveContent";
 import "#/lib/markdown";
 
@@ -47,6 +49,7 @@ export const Route = createFileRoute("/projects/$projectId")({
 
 function ProjectDetail() {
 	const { projectId } = Route.useParams();
+	const isDark = useIsDark();
 
 	const [project, setProject] = useState<Project | undefined>(() => {
 		const cached = getCache<Project>("projects");
@@ -88,10 +91,48 @@ function ProjectDetail() {
 		[project?.content],
 	);
 
+	const backdrop = (
+		<>
+			<div
+				aria-hidden
+				className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[100svh] overflow-hidden opacity-30 dark:opacity-45"
+				style={ASCII_FADE_MASK}
+			>
+				<GradientASCII
+					colors={GRADIENT_ASCII_COLORS}
+					shape="horizon"
+					cellSize={18}
+					density={0.8}
+					glyphOpacity={0.85}
+					gradientOpacity={0.9}
+					glow={0.2}
+					softness={0.5}
+					scale={1}
+					flow={0.5}
+					speed={0.4}
+					flicker={0.2}
+					depthOfField={0}
+					grain={0.08}
+					variation={0}
+					mouseInteraction
+					clickEffect="wave"
+					intro={false}
+					lightMode={!isDark}
+					className="size-full"
+				/>
+			</div>
+			<div
+				aria-hidden
+				className="pointer-events-none absolute inset-x-0 top-0 z-0 h-72 bg-gradient-to-b from-background/70 via-background/20 to-transparent"
+			/>
+		</>
+	);
+
 	if (loading) {
 		return (
-			<main className="relative min-h-screen">
-				<div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24">
+			<main className="relative min-h-screen overflow-hidden">
+				{backdrop}
+				<div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24">
 					<div className="mb-10 sm:mb-12">
 						<Skeleton className="h-4 w-48" />
 					</div>
@@ -146,7 +187,7 @@ function ProjectDetail() {
 
 	return (
 		<main className="relative min-h-screen overflow-hidden">
-			<AsciiBackdrop className="inset-x-0 top-0 z-0 h-48 md:h-64" />
+			{backdrop}
 			<div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24">
 				<nav className="flex items-center justify-between mb-10 sm:mb-12">
 					<Breadcrumb className="hidden sm:flex">

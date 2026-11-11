@@ -540,36 +540,26 @@ code {
 
 /* ---------------------------------------------------------------------------
    Scroll reveal
-   Elements opt in with `data-reveal`. A single observer (ScrollReveal) adds
-   `.reveal-init` before paint and swaps it for `.reveal-in` once the element
-   enters the viewport, producing a smooth, staggered entrance. An animation is
-   used (rather than a transition) so pre-existing hover transitions such as
-   `transition-all` on cards keep working without a stagger delay.
+   Elements opt in with `data-reveal`. The hidden state lives entirely in CSS,
+   so the server-rendered markup already matches the client render and nothing
+   is mutated before hydration. ScrollReveal animates elements with the Web
+   Animations API once they enter the viewport; because that never touches a
+   React-managed attribute it cannot cause a hydration mismatch.
+
+   `translate` is animated instead of `transform` so hover transforms on cards
+   keep working. The `scripting` query keeps content visible when JS is off.
 --------------------------------------------------------------------------- */
-[data-reveal] {
-  will-change: opacity, transform;
-}
-
-[data-reveal].reveal-init {
-  opacity: 0;
-  transform: translate3d(0, var(--reveal-y, 22px), 0);
-}
-
-[data-reveal].reveal-in {
-  animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--reveal-delay, 0ms);
-  will-change: auto;
-}
-
-@keyframes reveal-in {
-  from {
+@media (scripting: enabled) {
+  [data-reveal] {
     opacity: 0;
-    transform: translate3d(0, var(--reveal-y, 22px), 0);
+    translate: 0 var(--reveal-y, 22px);
   }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+}
+
+/* Runtime escape hatch for reduced motion / missing IntersectionObserver. */
+.reveal-off [data-reveal] {
+  opacity: 1;
+  translate: none;
 }
 
 /* ---------------------------------------------------------------------------
@@ -745,11 +735,7 @@ code {
 .about-shell [data-reveal],
 .hero-shell [data-reveal] {
   --reveal-y: 12px;
-}
-
-.about-shell [data-reveal].reveal-in,
-.hero-shell [data-reveal].reveal-in {
-  animation-duration: 0.5s;
+  --reveal-duration: 500ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -768,13 +754,11 @@ code {
 
 /* Respect users who prefer reduced motion: no entrance animations at all. */
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal].reveal-init {
-    opacity: 1;
-    transform: none;
-  }
-
-  [data-reveal].reveal-in {
-    animation: none !important;
+  @media (scripting: enabled) {
+    [data-reveal] {
+      opacity: 1;
+      translate: none;
+    }
   }
 
   .animate-page-enter {

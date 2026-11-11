@@ -1,6 +1,7 @@
 import GradientASCII, {
 	type GradientASCIIProps,
 } from "#/components/GradientASCII";
+import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
 
 interface AsciiBackdropProps {
@@ -40,11 +41,7 @@ export default function AsciiBackdrop({
 	fade = true,
 }: AsciiBackdropProps) {
 	const isDark = useIsDark();
-	const palette =
-		colors ??
-		(isDark
-			? ["#1e3fd8", "#f6f8ff", "#a5d8ff", "#38bdf8"]
-			: ["#1e3fd8", "#0b0e17", "#38bdf8", "#a5d8ff"]);
+	const palette = colors ?? GRADIENT_ASCII_COLORS;
 
 	return (
 		<div

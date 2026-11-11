@@ -975,7 +975,14 @@ const GradientASCII = ({
 			[field, halo, blur, composite].forEach((item) => {
 				gl.deleteProgram(item.program);
 			});
-			gl.getExtension("WEBGL_lose_context")?.loseContext();
+			// React can run this cleanup and then re-run the effect on the same
+			// <canvas> (Fast Refresh, route transitions). A lost context cannot be
+			// re-acquired, which would leave the canvas permanently blank, so only
+			// release it once the canvas has actually left the document.
+			queueMicrotask(() => {
+				if (canvas.isConnected) return;
+				gl.getExtension("WEBGL_lose_context")?.loseContext();
+			});
 		};
 	}, []);
 

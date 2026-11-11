@@ -1,19 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import {
+	ArrowDown,
 	ArrowUpRight,
-	Award,
 	Check,
 	Copy,
 	Download,
-	FolderKanban,
 	Github,
 	Linkedin,
 	Mail,
 	MapPin,
-	Sparkles,
 } from "lucide-react";
-import { type CSSProperties, useState } from "react";
-import AsciiBackdrop from "#/components/ui/ascii-backdrop";
+import { useReducedMotion } from "motion/react";
+import { type CSSProperties, useEffect, useState } from "react";
+import GradientASCII from "#/components/GradientASCII";
+import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
+import { useIsDark } from "#/lib/useIsDark";
 import { useLiveContent } from "#/lib/useLiveContent";
 
 interface HeroProject {
@@ -22,6 +23,8 @@ interface HeroProject {
 	image?: string | null;
 }
 
+const EMAIL = "itsanvert@gmail.com";
+
 const socials = [
 	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
 	{
@@ -29,32 +32,40 @@ const socials = [
 		label: "LinkedIn",
 		icon: Linkedin,
 	},
-	{ href: "mailto:itsanvert@gmail.com", label: "Email", icon: Mail },
-];
-
-const focus = ["Full stack", "Accessible UI", "Clean architecture"];
-
-const portraits = [
-	{ src: "/profile.webp", alt: "Portrait of Vert San" },
-	{ src: "/profile1.webp", alt: "Vert San" },
-	{ src: "/profile2.webp", alt: "Vert San" },
+	{ href: `mailto:${EMAIL}`, label: "Email", icon: Mail },
 ];
 
 const reveal = (delay: number) =>
 	({ "--reveal-delay": `${delay}ms` }) as CSSProperties;
 
+/** Phones need chunkier cells, or the character grid turns into noise. */
+function useGlyphCellSize() {
+	const [size, setSize] = useState(18);
+
+	useEffect(() => {
+		const compute = () => {
+			const width = window.innerWidth;
+			setSize(width < 480 ? 13 : width < 1024 ? 16 : 18);
+		};
+		compute();
+		window.addEventListener("resize", compute, { passive: true });
+		return () => window.removeEventListener("resize", compute);
+	}, []);
+
+	return size;
+}
+
 /**
- * Home hero — same premium, minimal language as the About page.
- *
- * What changed and why:
- * - Removed the framed card, ring and heavy shadow around the hero so the
- *   GradientASCII backdrop can breathe edge-to-edge.
- * - Replaced the rainbow CTA and multi-colour accents with one restrained
- *   indigo accent, quieter surfaces and a single clear type hierarchy.
- * - Kept every piece of content (location, availability, bio, focus chips,
- *   portraits, tagline and live stats) and reflowed it into a calmer grid.
+ * Home hero — one full-bleed GradientASCII field with the copy anchored to the
+ * bottom-left. The field carries the whole composition; the supporting UI is
+ * deliberately quiet so the light and the type do the work.
  */
 export default function HeroSection() {
+	const isDark = useIsDark();
+	const reduced = useReducedMotion() ?? false;
+	const cellSize = useGlyphCellSize();
+	const [copied, setCopied] = useState(false);
+
 	const {
 		items: projects,
 		loading: projectsLoading,
@@ -65,143 +76,151 @@ export default function HeroSection() {
 		loading: certificatesLoading,
 		error: certificatesError,
 	} = useLiveContent<Record<string, unknown>>("certificates");
-	const [copied, setCopied] = useState(false);
 
-	const handleCopyEmail = (e: React.MouseEvent) => {
-		e.preventDefault();
-		navigator.clipboard.writeText("itsanvert@gmail.com");
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
+	const handleCopyEmail = async () => {
+		try {
+			await navigator.clipboard.writeText(EMAIL);
+			setCopied(true);
+			window.setTimeout(() => setCopied(false), 2000);
+		} catch {
+			// Clipboard access can be blocked; the mailto link still works.
+		}
 	};
 
-	const resolveCount = (
-		count: number,
+	const count = (
+		length: number,
 		loading: boolean,
 		error: string | null,
 	): string | null => {
-		if (count > 0) return `${count}+`;
+		if (length > 0) return `${length}+`;
 		if (error) return "–";
 		if (loading) return null;
-		return `${count}+`;
+		return "0";
 	};
 
 	const stats = [
+		{ label: "Years", value: "2.5+" },
 		{
-			icon: Sparkles,
-			label: "Years of experience",
-			value: "2.5+",
-			href: "/about",
+			label: "Projects",
+			value: count(projects.length, projectsLoading, projectsError),
 		},
 		{
-			icon: FolderKanban,
-			label: "Projects delivered",
-			value: resolveCount(projects.length, projectsLoading, projectsError),
-			href: "/projects",
-		},
-		{
-			icon: Award,
-			label: "Certifications",
-			value: resolveCount(
-				certificates.length,
-				certificatesLoading,
-				certificatesError,
-			),
-			href: "/certificates",
+			label: "Certificates",
+			value: count(certificates.length, certificatesLoading, certificatesError),
 		},
 	];
 
 	return (
-		<section className="hero-shell relative w-full overflow-hidden">
+		<section
+			id="top"
+			aria-label="Introduction"
+			className="hero-shell relative -mt-[52px] flex min-h-[100svh] flex-col justify-end overflow-hidden lg:-mt-[62px]"
+		>
+			{/* ============================================================== */}
+			{/* FULL-BLEED FIELD                                                */}
+			{/* ============================================================== */}
 			<div
-				aria-hidden
-				className="ui-hero-glow pointer-events-none absolute inset-x-0 top-0 z-0 h-[42rem]"
+				aria-hidden="true"
+				className="pointer-events-none absolute inset-0 select-none"
+			>
+				<GradientASCII
+					colors={GRADIENT_ASCII_COLORS}
+					shape="horizon"
+					characters=" =+xX0S8#@"
+					cellSize={cellSize}
+					density={0.8}
+					glyphOpacity={0.85}
+					gradientOpacity={0.9}
+					glow={0.2}
+					softness={0.5}
+					scale={1}
+					flow={0.5}
+					speed={reduced ? 0 : 1}
+					flicker={reduced ? 0 : 0.2}
+					depthOfField={0}
+					grain={0.08}
+					variation={0}
+					mouseInteraction={!reduced}
+					clickEffect="wave"
+					scrambleRadius={0.1}
+					intro={!reduced}
+					lightMode={!isDark}
+					className="size-full"
+				/>
+			</div>
+
+			{/* Top wash keeps the floating navigation legible over the glow. */}
+			<div
+				aria-hidden="true"
+				className="pointer-events-none absolute inset-x-0 top-0 h-40"
+				style={{
+					background:
+						"linear-gradient(to bottom, var(--ui-bg) 0%, color-mix(in srgb, var(--ui-bg) 45%, transparent) 45%, transparent 100%)",
+				}}
 			/>
-			<AsciiBackdrop
-				className="inset-0 opacity-40 dark:opacity-50"
-				colors={["#1e1b4b", "#4338ca", "#818cf8", "#e0e7ff"]}
-				shape="horizon"
-				cellSize={20}
-				density={0.45}
-				glow={0.22}
-				gradientOpacity={0.4}
-				glyphOpacity={0.5}
-				speed={0.35}
-				intro
+
+			{/* Bottom-left scrim anchors the copy without flattening the field. */}
+			<div
+				aria-hidden="true"
+				className="pointer-events-none absolute inset-0"
+				style={{
+					background:
+						"radial-gradient(100% 82% at 0% 100%, var(--ui-bg) 0%, color-mix(in srgb, var(--ui-bg) 76%, transparent) 42%, transparent 78%), linear-gradient(to top, var(--ui-bg) 0%, color-mix(in srgb, var(--ui-bg) 80%, transparent) 24%, transparent 62%)",
+				}}
 			/>
 
-			<div className="relative z-10 mx-auto flex min-h-[calc(100svh-5.25rem)] w-full max-w-7xl flex-col justify-center gap-12 px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
-				<div className="flex flex-wrap items-center justify-between gap-3">
-					<span
-						className="ui-chip px-3 py-1.5 text-xs"
-						style={{ color: "var(--ui-text-muted)" }}
-					>
-						<MapPin className="size-3.5" aria-hidden />
-						Phnom Penh, Cambodia
-					</span>
+			{/* ============================================================== */}
+			{/* COPY — ANCHORED BOTTOM-LEFT                                     */}
+			{/* ============================================================== */}
+			<div className="relative z-10 w-full pt-32">
+				<div className="mx-auto w-full max-w-[84rem] px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
+					<div className="max-w-[66rem]">
+						{/* Availability + location */}
+						
 
-					<span className="ui-chip px-3 py-1.5 text-xs">
-						<span className="relative flex size-2" aria-hidden>
-							<span
-								className="absolute inline-flex size-full rounded-full opacity-60 motion-safe:animate-ping"
-								style={{ backgroundColor: "var(--ui-accent)" }}
-							/>
-							<span
-								className="relative inline-flex size-2 rounded-full"
-								style={{ backgroundColor: "var(--ui-accent)" }}
-							/>
-						</span>
-						Open to opportunities
-					</span>
-				</div>
+						{/* Statement headline */}
+						<h1
+							data-reveal
+							style={reveal(120)}
+							className="mt-4 max-w-[64rem] text-balance text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.045em] text-[var(--ui-text)]"
+						>
+							Building fast, immersive
+							<br className="hidden sm:block" /> web &amp; mobile software.
+						</h1>
 
-				<div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:gap-16">
-					<div className="flex flex-col items-start gap-8">
-						<div className="space-y-5">
-							<p
-								data-reveal
-								style={reveal(0)}
-								className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-[var(--ui-text-subtle)]"
-							>
-								Software engineer
-							</p>
-
-							<h1
-								data-reveal
-								style={reveal(60)}
-								className="text-balance text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.04em] text-[var(--ui-text)] sm:text-6xl lg:text-7xl"
-							>
-								Vert <span style={{ color: "var(--ui-accent)" }}>San</span>
-							</h1>
-
-							<p
-								data-reveal
-								style={{ ...reveal(120), color: "var(--ui-text-muted)" }}
-								className="max-w-md text-base leading-relaxed sm:text-lg"
-							>
-								I build accessible, scalable, and secure web and mobile
-								applications — with modern architecture and thoughtful UX.
-							</p>
-						</div>
-
-						<div
+						{/* Supporting statement */}
+						<p
 							data-reveal
 							style={reveal(180)}
-							className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center"
+							className="mt-5 max-w-[46rem] text-pretty text-sm leading-relaxed text-[var(--ui-text-muted)] sm:text-base"
+						>
+							I build accessible, scalable, and secure web and mobile
+							applications — with modern architecture and thoughtful UX.
+						</p>
+
+						{/* Actions */}
+						<div
+							data-reveal
+							style={reveal(240)}
+							className="mt-7 flex flex-wrap items-center gap-3"
 						>
 							<Link
 								to="/projects"
-								className="ui-button ui-button-primary ui-focusable group w-full sm:w-auto"
+								className="ui-button ui-button-primary ui-focusable group"
 							>
 								Explore projects
-								<ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+								<ArrowUpRight
+									aria-hidden="true"
+									className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+								/>
 							</Link>
 
 							<a
 								href="/resume.pdf"
 								download
-								className="ui-button ui-button-ghost ui-focusable w-full sm:w-auto"
+								className="ui-button ui-button-ghost ui-focusable"
 							>
-								<Download className="size-4" />
+								<Download aria-hidden="true" className="size-4" />
 								Download resume
 							</a>
 
@@ -209,164 +228,79 @@ export default function HeroSection() {
 								type="button"
 								onClick={handleCopyEmail}
 								title="Copy email address"
-								className="ui-button ui-button-ghost ui-focusable w-full px-3.5 text-xs sm:w-auto"
+								className="ui-button ui-button-ghost ui-focusable gap-2 px-3.5 text-xs"
 							>
 								{copied ? (
 									<>
 										<Check
-											className="size-3.5"
-											style={{ color: "var(--ui-accent)" }}
+											aria-hidden="true"
+											className="size-3.5 text-[var(--ui-accent)]"
 										/>
-										<span style={{ color: "var(--ui-accent)" }}>Copied</span>
+										<span className="text-[var(--ui-accent)]">Copied</span>
 									</>
 								) : (
 									<>
-										<Copy className="size-3.5" />
+										<Copy aria-hidden="true" className="size-3.5" />
 										<span className="hidden sm:inline">Copy email</span>
+										<span className="sm:hidden">Copy</span>
 									</>
 								)}
 							</button>
 						</div>
+					</div>
 
-						<div
-							data-reveal
-							style={reveal(240)}
-							className="flex items-center gap-2"
-						>
+					{/* Baseline rail: socials, live counts, scroll cue. */}
+					<div
+						data-reveal
+						style={reveal(320)}
+						className="mt-9 flex flex-col gap-4 border-t border-[var(--ui-border)] pt-5 sm:flex-row sm:items-center sm:justify-between"
+					>
+						<div className="flex items-center gap-1">
 							{socials.map(({ href, label, icon: Icon }) => (
 								<a
 									key={label}
 									href={href}
-									target="_blank"
+									target={href.startsWith("mailto:") ? undefined : "_blank"}
 									rel="noreferrer"
 									aria-label={label}
 									title={label}
-									className="ui-focusable flex size-10 items-center justify-center rounded-full border transition-transform duration-200 hover:-translate-y-0.5"
-									style={{
-										borderColor: "var(--ui-border)",
-										backgroundColor: "var(--ui-surface)",
-										color: "var(--ui-text-muted)",
-									}}
+									className="ui-focusable flex size-9 items-center justify-center rounded-full text-[var(--ui-text-muted)] transition-colors hover:bg-[var(--ui-surface-soft)] hover:text-[var(--ui-text)]"
 								>
 									<Icon className="size-4" />
 								</a>
 							))}
 						</div>
-					</div>
 
-					<aside
-						data-reveal
-						style={reveal(180)}
-						className="ui-card relative w-full overflow-hidden p-6 sm:p-7"
-					>
-						<div
-							aria-hidden
-							className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full"
-							style={{
-								background:
-									"radial-gradient(circle, var(--ui-glow) 0%, transparent 70%)",
-							}}
-						/>
-
-						<div className="relative flex items-center justify-between gap-3">
-							<p
-								className="text-[0.68rem] font-medium uppercase tracking-[0.2em]"
-								style={{ color: "var(--ui-text-subtle)" }}
-							>
-								About
-							</p>
-							<Link
-								to="/about"
-								className="ui-focusable inline-flex items-center gap-1 rounded-sm text-xs font-medium transition-colors hover:text-[var(--ui-text)]"
-								style={{ color: "var(--ui-text-muted)" }}
-							>
-								Full story
-								<ArrowUpRight className="size-3" />
-							</Link>
-						</div>
-
-						<p
-							className="relative mt-4 text-sm leading-relaxed sm:text-[0.95rem]"
-							style={{ color: "var(--ui-text-muted)" }}
-						>
-							I focus on interfaces that are fast, accessible, and visually
-							clean. I work across the full stack — from pixel-perfect frontends
-							to robust backends.
-						</p>
-
-						<ul className="relative mt-4 flex flex-wrap gap-2">
-							{focus.map((item) => (
-								<li key={item} className="ui-chip">
-									{item}
+						<ul className="hidden items-center gap-6 sm:flex">
+							{stats.map(({ label, value }) => (
+								<li key={label} className="flex items-baseline gap-2">
+									{value === null ? (
+										<span
+											aria-hidden="true"
+											className="inline-block h-3 w-6 animate-pulse rounded-sm bg-[var(--ui-border)]"
+										/>
+									) : (
+										<span className="font-mono text-sm font-semibold tabular-nums text-[var(--ui-text)]">
+											{value}
+										</span>
+									)}
+									<span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ui-text-subtle)]">
+										{label}
+									</span>
 								</li>
 							))}
 						</ul>
 
-						<div className="relative mt-5 flex items-center gap-3">
-							<div className="flex -space-x-2">
-								{portraits.map((portrait) => (
-									<img
-										key={portrait.src}
-										src={portrait.src}
-										alt={portrait.alt}
-										width={40}
-										height={40}
-										loading="lazy"
-										decoding="async"
-										className="size-10 rounded-full border-2 object-cover"
-										style={{ borderColor: "var(--ui-bg)" }}
-									/>
-								))}
-							</div>
-							<p
-								className="text-xs leading-snug"
-								style={{ color: "var(--ui-text-subtle)" }}
-							>
-								Always learning, always building.
-							</p>
-						</div>
-					</aside>
-				</div>
-
-				<div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-					{stats.map(({ icon: Icon, label, value, href }, index) => (
-						<Link
-							key={label}
-							to={href}
-							data-reveal
-							style={reveal(300 + index * 60)}
-							className="ui-card ui-focusable group flex items-center gap-3 p-4 sm:p-5"
+						<a
+							href="#about"
+							className="ui-focusable group inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--ui-text-muted)] transition-colors hover:text-[var(--ui-text)]"
 						>
-							<span className="ui-icon-chip size-10" aria-hidden>
-								<Icon className="size-4" />
+							Scroll to explore
+							<span className="grid size-8 place-items-center rounded-full border border-[var(--ui-border-strong)] transition-transform duration-300 group-hover:translate-y-0.5">
+								<ArrowDown aria-hidden="true" className="size-3.5" />
 							</span>
-							<div className="min-w-0 leading-tight">
-								{value === null ? (
-									<span
-										className="inline-block h-4 w-10 animate-pulse rounded-sm align-middle"
-										style={{ backgroundColor: "var(--ui-border)" }}
-									/>
-								) : (
-									<p
-										className="text-base font-semibold tabular-nums"
-										style={{ color: "var(--ui-text)" }}
-									>
-										{value}
-									</p>
-								)}
-								<p
-									className="truncate text-xs"
-									style={{ color: "var(--ui-text-muted)" }}
-								>
-									{label}
-								</p>
-							</div>
-							<ArrowUpRight
-								className="ml-auto size-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-								style={{ color: "var(--ui-text-subtle)" }}
-							/>
-						</Link>
-					))}
+						</a>
+					</div>
 				</div>
 			</div>
 		</section>

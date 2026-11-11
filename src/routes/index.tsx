@@ -1,33 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ResumeAssistant from "#/components/ResumeAssistant";
-import HeroSection from "#/components/sections/HeroSection";
-
-import { Spinner } from "#/components/ui/spinner";
-import { DataProvider, type InitialData } from "#/lib/data-context";
 import AboutSection from "#/components/sections/AboutSection";
-
-const BentoShowcaseSection = lazy(
-	() => import("#/components/sections/BentoShowcaseSection"),
-);
-const GetInTouchSection = lazy(
-	() => import("#/components/sections/GetInTouchSection"),
-);
-const ShowcaseSection = lazy(
-	() => import("#/components/sections/ShowcaseSection"),
-);
-const TestimonialsSection = lazy(
-	() => import("#/components/sections/TestimonialsSection"),
-);
-const WhatICanDoSection = lazy(
-	() => import("#/components/sections/WhatICanDoSection"),
-);
-
-const SectionFallback = () => (
-	<div className="min-h-[50vh] flex items-center justify-center">
-		<Spinner className="size-8" />
-	</div>
-);
+import GetInTouchSection from "#/components/sections/GetInTouchSection";
+import HeroSection from "#/components/sections/HeroSection";
+import ShowcaseSection from "#/components/sections/ShowcaseSection";
+import TestimonialsSection from "#/components/sections/TestimonialsSection";
+import WhatICanDoSection from "#/components/sections/WhatICanDoSection";
+import { DataProvider, type InitialData } from "#/lib/data-context";
 
 const EMPTY: InitialData = {
 	projects: [],
@@ -61,25 +41,11 @@ function Home() {
 		<DataProvider data={data}>
 			<ResumeAssistant />
 			<HeroSection />
-			<Suspense fallback={<SectionFallback />}>
-				<ShowcaseSection />
-			</Suspense>
-			<Suspense fallback={<SectionFallback />}>
-				<AboutSection hideIntro />
-			</Suspense>
-			{/* <Suspense fallback={<SectionFallback />}>
-				<BentoShowcaseSection />
-			</Suspense> */}
-
-			<Suspense fallback={<SectionFallback />}>
-				<WhatICanDoSection />
-			</Suspense>
-			<Suspense fallback={<SectionFallback />}>
-				<TestimonialsSection />
-			</Suspense>
-			<Suspense fallback={<SectionFallback />}>
-				<GetInTouchSection />
-			</Suspense>
+			<ShowcaseSection />
+			<AboutSection hideIntro />
+			<WhatICanDoSection />
+			<TestimonialsSection />
+			<GetInTouchSection />
 		</DataProvider>
 	);
 }
