@@ -8,7 +8,6 @@ import {
 	Github,
 	Linkedin,
 	Mail,
-	MapPin,
 } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
@@ -114,7 +113,7 @@ export default function HeroSection() {
 		<section
 			id="top"
 			aria-label="Introduction"
-			className="hero-shell relative -mt-[52px] flex min-h-[100svh] flex-col justify-end overflow-hidden lg:-mt-[62px]"
+			className="hero-shell relative -mt-13 flex min-h-svh flex-col justify-end overflow-hidden lg:-mt-15.5"
 		>
 			{/* ============================================================== */}
 			{/* FULL-BLEED FIELD                                                */}
@@ -173,16 +172,15 @@ export default function HeroSection() {
 			{/* COPY — ANCHORED BOTTOM-LEFT                                     */}
 			{/* ============================================================== */}
 			<div className="relative z-10 w-full pt-32">
-				<div className="mx-auto w-full max-w-[84rem] px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
-					<div className="max-w-[66rem]">
+				<div className="mx-auto w-full max-w-336 px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
+					<div className="max-w-264">
 						{/* Availability + location */}
-						
 
 						{/* Statement headline */}
 						<h1
 							data-reveal
 							style={reveal(120)}
-							className="mt-4 max-w-[64rem] text-balance text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.045em] text-[var(--ui-text)]"
+							className="mt-4 max-w-5xl text-balance text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.045em] text-(--ui-text)"
 						>
 							Building fast, immersive
 							<br className="hidden sm:block" /> web &amp; mobile software.
@@ -192,7 +190,7 @@ export default function HeroSection() {
 						<p
 							data-reveal
 							style={reveal(180)}
-							className="mt-5 max-w-[46rem] text-pretty text-sm leading-relaxed text-[var(--ui-text-muted)] sm:text-base"
+							className="mt-5 max-w-184 text-pretty text-sm leading-relaxed text-(--ui-text-muted) sm:text-base"
 						>
 							I build accessible, scalable, and secure web and mobile
 							applications — with modern architecture and thoughtful UX.
@@ -234,9 +232,9 @@ export default function HeroSection() {
 									<>
 										<Check
 											aria-hidden="true"
-											className="size-3.5 text-[var(--ui-accent)]"
+											className="size-3.5 text-(--ui-accent)"
 										/>
-										<span className="text-[var(--ui-accent)]">Copied</span>
+										<span className="text-(--ui-accent)">Copied</span>
 									</>
 								) : (
 									<>
@@ -253,7 +251,7 @@ export default function HeroSection() {
 					<div
 						data-reveal
 						style={reveal(320)}
-						className="mt-9 flex flex-col gap-4 border-t border-[var(--ui-border)] pt-5 sm:flex-row sm:items-center sm:justify-between"
+						className="mt-9 flex flex-col gap-4 border-t border-(--ui-border) pt-5 sm:flex-row sm:items-center sm:justify-between"
 					>
 						<div className="flex items-center gap-1">
 							{socials.map(({ href, label, icon: Icon }) => (
@@ -264,7 +262,7 @@ export default function HeroSection() {
 									rel="noreferrer"
 									aria-label={label}
 									title={label}
-									className="ui-focusable flex size-9 items-center justify-center rounded-full text-[var(--ui-text-muted)] transition-colors hover:bg-[var(--ui-surface-soft)] hover:text-[var(--ui-text)]"
+									className="ui-focusable flex size-9 items-center justify-center rounded-full text-(--ui-text-muted) transition-colors hover:bg-(--ui-surface-soft) hover:text-(--ui-text)"
 								>
 									<Icon className="size-4" />
 								</a>
@@ -277,14 +275,14 @@ export default function HeroSection() {
 									{value === null ? (
 										<span
 											aria-hidden="true"
-											className="inline-block h-3 w-6 animate-pulse rounded-sm bg-[var(--ui-border)]"
+											className="inline-block h-3 w-6 animate-pulse rounded-sm bg-(--ui-border)"
 										/>
 									) : (
-										<span className="font-mono text-sm font-semibold tabular-nums text-[var(--ui-text)]">
+										<span className="font-mono text-sm font-semibold tabular-nums text-(--ui-text)">
 											{value}
 										</span>
 									)}
-									<span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ui-text-subtle)]">
+									<span className="text-[10px] uppercase tracking-[0.16em] text-(--ui-text-subtle)">
 										{label}
 									</span>
 								</li>
@@ -293,10 +291,10 @@ export default function HeroSection() {
 
 						<a
 							href="#about"
-							className="ui-focusable group inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--ui-text-muted)] transition-colors hover:text-[var(--ui-text)]"
+							className="ui-focusable group inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-(--ui-text-muted) transition-colors hover:text-(--ui-text)"
 						>
 							Scroll to explore
-							<span className="grid size-8 place-items-center rounded-full border border-[var(--ui-border-strong)] transition-transform duration-300 group-hover:translate-y-0.5">
+							<span className="grid size-8 place-items-center rounded-full border border-(--ui-border-strong) transition-transform duration-300 group-hover:translate-y-0.5">
 								<ArrowDown aria-hidden="true" className="size-3.5" />
 							</span>
 						</a>
