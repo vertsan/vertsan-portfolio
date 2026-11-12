@@ -38,42 +38,7 @@ export default function AboutSection({
 				!hideIntro && "about-shell pt-16 pb-20 sm:pt-20 md:pt-24 md:pb-24",
 			)}
 		>
-			{!hideIntro && (
-				<>
-					<div
-						aria-hidden
-						className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] overflow-hidden opacity-35 dark:opacity-45"
-						style={ASCII_FADE_MASK}
-					>
-						<GradientASCII
-							colors={GRADIENT_ASCII_COLORS}
-							shape="horizon"
-							cellSize={18}
-							density={0.8}
-							glyphOpacity={0.85}
-							gradientOpacity={0.9}
-							glow={0.2}
-							softness={0.5}
-							scale={1}
-							flow={0.5}
-							speed={0.4}
-							flicker={0.2}
-							depthOfField={0}
-							grain={0.08}
-							variation={0}
-							mouseInteraction
-							clickEffect="wave"
-							intro={false}
-							lightMode={!isDark}
-							className="size-full"
-						/>
-					</div>
-					<div
-						aria-hidden
-						className="ui-hero-glow pointer-events-none absolute inset-x-0 top-0 h-[40rem]"
-					/>
-				</>
-			)}
+			
 
 			<div className="relative z-10 mx-auto w-full max-w-[75rem] px-5 sm:px-6">
 				{!hideIntro && (

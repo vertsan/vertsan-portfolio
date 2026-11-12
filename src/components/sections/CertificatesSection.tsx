@@ -97,34 +97,7 @@ export default function CertificatesSection() {
 			id="certificates"
 			className="relative min-h-screen flex flex-col justify-center py-16 md:py-24 bg-muted/30 scroll-mt-20 overflow-hidden"
 		>
-			<div
-				aria-hidden
-				className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[100svh] overflow-hidden opacity-30 dark:opacity-45"
-				style={ASCII_FADE_MASK}
-			>
-				<GradientASCII
-					colors={GRADIENT_ASCII_COLORS}
-					shape="horizon"
-					cellSize={18}
-					density={0.8}
-					glyphOpacity={0.85}
-					gradientOpacity={0.9}
-					glow={0.2}
-					softness={0.5}
-					scale={1}
-					flow={0.5}
-					speed={0.4}
-					flicker={0.2}
-					depthOfField={0}
-					grain={0.08}
-					variation={0}
-					mouseInteraction
-					clickEffect="wave"
-					intro={false}
-					lightMode={!isDark}
-					className="size-full"
-				/>
-			</div>
+			
 			<div
 				aria-hidden
 				className="pointer-events-none absolute inset-x-0 top-0 z-0 h-72 bg-gradient-to-b from-background/70 via-background/20 to-transparent"
