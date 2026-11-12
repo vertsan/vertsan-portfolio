@@ -124,31 +124,21 @@ vertsan/
 
 3. **Set up environment variables**
 
-   Create a `.env` file in the root directory:
+   Copy `.env.example` to `.env` and fill in the values:
 
-   ```env
-   # Database
-   DATABASE_URL=postgresql://username:password@host:port/database
+   ```bash
+   cp .env.example .env
+   ```
 
-   # Admin Authentication
-   ADMIN_SECRET=your-secure-admin-secret
+   See [`.env.example`](.env.example) for the full list. Required variables:
+   `DATABASE_URL`, `ADMIN_PASSWORD`, `ADMIN_SECRET`, `BASE_URL`, and the OAuth
+   client credentials you intend to use (`GOOGLE_*`, `GITHUB_*`).
 
-   # OAuth (for testimonials)
-   GITHUB_CLIENT_ID=your-github-client-id
-   GITHUB_CLIENT_SECRET=your-github-client-secret
-   DISCORD_CLIENT_ID=your-discord-client-id
-   DISCORD_CLIENT_SECRET=your-discord-client-secret
-   OAUTH_REDIRECT_URI=http://localhost:3000/api/auth
+   For production, configure the same variables in the Netlify UI
+   (Site configuration → Environment variables), or import the local file:
 
-   # AI Resume Assistant (optional)
-   OPENAI_API_KEY=your-openai-api-key
-   ANTHROPIC_API_KEY=your-anthropic-api-key
-   GEMINI_API_KEY=your-gemini-api-key
-
-   # Cloudinary (for image uploads, optional)
-   CLOUDINARY_CLOUD_NAME=your-cloud-name
-   CLOUDINARY_API_KEY=your-api-key
-   CLOUDINARY_API_SECRET=your-api-secret
+   ```bash
+   netlify env:import .env
    ```
 
 4. **Set up the database**
