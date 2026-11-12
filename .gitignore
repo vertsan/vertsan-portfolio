@@ -18,6 +18,9 @@ todos.json
 # Local Netlify folder
 .netlify
 
+# Local Vercel folder (build output)
+.vercel
+
 # Drizzle migrations
 drizzle/
 *.db
