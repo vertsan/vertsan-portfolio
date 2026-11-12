@@ -3,7 +3,15 @@ import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
 import { createLogger, defineConfig, type Plugin } from "vite";
+
+/**
+ * Vercel builds TanStack Start through Nitro's Vercel preset (`.vercel/output`).
+ * Netlify keeps using its own adapter. Both set their platform env var during
+ * their respective builds, so the correct adapter can be selected here.
+ */
+const isVercel = Boolean(process.env.VERCEL);
 
 const isAbortLike = (value: unknown): boolean => {
 	if (value && typeof value === "object") {
@@ -115,9 +123,10 @@ const config = defineConfig({
 	plugins: [
 		silenceAbortedRequestLogs(),
 		devtools({ removeDevtoolsOnBuild: true }),
-		netlify(),
+		...(isVercel ? [] : [netlify()]),
 		tailwindcss(),
 		tanstackStart(),
+		...(isVercel ? [nitro()] : []),
 		viteReact(),
 	],
 });
