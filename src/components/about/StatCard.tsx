@@ -1,8 +1,6 @@
-import type { LucideIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 interface StatCardProps {
-	icon: LucideIcon;
 	value: number;
 	suffix?: string;
 	decimals?: number;
@@ -12,11 +10,10 @@ interface StatCardProps {
 }
 
 /**
- * Equal-height stat tile with an accent icon chip, a count-up number and a
- * small label. The count-up is skipped for users who prefer reduced motion.
+ * Unboxed metric for the About hairline strip: a large count-up number and a
+ * muted label, with no card chrome of its own.
  */
 export default function StatCard({
-	icon: Icon,
 	value,
 	suffix = "",
 	decimals = 0,
@@ -73,27 +70,15 @@ export default function StatCard({
 			ref={ref}
 			data-reveal
 			style={{ "--reveal-delay": `${delay}ms` } as CSSProperties}
-			className="ui-card ui-card-flat flex h-full flex-col justify-between gap-4 p-5 sm:p-6"
+			className="px-4 first:pl-0 last:pr-0 sm:px-6"
 		>
-			<span className="ui-icon-chip" aria-hidden>
-				<Icon className="size-[18px]" />
-			</span>
-
-			<div>
-				<p
-					className="text-3xl font-semibold tracking-tight tabular-nums"
-					style={{ color: "var(--ui-text)" }}
-				>
-					{count.toFixed(decimals)}
-					{suffix}
-				</p>
-				<p
-					className="mt-1 text-xs font-medium"
-					style={{ color: "var(--ui-text-subtle)" }}
-				>
-					{label}
-				</p>
-			</div>
+			<p className="text-2xl font-semibold tracking-tight tabular-nums text-neutral-900 dark:text-white sm:text-3xl">
+				{count.toFixed(decimals)}
+				{suffix}
+			</p>
+			<p className="mt-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+				{label}
+			</p>
 		</div>
 	);
 }

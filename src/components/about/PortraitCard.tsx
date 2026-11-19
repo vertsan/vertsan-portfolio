@@ -36,7 +36,7 @@ export default function PortraitCard() {
 		<figure className="mx-auto w-full max-w-[420px] lg:mx-0 lg:max-w-none">
 			<div
 				data-reveal
-				className="ui-card relative aspect-[4/5] w-full overflow-hidden"
+				className="relative aspect-[4/5] w-full overflow-hidden rounded-[24px] border border-black/10 bg-white/[0.02] dark:border-white/10 dark:bg-white/[0.02]"
 			>
 				<div
 					aria-hidden
