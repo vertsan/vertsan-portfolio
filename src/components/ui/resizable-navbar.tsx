@@ -542,15 +542,19 @@ export const NavbarButton = ({
 	| React.ComponentPropsWithoutRef<"a">
 	| React.ComponentPropsWithoutRef<"button">
 )) => {
-	const baseStyles =
-		"relative inline-block cursor-pointer rounded-full px-4 py-2 text-center text-sm font-bold transition duration-200";
+	const variantMap = {
+		primary: "default",
+		secondary: "ghost",
+		dark: "default",
+		gradient: "default",
+	} as const;
 
 	const variantStyles = {
-		primary: "bg-primary text-primary-foreground shadow-lg shadow-primary/20",
-		secondary: "bg-transparent text-foreground shadow-none",
+		primary: "",
+		secondary: "",
 		dark: "bg-foreground text-background",
-		gradient: "bg-gradient-to-b from-blue-500 to-blue-700 text-white",
-	};
+		gradient: "bg-linear-to-b from-blue-500 to-blue-700 text-white",
+	} as const;
 
 	const Comp = Tag as React.ElementType<
 		React.ComponentPropsWithoutRef<"a"> &
@@ -558,12 +562,14 @@ export const NavbarButton = ({
 	>;
 
 	return (
-		<Comp
-			href={href || undefined}
-			className={cn(baseStyles, variantStyles[variant], className)}
-			{...props}
+		<Button
+			asChild
+			variant={variantMap[variant]}
+			className={cn("relative", variantStyles[variant], className)}
 		>
-			{children}
-		</Comp>
+			<Comp href={href || undefined} {...props}>
+				{children}
+			</Comp>
+		</Button>
 	);
 };

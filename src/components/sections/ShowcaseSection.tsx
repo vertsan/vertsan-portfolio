@@ -187,14 +187,15 @@ export default function ShowcaseSection() {
 
 							<div className="flex flex-wrap items-center gap-3">
 								{activeProject.slug && (
-									<Link
-										to="/projects/$projectId"
-										params={{ projectId: activeProject.slug }}
-										className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-sm font-medium text-background transition-transform duration-200"
-									>
-										View project
-										<ArrowUpRight className="size-4" />
-									</Link>
+									<Button variant="ghost" asChild>
+										<Link
+											to="/projects/$projectId"
+											params={{ projectId: activeProject.slug }}
+										>
+											View project
+											<ArrowUpRight className="size-4" />
+										</Link>
+									</Button>
 								)}
 
 								<div className="flex items-center gap-2">

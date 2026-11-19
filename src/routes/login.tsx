@@ -171,7 +171,7 @@ function LoginPage() {
 
 						<Button
 							type="submit"
-							className="w-full gap-2 rounded-lg h-10"
+							className="w-full gap-2"
 							disabled={loading}
 						>
 							<LogIn className="size-4" />

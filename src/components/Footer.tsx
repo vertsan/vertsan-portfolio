@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Github, Linkedin, Mail } from "lucide-react";
+import { Button } from "#/components/ui/button";
 
 const year = new Date().getFullYear();
 
@@ -52,16 +53,22 @@ export default function Footer() {
 					{/* Right: Socials */}
 					<div className="flex items-center justify-center gap-1.5 md:justify-end">
 						{socialLinks.map(({ href, label, icon: Icon }) => (
-							<a
+							<Button
 								key={label}
-								href={href}
-								target={href.startsWith("mailto:") ? undefined :"_blank"}
-								rel="noreferrer"
-								className="flex size-9 sm:size-8 items-center justify-center rounded-md text-muted-foreground transition-colors"
-								aria-label={label}
+								variant="ghost"
+								size="icon"
+								asChild
+								className="sm:size-8"
 							>
-								<Icon className="size-3.5" />
-							</a>
+								<a
+									href={href}
+									target={href.startsWith("mailto:") ? undefined :"_blank"}
+									rel="noreferrer"
+									aria-label={label}
+								>
+									<Icon className="size-3.5" />
+								</a>
+							</Button>
 						))}
 					</div>
 				</div>

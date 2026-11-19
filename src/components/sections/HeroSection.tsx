@@ -11,6 +11,7 @@ import { useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
 import ElapsedYearsCounter from "#/components/ElapsedYearsCounter";
 import GradientASCII from "#/components/GradientASCII";
+import { buttonVariants } from "#/components/ui/button";
 import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
 import { useLiveContent } from "#/lib/useLiveContent";

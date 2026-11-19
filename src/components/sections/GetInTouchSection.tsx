@@ -83,11 +83,7 @@ export default function GetInTouchSection() {
 						</p>
 
 						<div className="mt-9">
-							<Button
-								variant="ghost"
-								className="ui-button ui-button-ghost ui-focusable gap-2"
-								asChild
-							>
+							<Button variant="ghost" asChild>
 								<a href="mailto:hello@vertsan.com">
 									<Mail className="size-4" />
 									Send a Message

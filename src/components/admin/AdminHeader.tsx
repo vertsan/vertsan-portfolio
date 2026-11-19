@@ -150,7 +150,7 @@ export default function AdminHeader({
 					<ThemeToggle />
 
 					{/* User avatar */}
-					<Button variant="ghost" className="hidden sm:flex items-center gap-2 px-2 rounded-xl text-muted-foreground">
+					<Button variant="ghost" className="hidden sm:flex items-center gap-2 text-muted-foreground">
 						<div className="size-7 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-[11px] font-bold shrink-0">
 							A
 						</div>

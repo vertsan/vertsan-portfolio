@@ -9,7 +9,7 @@ export default function RemyButton() {
 				type="button"
 				variant="ghost"
 				onClick={() => showResumeAssistant.setState(() => true)}
-				className="flex h-auto w-full justify-between rounded-[14px] bg-linear-to-r from-blue-500 to-purple-800 px-4 py-2.5 text-white transition-opacity"
+				className="flex w-full justify-between bg-linear-to-r from-blue-500 to-purple-800 text-white transition-opacity"
 				aria-label="Open Resume Assistant"
 			>
 				<div className="flex items-center gap-2">
