@@ -2,8 +2,6 @@ import { Link } from "@tanstack/react-router";
 import {
 	ArrowDown,
 	ArrowUpRight,
-	Check,
-	Copy,
 	Download,
 	Github,
 	Linkedin,
@@ -11,8 +9,8 @@ import {
 } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
+import ElapsedYearsCounter from "#/components/ElapsedYearsCounter";
 import GradientASCII from "#/components/GradientASCII";
-import { Button } from "#/components/ui/button";
 import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
 import { useLiveContent } from "#/lib/useLiveContent";
@@ -24,6 +22,7 @@ interface HeroProject {
 }
 
 const EMAIL = "itsanvert@gmail.com";
+const BIRTH_DATE = new Date("2004-09-25T00:00:00Z");
 
 const socials = [
 	{ href: "https://github.com/vertsan", label:"GitHub", icon: Github },
@@ -64,7 +63,6 @@ export default function HeroSection() {
 	const isDark = useIsDark();
 	const reduced = useReducedMotion() ?? false;
 	const cellSize = useGlyphCellSize();
-	const [copied, setCopied] = useState(false);
 
 	const {
 		items: projects,
@@ -76,16 +74,6 @@ export default function HeroSection() {
 		loading: certificatesLoading,
 		error: certificatesError,
 	} = useLiveContent<Record<string, unknown>>("certificates");
-
-	const handleCopyEmail = async () => {
-		try {
-			await navigator.clipboard.writeText(EMAIL);
-			setCopied(true);
-			window.setTimeout(() => setCopied(false), 2000);
-		} catch {
-			// Clipboard access can be blocked; the mailto link still works.
-		}
-	};
 
 	const count = (
 		length: number,
@@ -99,7 +87,7 @@ export default function HeroSection() {
 	};
 
 	const stats = [
-		{ label: "Years", value:"2.5+" },
+		{ label: "Years", value: "2.5+" },
 		{
 			label: "Projects",
 			value: count(projects.length, projectsLoading, projectsError),
@@ -175,7 +163,8 @@ export default function HeroSection() {
 			<div className="relative z-10 w-full pt-32">
 				<div className="mx-auto w-full max-w-336 px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
 					<div className="max-w-264">
-						{/* Availability + location */}
+						{/* Live age counter */}
+						<ElapsedYearsCounter birthDate={BIRTH_DATE} />
 
 						{/* Statement headline */}
 						<h1
