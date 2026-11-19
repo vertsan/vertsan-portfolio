@@ -93,8 +93,7 @@ export default function GetInTouchSection() {
 						</div>
 
 						<div className="mt-10 flex flex-col items-center gap-4">
-							
-
+					
 							<div className="flex items-center justify-center gap-3">
 								{[
 									{
