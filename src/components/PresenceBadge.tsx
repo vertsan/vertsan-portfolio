@@ -1,5 +1,5 @@
-import { Clock, Eye, UserRound, Users } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Clock, Eye, UserRound } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -7,8 +7,6 @@ import {
 	type PresenceView,
 	usePresence,
 } from "../hooks/use-presence";
-
-const NAME_KEY = "vrt_name";
 
 function formatCount(value: number | null): string {
 	if (value === null) return "–";
@@ -33,32 +31,7 @@ function displayName(name: string | null): string {
 
 export default function PresenceBadge() {
 	const { online, totalViews, onlineUsers, recentViews } = usePresence();
-	const [active, setActive] = useState<"online" |"views" | null>(null);
-	const [editing, setEditing] = useState(false);
-	const [draft, setDraft] = useState("");
-	const name = useRef<string | null>(null);
-	const inputRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		name.current = window.localStorage.getItem(NAME_KEY);
-	}, []);
-
-	useEffect(() => {
-		if (editing) inputRef.current?.focus();
-	}, [editing]);
-
-	const commitName = () => {
-		const value = draft.trim().slice(0, 60);
-		window.localStorage.setItem(NAME_KEY, value);
-		name.current = value || null;
-		setEditing(false);
-	};
-
-	const openEdit = () => {
-		setDraft(name.current ?? "");
-		setEditing(true);
-		setActive(null);
-	};
+	const [active, setActive] = useState<"online" | "views" | null>(null);
 
 	const renderUser = (u: PresenceUser) => (
 		<li
@@ -92,65 +65,40 @@ export default function PresenceBadge() {
 	);
 
 	return (
-		<div className="relative hidden items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1.5 text-sm shadow-sm lg:flex">
-			{/* Name / identity */}
-			{editing ? (
-				<input
-					ref={inputRef}
-					value={draft}
-					onChange={(e) => setDraft(e.target.value)}
-					onBlur={commitName}
-					onKeyDown={(e) => {
-						if (e.key === "Enter") commitName();
-					}}
-					placeholder="Your name"
-					maxLength={60}
-					className="w-24 rounded-md border border-border bg-background px-1.5 py-0.5 text-xs text-foreground outline-none"
-				/>
-			) : (
-				<Button
-					type="button"
-					variant="ghost"
-					onClick={openEdit}
-					title={name.current ? `You are ${name.current}` : "Set your name"}
-					className="header-chip h-auto max-w-20 rounded-full px-2 py-0.5 text-xs"
-				>
-					{displayName(name.current)}
-				</Button>
-			)}
-
-			<span aria-hidden className="h-3 w-px bg-border" />
-
-			{/* Online users */}
+		<div className="relative hidden items-center gap-1 rounded-full border border-border/60 bg-background/70 px-2.5 py-1.5 text-sm shadow-[0_8px_28px_-14px_rgb(0_0_0/0.32)] backdrop-blur-md lg:flex">
+			{/* Online count */}
 			<Button
 				type="button"
 				variant="ghost"
 				onMouseEnter={() => setActive("online")}
 				onMouseLeave={() => setActive(null)}
-				onClick={() => setActive(active === "online" ? null :"online")}
-				className="header-chip h-auto gap-1.5 rounded-full px-2 py-1"
+				onClick={() => setActive(active === "online" ? null : "online")}
+				aria-label={`${formatCount(online)} visitors online`}
+				className="header-chip h-auto gap-1.5 rounded-full px-1.5 py-0.5"
 			>
-				<span className="relative flex h-2 w-2">
+				<span className="relative flex size-2 shrink-0">
 					<span
 						aria-hidden
-						className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
+						className="absolute inline-flex size-full animate-ping rounded-full bg-green-400 opacity-75"
 					/>
-					<span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+					<span className="relative inline-flex size-2 rounded-full bg-green-500" />
 				</span>
-				<Users className="size-3.5" />
 				<span className="font-medium tabular-nums text-foreground">
 					{formatCount(online)}
 				</span>
 			</Button>
 
-			{/* Views */}
+			<span aria-hidden className="h-3 w-px shrink-0 bg-border/60" />
+
+			{/* Views count */}
 			<Button
 				type="button"
 				variant="ghost"
 				onMouseEnter={() => setActive("views")}
 				onMouseLeave={() => setActive(null)}
-				onClick={() => setActive(active === "views" ? null :"views")}
-				className="header-chip h-auto gap-1.5 rounded-full px-2 py-1"
+				onClick={() => setActive(active === "views" ? null : "views")}
+				aria-label={`${formatCount(totalViews)} total views`}
+				className="header-chip h-auto gap-1.5 rounded-full px-1.5 py-0.5"
 			>
 				<Eye className="size-3.5" />
 				<span className="font-medium tabular-nums text-foreground">
@@ -158,7 +106,6 @@ export default function PresenceBadge() {
 				</span>
 			</Button>
 
-			{/* Tooltip */}
 			{active === "online" && (
 				<div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-border bg-card p-2 shadow-xl">
 					<p className="px-1 pb-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">

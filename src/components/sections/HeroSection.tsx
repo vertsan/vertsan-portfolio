@@ -194,7 +194,7 @@ export default function HeroSection() {
 						>
 							<Link
 								to="/projects"
-								className="ui-button ui-button-ghost ui-focusable"
+								className={buttonVariants({ variant: "ghost" })}
 							>
 								Explore Project
 								<ArrowUpRight
@@ -206,7 +206,7 @@ export default function HeroSection() {
 							<a
 								href="/resume.pdf"
 								download
-								className="ui-button ui-button-ghost ui-focusable"
+								className={buttonVariants({ variant: "ghost" })}
 							>
 								<Download aria-hidden="true" className="size-4" />
 								Download resume
@@ -218,7 +218,7 @@ export default function HeroSection() {
 					<div
 						data-reveal
 						style={reveal(320)}
-						className="mt-9 flex flex-col gap-4 border-t border-(--ui-border) pt-5 sm:flex-row sm:items-center sm:justify-between"
+						className="mt-9 flex flex-col gap-4  pt-5 sm:flex-row sm:items-center sm:justify-between"
 					>
 						<div className="flex items-center gap-1">
 							{socials.map(({ href, label, icon: Icon }) => (
@@ -235,36 +235,6 @@ export default function HeroSection() {
 								</a>
 							))}
 						</div>
-
-						<ul className="hidden items-center gap-6 sm:flex">
-							{stats.map(({ label, value }) => (
-								<li key={label} className="flex items-baseline gap-2">
-									{value === null ? (
-										<span
-											aria-hidden="true"
-											className="inline-block h-3 w-6 animate-pulse rounded-sm bg-(--ui-border)"
-										/>
-									) : (
-										<span className="font-mono text-sm font-semibold tabular-nums text-(--ui-text)">
-											{value}
-										</span>
-									)}
-									<span className="text-[10px] uppercase tracking-[0.16em] text-(--ui-text-subtle)">
-										{label}
-									</span>
-								</li>
-							))}
-						</ul>
-
-						<a
-							href="#about"
-							className="ui-focusable inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-(--ui-text-muted) transition-colors"
-						>
-							Scroll to explore
-							<span className="grid size-8 place-items-center rounded-full border border-(--ui-border-strong) transition-transform duration-300">
-								<ArrowDown aria-hidden="true" className="size-3.5" />
-							</span>
-						</a>
 					</div>
 				</div>
 			</div>

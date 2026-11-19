@@ -662,7 +662,7 @@ code {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 14px;
     padding-inline: 1.25rem;
     font-size: 0.875rem;
     font-weight: 500;

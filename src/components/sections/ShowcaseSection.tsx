@@ -90,7 +90,7 @@ export default function ShowcaseSection() {
 					eyebrow="Showcase"
 					title={
 						<>
-							Featured <span className="accent-gradient-text">Projects</span>
+							Featured Projects
 						</>
 					}
 					description="A rotating look at projects I've designed and shipped. Tap a card to jump straight into the case study."
