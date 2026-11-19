@@ -113,7 +113,7 @@ const ReviewCard = ({
 				rel="noopener noreferrer"
 				className={cn(
 					"block relative h-full w-[15rem] sm:w-72 shrink-0 overflow-hidden rounded-2xl border p-4 transition-all duration-300",
-					"border-border/60 bg-card/70 backdrop-blur-sm shadow-sm hover:shadow-md hover:-translate-y-0.5",
+					"border-border/60 bg-card/70 backdrop-blur-sm shadow-sm",
 				)}
 			>
 				{cardContent}
@@ -142,7 +142,7 @@ export default function TestimonialsSection() {
 	const [newCompany, setNewCompany] = useState("");
 	const [submitting, setSubmitting] = useState(false);
 	const [submitMessage, setSubmitMessage] = useState<{
-		type: "success" | "error";
+		type: "success" |"error";
 		text: string;
 	} | null>(null);
 
@@ -162,7 +162,7 @@ export default function TestimonialsSection() {
 		try {
 			const res = await fetch("/api/auth/check", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type":"application/json" },
 				credentials: "include",
 			});
 			const data = await res.json();
@@ -193,7 +193,7 @@ export default function TestimonialsSection() {
 		try {
 			const res = await fetch("/api/testimonials", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type":"application/json" },
 				body: JSON.stringify({
 					action: "create",
 					content: newContent.trim(),
@@ -215,9 +215,9 @@ export default function TestimonialsSection() {
 			}
 			setNewContent("");
 			setNewCompany("");
-			setSubmitMessage({ type: "success", text: "Testimonial submitted!" });
+			setSubmitMessage({ type: "success", text:"Testimonial submitted!" });
 		} catch {
-			setSubmitMessage({ type: "error", text: "Connection error" });
+			setSubmitMessage({ type: "error", text:"Connection error" });
 		} finally {
 			setSubmitting(false);
 		}
@@ -227,7 +227,7 @@ export default function TestimonialsSection() {
 		try {
 			const res = await fetch("/api/testimonials", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type":"application/json" },
 				body: JSON.stringify({ action: "delete", testimonialId: id }),
 			});
 			if (res.ok) {
@@ -293,7 +293,7 @@ export default function TestimonialsSection() {
 					</div>
 				) : (
 					<div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-						<Marquee pauseOnHover className="[--duration:20s]">
+						<Marquee className="[--duration:20s]">
 							{firstRow.map((review) => (
 								<ReviewCard
 									key={review.id}
@@ -308,7 +308,7 @@ export default function TestimonialsSection() {
 							))}
 						</Marquee>
 						{secondRow.length > 0 && (
-							<Marquee reverse pauseOnHover className="[--duration:20s]">
+							<Marquee reverse className="[--duration:20s]">
 								{secondRow.map((review) => (
 									<ReviewCard
 										key={review.id}
@@ -363,7 +363,7 @@ export default function TestimonialsSection() {
 									variant="ghost"
 									size="sm"
 									onClick={handleLogout}
-									className="text-xs text-muted-foreground hover:text-destructive"
+									className="text-xs text-muted-foreground"
 								>
 									Sign out
 								</Button>
@@ -374,17 +374,19 @@ export default function TestimonialsSection() {
 									<p className="text-sm font-medium text-green-700 dark:text-green-400">
 										Thank you! Your testimonial has been submitted.
 									</p>
-									<button
+									<Button
 										type="button"
+										variant="link"
+										size="sm"
 										onClick={() => {
 											setSubmitMessage(null);
 											setNewContent("");
 											setNewCompany("");
 										}}
-										className="mt-2 text-xs text-green-600 underline hover:text-green-800 dark:text-green-500 dark:hover:text-green-300"
+										className="mt-2 h-auto p-0 text-xs text-green-600 underline dark:text-green-500"
 									>
 										Write another
-									</button>
+									</Button>
 								</div>
 							) : (
 								<form onSubmit={handleSubmit} className="space-y-3">
@@ -446,14 +448,16 @@ export default function TestimonialsSection() {
 													<p className="line-clamp-2 flex-1 text-xs">
 														{t.content}
 													</p>
-													<button
+													<Button
 														type="button"
+														variant="ghost"
+														size="icon"
 														onClick={() => handleDelete(t.id)}
-														className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+														className="size-6 shrink-0 p-0 text-muted-foreground transition-colors"
 														aria-label="Delete testimonial"
 													>
 														<Trash2 className="size-3.5" />
-													</button>
+													</Button>
 												</div>
 											))}
 									</div>

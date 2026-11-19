@@ -89,7 +89,7 @@ export default function CertificatesSection() {
 		setPage(nextPage);
 		document
 			.getElementById("certificates")
-			?.scrollIntoView({ behavior: "smooth", block: "start" });
+			?.scrollIntoView({ behavior: "smooth", block:"start" });
 	};
 
 	return (
@@ -115,15 +115,15 @@ export default function CertificatesSection() {
 							key={(cert as Record<string, any>).title as string}
 							data-reveal
 							style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
-							className="group border shadow-sm hover:shadow-md hover:border-primary/15 transition-all duration-300 overflow-hidden gap-0"
+							className="border shadow-sm transition-all duration-300 overflow-hidden gap-0"
 						>
 							<CardHeader className="px-5 pt-5 pb-3">
 								<div className="flex items-start gap-3">
-									<div className="p-2.5 rounded-lg bg-primary/10 text-primary shrink-0 group-hover:bg-primary/15 group-hover:scale-105 transition-all duration-300">
+									<div className="p-2.5 rounded-lg bg-primary/10 text-primary shrink-0 transition-all duration-300">
 										<Award className="size-5" />
 									</div>
 									<div className="space-y-1">
-										<CardTitle className="text-base leading-snug group-hover:text-primary transition-colors duration-300">
+										<CardTitle className="text-base leading-snug transition-colors duration-300">
 											{(cert as Record<string, any>).title as string}
 										</CardTitle>
 										<CardDescription className="text-sm">
@@ -148,7 +148,7 @@ export default function CertificatesSection() {
 											}
 											target="_blank"
 											rel="noreferrer"
-											className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+											className="inline-flex items-center gap-1 text-xs text-primary"
 										>
 											Verify
 											<ExternalLink className="size-3" />
@@ -161,7 +161,7 @@ export default function CertificatesSection() {
 											<Badge
 												key={tag}
 												variant="outline"
-												className="text-xs font-normal transition-colors duration-200 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+												className="text-xs font-normal transition-colors duration-200"
 											>
 												{tag}
 											</Badge>

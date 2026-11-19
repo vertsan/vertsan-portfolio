@@ -61,7 +61,7 @@ export default function CollectionManager({ collection, title }: Props) {
 		(action: string, extra: Record<string, unknown> = {}) =>
 			fetch("/api/admin", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type":"application/json" },
 				body: JSON.stringify({ collection, action, ...extra }),
 			}).then((r) => r.json()),
 		[collection],
@@ -247,7 +247,7 @@ export default function CollectionManager({ collection, title }: Props) {
 
 				const res = await fetch("/api/admin/upload", {
 					method: "POST",
-					headers: { "Content-Type": "application/json" },
+					headers: { "Content-Type":"application/json" },
 					body: JSON.stringify({
 						name: file.name,
 						data: dataUrl,
@@ -266,7 +266,7 @@ export default function CollectionManager({ collection, title }: Props) {
 				const formData = new FormData();
 				formData.append("file", file);
 				formData.append("timestamp", String(timestamp));
-				formData.append("folder", "vertsan");
+				formData.append("folder","vertsan");
 				formData.append("api_key", api_key);
 				formData.append("signature", signature);
 
@@ -374,7 +374,7 @@ export default function CollectionManager({ collection, title }: Props) {
 					<div className="rounded-xl border bg-card p-6 shadow-lg max-w-sm w-full mx-4 space-y-4">
 						<h3 className="font-semibold text-lg">Confirm Delete</h3>
 						<p className="text-sm text-muted-foreground">
-							Delete{" "}
+							Delete{""}
 							<span className="font-medium text-foreground">
 								{getDisplayName(confirmDelete)}
 							</span>
@@ -499,7 +499,7 @@ export default function CollectionManager({ collection, title }: Props) {
 								) : field.type === "file" ? (
 									<div className="space-y-3">
 										{editing[field.name] ? (
-											<div className="relative group rounded-lg overflow-hidden border border-border">
+											<div className="relative rounded-lg overflow-hidden border border-border">
 												{isImageField(field.name) ? (
 													<img
 														src={String(editing[field.name])}
@@ -519,25 +519,27 @@ export default function CollectionManager({ collection, title }: Props) {
 																href={String(editing[field.name])}
 																target="_blank"
 																rel="noreferrer"
-																className="text-xs text-primary hover:underline truncate block"
+																className="text-xs text-primary truncate block"
 															>
 																{String(editing[field.name])}
 															</a>
 														</div>
 													</div>
 												)}
-												<button
+												<Button
 													type="button"
+													variant="ghost"
+													size="icon"
 													onClick={() => handleFieldChange(field.name, "")}
-													className="absolute top-2 right-2 size-7 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+													className="absolute top-2 right-2 size-7 rounded-full bg-black/60 text-white opacity-0 transition-opacity"
 													aria-label="Remove file"
 												>
 													<X className="size-4" />
-												</button>
+												</Button>
 											</div>
 										) : (
 											<div className="space-y-3">
-												<div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+												<div className="border-2 border-dashed border-border rounded-lg p-6 text-center transition-colors">
 													{isImageField(field.name) ? (
 														<ImageIcon className="size-8 mx-auto text-muted-foreground/40 mb-2" />
 													) : (
@@ -665,11 +667,11 @@ export default function CollectionManager({ collection, title }: Props) {
 								return (
 									<div
 										key={item.id as number}
-										className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors group"
+										className="flex items-center justify-between px-5 py-4 transition-colors"
 									>
 										<div className="flex-1 min-w-0 flex items-center gap-3">
 											{Icon && (
-												<div className="size-8 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+												<div className="size-8 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 transition-colors">
 													<Icon className="size-4 text-primary/60" />
 												</div>
 											)}
@@ -689,7 +691,7 @@ export default function CollectionManager({ collection, title }: Props) {
 											</div>
 										</div>
 										{isAdmin ? (
-											<div className="flex gap-1 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+											<div className="flex gap-1 shrink-0 opacity-70 transition-opacity">
 												<Button
 													variant="ghost"
 													size="sm"
@@ -702,7 +704,7 @@ export default function CollectionManager({ collection, title }: Props) {
 												<Button
 													variant="ghost"
 													size="sm"
-													className="size-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+													className="size-8 p-0 text-destructive"
 													onClick={() => setConfirmDelete(item)}
 													title="Delete"
 												>
@@ -710,7 +712,7 @@ export default function CollectionManager({ collection, title }: Props) {
 												</Button>
 											</div>
 										) : (
-											<div className="opacity-70 group-hover:opacity-100 transition-opacity">
+											<div className="opacity-70 transition-opacity">
 												<span className="text-[10px] text-muted-foreground/50 px-2 py-1 rounded-md bg-muted/30">Read only</span>
 											</div>
 										)}

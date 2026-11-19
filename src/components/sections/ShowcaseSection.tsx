@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { Button } from "#/components/ui/button";
 import CardSwap, { Card, type CardSwapHandle } from "#/components/ui/CardSwap";
 import SectionHeading from "#/components/ui/section-heading";
 import { Skeleton } from "#/components/ui/skeleton";
@@ -189,7 +190,7 @@ export default function ShowcaseSection() {
 									<Link
 										to="/projects/$projectId"
 										params={{ projectId: activeProject.slug }}
-										className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-sm font-medium text-background transition-transform duration-200 hover:-translate-y-0.5"
+										className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-sm font-medium text-background transition-transform duration-200"
 									>
 										View project
 										<ArrowUpRight className="size-4" />
@@ -197,22 +198,26 @@ export default function ShowcaseSection() {
 								)}
 
 								<div className="flex items-center gap-2">
-									<button
+									<Button
 										type="button"
+										variant="outline"
+										size="icon"
 										onClick={() => swapRef.current?.prev()}
 										aria-label="Previous project"
-										className="flex size-10 items-center justify-center rounded-full border border-border bg-background/60 text-foreground transition-colors duration-200 hover:bg-muted"
+										className="size-10 rounded-full border-border bg-background/60 text-foreground transition-colors duration-200"
 									>
 										<ArrowLeft className="size-4" />
-									</button>
-									<button
+									</Button>
+									<Button
 										type="button"
+										variant="outline"
+										size="icon"
 										onClick={() => swapRef.current?.next()}
 										aria-label="Next project"
-										className="flex size-10 items-center justify-center rounded-full border border-border bg-background/60 text-foreground transition-colors duration-200 hover:bg-muted"
+										className="size-10 rounded-full border-border bg-background/60 text-foreground transition-colors duration-200"
 									>
 										<ArrowRight className="size-4" />
-									</button>
+									</Button>
 								</div>
 							</div>
 						</div>

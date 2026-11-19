@@ -149,7 +149,7 @@ export const Route = createRootRoute({
 			<p className="text-base sm:text-lg text-muted-foreground">
 				Page not found
 			</p>
-			<Link to="/" className="text-sm text-primary hover:underline">
+			<Link to="/" className="text-sm text-primary">
 				Back to Home
 			</Link>
 		</main>
@@ -159,7 +159,7 @@ export const Route = createRootRoute({
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const loc = useLocation();
 	const isAdmin =
-		loc.pathname.startsWith("/admin") || loc.pathname === "/login";
+		loc.pathname.startsWith("/admin") || loc.pathname ==="/login";
 
 	return (
 		<html lang="en" suppressHydrationWarning>

@@ -40,7 +40,7 @@ export interface Project {
 function prefetchProjects() {
 	fetch("/api/public", {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
+		headers: { "Content-Type":"application/json" },
 		body: JSON.stringify({ collection: "projects" }),
 	})
 		.then((r) => r.json())
@@ -105,15 +105,15 @@ const ProjectCard = memo(function ProjectCard({
 		<Card
 			data-reveal
 			style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
-			className="group flex flex-col border shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md overflow-hidden gap-0"
+			className="flex flex-col border shadow-sm transition-all duration-300 overflow-hidden gap-0"
 		>
 			<CardHeader className="px-5 pt-5 pb-3">
 				<div className="flex items-start justify-between gap-3">
-					<CardTitle className="text-base leading-snug md:text-lg group-hover:text-primary transition-colors duration-300">
+					<CardTitle className="text-base leading-snug md:text-lg transition-colors duration-300">
 						{project.title}
 					</CardTitle>
 					<Badge
-						variant={project.status === "Completed" ? "default" : "secondary"}
+						variant={project.status === "Completed" ?"default" :"secondary"}
 						className="shrink-0"
 					>
 						{project.status}
@@ -233,7 +233,7 @@ export default function ProjectsSection() {
 		setPage(nextPage);
 		document
 			.getElementById("projects")
-			?.scrollIntoView({ behavior: "smooth", block: "start" });
+			?.scrollIntoView({ behavior: "smooth", block:"start" });
 	};
 
 	if (loading && projects.length === 0) return <ProjectsShimmer />;

@@ -13,7 +13,7 @@ export default function GetInTouchSection() {
 						className="relative h-[260px] sm:h-[400px] md:h-[550px] rounded-2xl overflow-hidden bg-muted/20 border order-2 md:order-1"
 					>
 						<Strands
-							colors={["#F97316", "#7C3AED", "#06B6D4"]}
+							colors={["#F97316","#7C3AED","#06B6D4"]}
 							count={3}
 							speed={0.5}
 							amplitude={1}
@@ -36,7 +36,7 @@ export default function GetInTouchSection() {
 
 					<div
 						data-reveal
-						style={{ "--reveal-delay": "90ms" } as CSSProperties}
+						style={{ "--reveal-delay":"90ms" } as CSSProperties}
 						className="space-y-8 order-1 md:order-2"
 					>
 						<div className="space-y-4">
@@ -55,13 +55,13 @@ export default function GetInTouchSection() {
 						<div className="space-y-4">
 							<Button
 								size="lg"
-								className="gap-2 w-full sm:w-auto group"
+								className="gap-2 w-full sm:w-auto"
 								asChild
 							>
 								<a href="mailto:hello@vertsan.com">
 									<Mail className="size-5" />
 									Send a Message
-									<ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+									<ArrowUpRight className="size-4 transition-transform" />
 								</a>
 							</Button>
 						</div>
@@ -95,7 +95,7 @@ export default function GetInTouchSection() {
 										href={href}
 										target="_blank"
 										rel="noreferrer"
-										className="inline-flex items-center justify-center size-10 rounded-full border text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
+										className="inline-flex items-center justify-center size-10 rounded-full border text-muted-foreground transition-all duration-200"
 										aria-label={label}
 									>
 										<Icon className="size-4" />

@@ -94,7 +94,7 @@ export default function EducationSection() {
 									style={
 										{ "--reveal-delay": `${index * 80}ms` } as CSSProperties
 									}
-									className="border shadow-sm hover:shadow-lg hover:border-primary/10 transition-all duration-300 gap-3 md:gap-6 py-3 md:py-6"
+									className="border shadow-sm transition-all duration-300 gap-3 md:gap-6 py-3 md:py-6"
 								>
 									<CardHeader className="px-3 md:px-6">
 										<div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
@@ -131,7 +131,7 @@ export default function EducationSection() {
 												<Badge
 													key={tag}
 													variant="outline"
-													className="text-[0.65rem] sm:text-xs transition-colors duration-200 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+													className="text-[0.65rem] sm:text-xs transition-colors duration-200"
 												>
 													{tag}
 												</Badge>

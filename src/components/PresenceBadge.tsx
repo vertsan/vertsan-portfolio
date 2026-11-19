@@ -1,6 +1,7 @@
 import { Clock, Eye, UserRound, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { Button } from "#/components/ui/button";
 import {
 	type PresenceUser,
 	type PresenceView,
@@ -32,7 +33,7 @@ function displayName(name: string | null): string {
 
 export default function PresenceBadge() {
 	const { online, totalViews, onlineUsers, recentViews } = usePresence();
-	const [active, setActive] = useState<"online" | "views" | null>(null);
+	const [active, setActive] = useState<"online" |"views" | null>(null);
 	const [editing, setEditing] = useState(false);
 	const [draft, setDraft] = useState("");
 	const name = useRef<string | null>(null);
@@ -107,25 +108,27 @@ export default function PresenceBadge() {
 					className="w-24 rounded-md border border-border bg-background px-1.5 py-0.5 text-xs text-foreground outline-none"
 				/>
 			) : (
-				<button
+				<Button
 					type="button"
+					variant="ghost"
 					onClick={openEdit}
 					title={name.current ? `You are ${name.current}` : "Set your name"}
-					className="header-chip max-w-20 truncate px-2 py-0.5 text-xs"
+					className="header-chip h-auto max-w-20 rounded-full px-2 py-0.5 text-xs"
 				>
 					{displayName(name.current)}
-				</button>
+				</Button>
 			)}
 
 			<span aria-hidden className="h-3 w-px bg-border" />
 
 			{/* Online users */}
-			<button
+			<Button
 				type="button"
+				variant="ghost"
 				onMouseEnter={() => setActive("online")}
 				onMouseLeave={() => setActive(null)}
-				onClick={() => setActive(active === "online" ? null : "online")}
-				className="header-chip gap-1.5 px-2 py-1"
+				onClick={() => setActive(active === "online" ? null :"online")}
+				className="header-chip h-auto gap-1.5 rounded-full px-2 py-1"
 			>
 				<span className="relative flex h-2 w-2">
 					<span
@@ -138,21 +141,22 @@ export default function PresenceBadge() {
 				<span className="font-medium tabular-nums text-foreground">
 					{formatCount(online)}
 				</span>
-			</button>
+			</Button>
 
 			{/* Views */}
-			<button
+			<Button
 				type="button"
+				variant="ghost"
 				onMouseEnter={() => setActive("views")}
 				onMouseLeave={() => setActive(null)}
-				onClick={() => setActive(active === "views" ? null : "views")}
-				className="header-chip gap-1.5 px-2 py-1"
+				onClick={() => setActive(active === "views" ? null :"views")}
+				className="header-chip h-auto gap-1.5 rounded-full px-2 py-1"
 			>
 				<Eye className="size-3.5" />
 				<span className="font-medium tabular-nums text-foreground">
 					{formatCount(totalViews)}
 				</span>
-			</button>
+			</Button>
 
 			{/* Tooltip */}
 			{active === "online" && (

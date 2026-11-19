@@ -1,6 +1,7 @@
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { Button } from "#/components/ui/button";
 import { cn } from "#/lib/utils";
 
 interface NavbarProps {
@@ -30,7 +31,7 @@ type NavLinkComponent = React.ElementType<{
 	href?: string;
 	className?: string;
 	onClick?: () => void;
-	"aria-current"?: "page" | undefined;
+	"aria-current"?:"page" | undefined;
 	children?: React.ReactNode;
 }>;
 
@@ -254,14 +255,14 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 	return (
 		<div
-			data-scrolled={isVisible ? "true" : "false"}
+			data-scrolled={isVisible ? "true" :"false"}
 			className={cn(
 				// `isolate` keeps the surface layer behind the content without
 				// forcing a `z-index` onto every child.
 				"relative z-10 isolate mx-auto hidden w-full self-start items-center justify-between px-4 py-2.5 lg:flex [contain:layout_style]",
 				BAR_GEOMETRY,
 				reducedMotion ? "duration-0" : BAR_DURATION,
-				isVisible ? "max-w-[min(52rem,94vw)]" : "max-w-[92rem]",
+				isVisible ? "max-w-[min(52rem,94vw)]" :"max-w-[92rem]",
 				className,
 			)}
 		>
@@ -305,16 +306,16 @@ export const NavItems = ({
 							"relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-200",
 							isActive
 								? // The active pill paints the hover state itself, so no
-									// `hover:bg-muted` here and the two never stack.
+									// `` here and the two never stack.
 									"text-foreground"
-								: "text-muted-foreground hover:bg-muted hover:text-foreground",
+								: "text-muted-foreground",
 						)}
 					>
 						{/*
 						 * Only the active pill uses `layoutId`. A hover pill used to
 						 * share one too, which meant every mouse enter/leave remounted a
 						 * projection node and re-measured the whole nav row; a plain
-						 * `hover:bg-muted` is indistinguishable here and free.
+						 * `` is indistinguishable here and free.
 						 */}
 						{isActive && (
 							<motion.span
@@ -340,7 +341,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
 
 	return (
 		<div
-			data-scrolled={isVisible ? "true" : "false"}
+			data-scrolled={isVisible ? "true" :"false"}
 			className={cn(
 				"relative z-10 isolate mx-auto flex w-full flex-col items-center justify-between px-3 py-2 lg:hidden [contain:layout_style]",
 				BAR_GEOMETRY,
@@ -459,13 +460,15 @@ export const MobileNavToggle = ({
 	className?: string;
 }) => {
 	return (
-		<button
+		<Button
 			type="button"
+			variant="ghost"
+			size="icon"
 			onClick={onClick}
 			aria-expanded={isOpen}
-			aria-label={isOpen ? "Close menu" : "Open menu"}
+			aria-label={isOpen ? "Close menu" :"Open menu"}
 			className={cn(
-				"inline-flex size-9 shrink-0 items-center justify-center rounded-full text-foreground transition-colors duration-200 hover:bg-muted active:scale-90",
+				"size-9 shrink-0 rounded-full text-foreground transition-colors duration-200 active:scale-90",
 				className,
 			)}
 		>
@@ -474,7 +477,7 @@ export const MobileNavToggle = ({
 			<span className="relative block size-4">
 				<AnimatePresence initial={false}>
 					<motion.span
-						key={isOpen ? "close" : "open"}
+						key={isOpen ? "close" :"open"}
 						initial={{ opacity: 0, rotate: -70, scale: 0.7 }}
 						animate={{ opacity: 1, rotate: 0, scale: 1 }}
 						exit={{ opacity: 0, rotate: 70, scale: 0.7 }}
@@ -489,7 +492,7 @@ export const MobileNavToggle = ({
 					</motion.span>
 				</AnimatePresence>
 			</span>
-		</button>
+		</Button>
 	);
 };
 
@@ -542,16 +545,16 @@ export const NavbarButton = ({
 	...props
 }: {
 	href?: string;
-	as?: "a" | "button";
+	as?: "a" |"button";
 	children: React.ReactNode;
 	className?: string;
-	variant?: "primary" | "secondary" | "dark" | "gradient";
+	variant?: "primary" |"secondary" |"dark" |"gradient";
 } & (
 	| React.ComponentPropsWithoutRef<"a">
 	| React.ComponentPropsWithoutRef<"button">
 )) => {
 	const baseStyles =
-		"relative inline-block cursor-pointer rounded-full px-4 py-2 text-center text-sm font-bold transition duration-200 hover:-translate-y-0.5";
+		"relative inline-block cursor-pointer rounded-full px-4 py-2 text-center text-sm font-bold transition duration-200";
 
 	const variantStyles = {
 		primary: "bg-primary text-primary-foreground shadow-lg shadow-primary/20",

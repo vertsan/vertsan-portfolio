@@ -1,20 +1,21 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "#/components/ui/button";
 
-type ThemeMode = "light" | "dark" | "auto";
+type ThemeMode = "light" |"dark" |"auto";
 
 function getInitialMode(): ThemeMode {
-	if (typeof window === "undefined") return "auto";
+	if (typeof window === "undefined") return"auto";
 	const stored = window.localStorage.getItem("theme");
-	if (stored === "light" || stored === "dark" || stored === "auto")
+	if (stored === "light" || stored ==="dark" || stored ==="auto")
 		return stored;
 	return "auto";
 }
 
 function applyThemeMode(mode: ThemeMode) {
 	const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-	const resolved = mode === "auto" ? (prefersDark ? "dark" : "light") : mode;
-	document.documentElement.classList.remove("light", "dark");
+	const resolved = mode === "auto" ? (prefersDark ?"dark" :"light") : mode;
+	document.documentElement.classList.remove("light","dark");
 	document.documentElement.classList.add(resolved);
 	if (mode === "auto") {
 		document.documentElement.removeAttribute("data-theme");
@@ -43,7 +44,7 @@ export default function ThemeToggle() {
 
 	function toggleMode() {
 		const nextMode: ThemeMode =
-			mode === "light" ? "dark" : mode === "dark" ? "auto" : "light";
+			mode === "light" ?"dark" : mode ==="dark" ?"auto" :"light";
 		setMode(nextMode);
 		applyThemeMode(nextMode);
 		window.localStorage.setItem("theme", nextMode);
@@ -62,16 +63,18 @@ export default function ThemeToggle() {
 	};
 
 	return (
-		<button
+		<Button
 			type="button"
+			variant="ghost"
+			size="icon"
 			onClick={toggleMode}
 			aria-label={labels[mode]}
 			title={labels[mode]}
-			className="header-chip relative p-2.5 active:scale-90"
+			className="header-chip relative size-9 rounded-full p-2.5 active:scale-90"
 		>
 			<span className="block transition-transform duration-300 rotate-0 scale-100">
 				{icons[mode]}
 			</span>
-		</button>
+		</Button>
 	);
 }

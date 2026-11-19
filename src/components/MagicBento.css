@@ -42,23 +42,11 @@
   background: var(--background-dark);
   font-weight: 300;
   overflow: hidden;
-  transition: all 0.3s ease;
 
   --glow-x: 50%;
   --glow-y: 50%;
   --glow-intensity: 0;
   --glow-radius: 200px;
-}
-
-.magic-bento-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-@media (prefers-color-scheme: light) {
-  .magic-bento-card:hover {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-  }
 }
 
 .magic-bento-card__header,
@@ -180,26 +168,7 @@
   mask-composite: exclude;
   pointer-events: none;
   opacity: 1;
-  transition: opacity 0.3s ease;
   z-index: 1;
-}
-
-.magic-bento-card--border-glow:hover::after {
-  opacity: 1;
-}
-
-.magic-bento-card--border-glow:hover {
-  box-shadow:
-    0 4px 20px rgba(46, 24, 78, 0.4),
-    0 0 30px var(--purple-glow);
-}
-
-@media (prefers-color-scheme: light) {
-  .magic-bento-card--border-glow:hover {
-    box-shadow:
-      0 4px 20px rgba(132, 0, 255, 0.08),
-      0 0 30px rgba(132, 0, 255, 0.06);
-  }
 }
 
 .particle-container {
@@ -217,20 +186,6 @@
   background: rgba(132, 0, 255, 0.2);
   border-radius: 50%;
   z-index: -1;
-}
-
-.particle-container:hover {
-  box-shadow:
-    0 4px 20px rgba(46, 24, 78, 0.2),
-    0 0 30px var(--purple-glow);
-}
-
-@media (prefers-color-scheme: light) {
-  .particle-container:hover {
-    box-shadow:
-      0 4px 20px rgba(132, 0, 255, 0.06),
-      0 0 30px rgba(132, 0, 255, 0.04);
-  }
 }
 
 .global-spotlight {

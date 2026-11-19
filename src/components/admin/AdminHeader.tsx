@@ -61,7 +61,7 @@ export default function AdminHeader({
 					variant="ghost"
 					size="icon"
 					onClick={onToggleSidebar}
-					aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+					aria-label={sidebarOpen ? "Close sidebar" :"Open sidebar"}
 					className="shrink-0 lg:hidden"
 				>
 					<Menu className="size-4" />
@@ -71,8 +71,8 @@ export default function AdminHeader({
 					variant="ghost"
 					size="icon"
 					onClick={onToggleSidebar}
-					aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-					className="shrink-0 hidden lg:inline-flex text-muted-foreground hover:text-foreground transition-colors duration-200"
+					aria-label={sidebarOpen ? "Collapse sidebar" :"Expand sidebar"}
+					className="shrink-0 hidden lg:inline-flex text-muted-foreground transition-colors duration-200"
 				>
 					{sidebarOpen ? (
 						<PanelRightClose className="size-4" />
@@ -100,7 +100,7 @@ export default function AdminHeader({
 											<BreadcrumbLink asChild>
 												<Link
 													to={crumb.to}
-													className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+													className="text-sm text-muted-foreground transition-colors duration-200"
 												>
 													{crumb.label}
 												</Link>
@@ -123,7 +123,7 @@ export default function AdminHeader({
 
 				<div className="ml-auto flex items-center gap-2">
 					{/* Search */}
-					<div className={`hidden md:flex items-center gap-2 rounded-xl border transition-all duration-200 ${searchFocused ? "border-primary/30 ring-2 ring-primary/10 bg-white" : "border-transparent bg-muted/60 hover:bg-muted"} px-3 py-1.5`}>
+					<div className={`hidden md:flex items-center gap-2 rounded-xl border transition-all duration-200 ${searchFocused ? "border-primary/30 ring-2 ring-primary/10 bg-white" :"border-transparent bg-muted/60 "} px-3 py-1.5`}>
 						<Search className="size-3.5 text-muted-foreground/50 shrink-0" />
 						<input
 							type="text"
@@ -142,7 +142,7 @@ export default function AdminHeader({
 					</div>
 
 					{/* Notifications */}
-					<Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
+					<Button variant="ghost" size="icon" className="relative text-muted-foreground">
 						<Bell className="size-4" />
 						<span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-primary" />
 					</Button>
@@ -150,7 +150,7 @@ export default function AdminHeader({
 					<ThemeToggle />
 
 					{/* User avatar */}
-					<Button variant="ghost" className="hidden sm:flex items-center gap-2 px-2 rounded-xl text-muted-foreground hover:text-foreground">
+					<Button variant="ghost" className="hidden sm:flex items-center gap-2 px-2 rounded-xl text-muted-foreground">
 						<div className="size-7 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-[11px] font-bold shrink-0">
 							A
 						</div>

@@ -23,7 +23,7 @@ interface Job {
 
 function ExperienceShimmer() {
 	return (
-		<section className="min-h-screen flex flex-col justify-center py-16 md:py-24 px-4 sm:px-6 ">
+		<section className="min-h-screen flex flex-col justify-center py-16 md:py-24 px-4 sm:px-6">
 			<div className="max-w-4xl mx-auto w-full space-y-12">
 				<div className="text-center space-y-4">
 					<Skeleton className="h-10 w-48 mx-auto" />
@@ -97,7 +97,7 @@ export default function ExperienceSection() {
 									style={
 										{ "--reveal-delay": `${index * 80}ms` } as CSSProperties
 									}
-									className="border shadow-sm hover:shadow-lg hover:border-primary/10 transition-all duration-300 gap-2 md:gap-6 py-3 md:py-6"
+									className="border shadow-sm transition-all duration-300 gap-2 md:gap-6 py-3 md:py-6"
 								>
 									<CardHeader className="px-2 md:px-6">
 										<div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-2">
@@ -143,7 +143,7 @@ export default function ExperienceSection() {
 												<Badge
 													key={tag}
 													variant="outline"
-													className="text-[0.6rem] sm:text-xs px-1.5 py-0 sm:px-2.5 sm:py-0.5 transition-colors duration-200 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+													className="text-[0.6rem] sm:text-xs px-1.5 py-0 sm:px-2.5 sm:py-0.5 transition-colors duration-200"
 												>
 													{tag}
 												</Badge>

@@ -4,21 +4,21 @@ import { Github, Linkedin, Mail } from "lucide-react";
 const year = new Date().getFullYear();
 
 const footerLinks = [
-	{ to: "/" as const, label: "Home" },
-	{ to: "/about" as const, label: "About" },
-	{ to: "/projects" as const, label: "Projects" },
-	{ to: "/certificates" as const, label: "Certificates" },
-	{ to: "/visitors" as const, label: "Visitors" },
+	{ to: "/" as const, label:"Home" },
+	{ to: "/about" as const, label:"About" },
+	{ to: "/projects" as const, label:"Projects" },
+	{ to: "/certificates" as const, label:"Certificates" },
+	{ to: "/visitors" as const, label:"Visitors" },
 ];
 
 const socialLinks = [
-	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
+	{ href: "https://github.com/vertsan", label:"GitHub", icon: Github },
 	{
 		href: "https://linkedin.com/in/vertsan",
 		label: "LinkedIn",
 		icon: Linkedin,
 	},
-	{ href: "mailto:itsanvert@gmail.com", label: "Email", icon: Mail },
+	{ href: "mailto:itsanvert@gmail.com", label:"Email", icon: Mail },
 ];
 
 export default function Footer() {
@@ -41,7 +41,7 @@ export default function Footer() {
 								<Link
 									key={link.label}
 									to={link.to}
-									className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+									className="text-xs text-muted-foreground transition-colors"
 								>
 									{link.label}
 								</Link>
@@ -55,9 +55,9 @@ export default function Footer() {
 							<a
 								key={label}
 								href={href}
-								target={href.startsWith("mailto:") ? undefined : "_blank"}
+								target={href.startsWith("mailto:") ? undefined :"_blank"}
 								rel="noreferrer"
-								className="flex size-9 sm:size-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+								className="flex size-9 sm:size-8 items-center justify-center rounded-md text-muted-foreground transition-colors"
 								aria-label={label}
 							>
 								<Icon className="size-3.5" />

@@ -12,6 +12,7 @@ import {
 import { useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
 import GradientASCII from "#/components/GradientASCII";
+import { Button } from "#/components/ui/button";
 import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
 import { useLiveContent } from "#/lib/useLiveContent";
@@ -25,7 +26,7 @@ interface HeroProject {
 const EMAIL = "itsanvert@gmail.com";
 
 const socials = [
-	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
+	{ href: "https://github.com/vertsan", label:"GitHub", icon: Github },
 	{
 		href: "https://linkedin.com/in/vertsan",
 		label: "LinkedIn",
@@ -98,7 +99,7 @@ export default function HeroSection() {
 	};
 
 	const stats = [
-		{ label: "Years", value: "2.5+" },
+		{ label: "Years", value:"2.5+" },
 		{
 			label: "Projects",
 			value: count(projects.length, projectsLoading, projectsError),
@@ -204,12 +205,12 @@ export default function HeroSection() {
 						>
 							<Link
 								to="/projects"
-								className="ui-button ui-button-primary ui-focusable group"
+								className="ui-button ui-button-ghost ui-focusable"
 							>
-								Explore projects
+								Explore Project
 								<ArrowUpRight
 									aria-hidden="true"
-									className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+									className="size-4 transition-transform duration-200"
 								/>
 							</Link>
 
@@ -221,29 +222,6 @@ export default function HeroSection() {
 								<Download aria-hidden="true" className="size-4" />
 								Download resume
 							</a>
-
-							<button
-								type="button"
-								onClick={handleCopyEmail}
-								title="Copy email address"
-								className="ui-button ui-button-ghost ui-focusable gap-2 px-3.5 text-xs"
-							>
-								{copied ? (
-									<>
-										<Check
-											aria-hidden="true"
-											className="size-3.5 text-(--ui-accent)"
-										/>
-										<span className="text-(--ui-accent)">Copied</span>
-									</>
-								) : (
-									<>
-										<Copy aria-hidden="true" className="size-3.5" />
-										<span className="hidden sm:inline">Copy email</span>
-										<span className="sm:hidden">Copy</span>
-									</>
-								)}
-							</button>
 						</div>
 					</div>
 
@@ -258,11 +236,11 @@ export default function HeroSection() {
 								<a
 									key={label}
 									href={href}
-									target={href.startsWith("mailto:") ? undefined : "_blank"}
+									target={href.startsWith("mailto:") ? undefined :"_blank"}
 									rel="noreferrer"
 									aria-label={label}
 									title={label}
-									className="ui-focusable flex size-9 items-center justify-center rounded-full text-(--ui-text-muted) transition-colors hover:bg-(--ui-surface-soft) hover:text-(--ui-text)"
+									className="ui-focusable flex size-9 items-center justify-center rounded-full text-(--ui-text-muted) transition-colors"
 								>
 									<Icon className="size-4" />
 								</a>
@@ -291,10 +269,10 @@ export default function HeroSection() {
 
 						<a
 							href="#about"
-							className="ui-focusable group inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-(--ui-text-muted) transition-colors hover:text-(--ui-text)"
+							className="ui-focusable inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-(--ui-text-muted) transition-colors"
 						>
 							Scroll to explore
-							<span className="grid size-8 place-items-center rounded-full border border-(--ui-border-strong) transition-transform duration-300 group-hover:translate-y-0.5">
+							<span className="grid size-8 place-items-center rounded-full border border-(--ui-border-strong) transition-transform duration-300">
 								<ArrowDown aria-hidden="true" className="size-3.5" />
 							</span>
 						</a>
