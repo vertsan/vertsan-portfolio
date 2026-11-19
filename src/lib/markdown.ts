@@ -5,7 +5,7 @@ function escapeHtml(text: string): string {
 		.replace(/&/g, "&amp;")
 		.replace(/</g, "&lt;")
 		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
+		.replace(/"/g,"&quot;")
 		.replace(/'/g, "&#039;");
 }
 
@@ -15,7 +15,7 @@ marked.use({
 	renderer: {
 		code({ text, lang }: Tokens.Code) {
 			const langClass = lang
-				? ` class="language-${lang.replace(/[^a-zA-Z0-9_+#-]/g, "")}"`
+				? ` class="language-${lang.replace(/[^a-zA-Z0-9_+#-]/g,"")}"`
 				: "";
 			const escaped = escapeHtml(text);
 			return [
@@ -50,7 +50,7 @@ marked.use({
 		},
 
 		list(token: Tokens.List) {
-			const tag = token.ordered ? "ol" : "ul";
+			const tag = token.ordered ? "ol" :"ul";
 			const cls = token.ordered
 				? "list-decimal ml-6 mb-6 space-y-1.5"
 				: "list-disc ml-6 mb-6 space-y-1.5";
@@ -67,7 +67,7 @@ marked.use({
 		listitem(item: Tokens.ListItem) {
 			const text = this.parser.parse(item.tokens);
 			if (item.task) {
-				return `<li class="flex items-start gap-2 leading-relaxed"><input type="checkbox" class="mt-1 shrink-0" ${item.checked ? "checked" : ""} disabled /> <span>${text}</span></li>`;
+				return `<li class="flex items-start gap-2 leading-relaxed"><input type="checkbox" class="mt-1 shrink-0" ${item.checked ?"checked" :""} disabled /> <span>${text}</span></li>`;
 			}
 			return `<li class="leading-relaxed">${text}</li>`;
 		},
@@ -79,13 +79,13 @@ marked.use({
 
 		table(token: Tokens.Table) {
 		const alignAttr = (align: string | null) =>
-			align ? ` style="text-align: ${align}"` : "";
+			align ? ` style="text-align: ${align}"` :"";
 		const thead =
 			`<thead class="bg-muted/60">\n<tr>\n` +
 			token.header
 				.map(
 					(cell) =>
-						`<th class="p-3 font-semibold text-left border border-border${cell.align ? ` text-${cell.align}` : ""}"${alignAttr(cell.align)}>${this.parser.parseInline(cell.tokens)}</th>`,
+						`<th class="p-3 font-semibold text-left border border-border${cell.align ? ` text-${cell.align}` :""}"${alignAttr(cell.align)}>${this.parser.parseInline(cell.tokens)}</th>`,
 				)
 				.join("\n") +
 			`\n</tr>\n</thead>`;
@@ -94,11 +94,11 @@ marked.use({
 			token.rows
 				.map(
 					(row, ri) =>
-						`<tr class="${ri % 2 === 1 ? "bg-muted/20" : ""} transition-colors hover:bg-muted/40">\n` +
+						`<tr class="${ri % 2 === 1 ?"bg-muted/20" :""} transition-colors">\n` +
 						row
 							.map(
 								(cell) =>
-									`<td class="p-3 border border-border${cell.align ? ` text-${cell.align}` : ""}"${alignAttr(cell.align)}>${this.parser.parseInline(cell.tokens)}</td>`,
+									`<td class="p-3 border border-border${cell.align ? ` text-${cell.align}` :""}"${alignAttr(cell.align)}>${this.parser.parseInline(cell.tokens)}</td>`,
 							)
 							.join("\n") +
 						`\n</tr>`,
@@ -116,7 +116,7 @@ marked.use({
 		},
 
 		image({ href, title, text }: Tokens.Image) {
-			const titleAttr = title ? ` title="${escapeHtml(title)}"` : "";
+			const titleAttr = title ? ` title="${escapeHtml(title)}"` :"";
 			return [
 				`<figure class="my-8">`,
 				`<img src="${href}" alt="${escapeHtml(text)}"${titleAttr} class="w-full rounded-lg border border-border" loading="lazy" />`,
@@ -136,7 +136,7 @@ marked.use({
 			const icon = isExternal
 				? `<svg class="inline-block size-3.5 ml-0.5 -mt-0.5 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>`
 				: "";
-			return `<a href="${href}"${target} class="text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-all">${text}${icon}</a>`;
+			return `<a href="${href}"${target} class="text-primary underline underline-offset-4 decoration-primary/30  transition-all">${text}${icon}</a>`;
 		},
 
 		hr() {

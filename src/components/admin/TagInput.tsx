@@ -32,13 +32,15 @@ export default function TagInput({ value, onChange, placeholder }: Props) {
 				{tags.map((tag) => (
 					<Badge key={tag} variant="secondary" className="gap-1 pr-1">
 						{tag}
-						<button
+						<Button
 							type="button"
+							variant="ghost"
+							size="icon"
 							onClick={() => removeTag(tag)}
-							className="hover:text-destructive transition-colors"
+							className="size-5 p-0 text-muted-foreground transition-colors"
 						>
 							<X className="size-3" />
-						</button>
+						</Button>
 					</Badge>
 				))}
 			</div>

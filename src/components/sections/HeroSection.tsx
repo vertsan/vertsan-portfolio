@@ -2,8 +2,6 @@ import { Link } from "@tanstack/react-router";
 import {
 	ArrowDown,
 	ArrowUpRight,
-	Check,
-	Copy,
 	Download,
 	Github,
 	Linkedin,
@@ -11,7 +9,9 @@ import {
 } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
+import ElapsedYearsCounter from "#/components/ElapsedYearsCounter";
 import GradientASCII from "#/components/GradientASCII";
+import { buttonVariants } from "#/components/ui/button";
 import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
 import { useLiveContent } from "#/lib/useLiveContent";
@@ -23,9 +23,10 @@ interface HeroProject {
 }
 
 const EMAIL = "itsanvert@gmail.com";
+const BIRTH_DATE = new Date("2004-09-25T00:00:00Z");
 
 const socials = [
-	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
+	{ href: "https://github.com/vertsan", label:"GitHub", icon: Github },
 	{
 		href: "https://linkedin.com/in/vertsan",
 		label: "LinkedIn",
@@ -63,7 +64,6 @@ export default function HeroSection() {
 	const isDark = useIsDark();
 	const reduced = useReducedMotion() ?? false;
 	const cellSize = useGlyphCellSize();
-	const [copied, setCopied] = useState(false);
 
 	const {
 		items: projects,
@@ -75,16 +75,6 @@ export default function HeroSection() {
 		loading: certificatesLoading,
 		error: certificatesError,
 	} = useLiveContent<Record<string, unknown>>("certificates");
-
-	const handleCopyEmail = async () => {
-		try {
-			await navigator.clipboard.writeText(EMAIL);
-			setCopied(true);
-			window.setTimeout(() => setCopied(false), 2000);
-		} catch {
-			// Clipboard access can be blocked; the mailto link still works.
-		}
-	};
 
 	const count = (
 		length: number,
@@ -174,7 +164,8 @@ export default function HeroSection() {
 			<div className="relative z-10 w-full pt-32">
 				<div className="mx-auto w-full max-w-336 px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
 					<div className="max-w-264">
-						{/* Availability + location */}
+						{/* Live age counter */}
+						<ElapsedYearsCounter birthDate={BIRTH_DATE} />
 
 						{/* Statement headline */}
 						<h1
@@ -204,46 +195,23 @@ export default function HeroSection() {
 						>
 							<Link
 								to="/projects"
-								className="ui-button ui-button-primary ui-focusable group"
+								className={buttonVariants({ variant: "ghost" })}
 							>
-								Explore projects
+								Explore Project
 								<ArrowUpRight
 									aria-hidden="true"
-									className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+									className="size-4 transition-transform duration-200"
 								/>
 							</Link>
 
 							<a
 								href="/resume.pdf"
 								download
-								className="ui-button ui-button-ghost ui-focusable"
+								className={buttonVariants({ variant: "ghost" })}
 							>
 								<Download aria-hidden="true" className="size-4" />
 								Download resume
 							</a>
-
-							<button
-								type="button"
-								onClick={handleCopyEmail}
-								title="Copy email address"
-								className="ui-button ui-button-ghost ui-focusable gap-2 px-3.5 text-xs"
-							>
-								{copied ? (
-									<>
-										<Check
-											aria-hidden="true"
-											className="size-3.5 text-(--ui-accent)"
-										/>
-										<span className="text-(--ui-accent)">Copied</span>
-									</>
-								) : (
-									<>
-										<Copy aria-hidden="true" className="size-3.5" />
-										<span className="hidden sm:inline">Copy email</span>
-										<span className="sm:hidden">Copy</span>
-									</>
-								)}
-							</button>
 						</div>
 					</div>
 
@@ -251,53 +219,23 @@ export default function HeroSection() {
 					<div
 						data-reveal
 						style={reveal(320)}
-						className="mt-9 flex flex-col gap-4 border-t border-(--ui-border) pt-5 sm:flex-row sm:items-center sm:justify-between"
+						className="mt-9 flex flex-col gap-4  pt-5 sm:flex-row sm:items-center sm:justify-between"
 					>
 						<div className="flex items-center gap-1">
 							{socials.map(({ href, label, icon: Icon }) => (
 								<a
 									key={label}
 									href={href}
-									target={href.startsWith("mailto:") ? undefined : "_blank"}
+									target={href.startsWith("mailto:") ? undefined :"_blank"}
 									rel="noreferrer"
 									aria-label={label}
 									title={label}
-									className="ui-focusable flex size-9 items-center justify-center rounded-full text-(--ui-text-muted) transition-colors hover:bg-(--ui-surface-soft) hover:text-(--ui-text)"
+									className="ui-focusable flex size-9 items-center justify-center rounded-full text-(--ui-text-muted) transition-colors"
 								>
 									<Icon className="size-4" />
 								</a>
 							))}
 						</div>
-
-						<ul className="hidden items-center gap-6 sm:flex">
-							{stats.map(({ label, value }) => (
-								<li key={label} className="flex items-baseline gap-2">
-									{value === null ? (
-										<span
-											aria-hidden="true"
-											className="inline-block h-3 w-6 animate-pulse rounded-sm bg-(--ui-border)"
-										/>
-									) : (
-										<span className="font-mono text-sm font-semibold tabular-nums text-(--ui-text)">
-											{value}
-										</span>
-									)}
-									<span className="text-[10px] uppercase tracking-[0.16em] text-(--ui-text-subtle)">
-										{label}
-									</span>
-								</li>
-							))}
-						</ul>
-
-						<a
-							href="#about"
-							className="ui-focusable group inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-(--ui-text-muted) transition-colors hover:text-(--ui-text)"
-						>
-							Scroll to explore
-							<span className="grid size-8 place-items-center rounded-full border border-(--ui-border-strong) transition-transform duration-300 group-hover:translate-y-0.5">
-								<ArrowDown aria-hidden="true" className="size-3.5" />
-							</span>
-						</a>
 					</div>
 				</div>
 			</div>

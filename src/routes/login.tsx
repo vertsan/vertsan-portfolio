@@ -53,7 +53,7 @@ function LoginPage() {
 	useEffect(() => {
 		fetch("/api/admin/login", {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: { "Content-Type":"application/json" },
 			body: JSON.stringify({ action: "check" }),
 		})
 			.then((r) => r.json())
@@ -77,7 +77,7 @@ function LoginPage() {
 		try {
 			const res = await fetch("/api/admin/login", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type":"application/json" },
 				body: JSON.stringify({
 					action: "login",
 					username,
@@ -108,7 +108,7 @@ function LoginPage() {
 				<div className="w-full max-w-md px-1 sm:px-0">
 					<Link
 						to="/"
-						className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors duration-200 mb-8"
+						className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors duration-200 mb-8"
 					>
 						<ArrowLeft className="size-3" />
 						Back to site
@@ -171,11 +171,11 @@ function LoginPage() {
 
 						<Button
 							type="submit"
-							className="w-full gap-2 rounded-lg h-10"
+							className="w-full gap-2"
 							disabled={loading}
 						>
 							<LogIn className="size-4" />
-							{loading ? "Please wait..." : "Sign In"}
+							{loading ? "Please wait..." :"Sign In"}
 						</Button>
 					</form>
 				</div>

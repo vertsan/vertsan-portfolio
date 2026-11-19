@@ -88,31 +88,40 @@ export default function CertificateCarousel({ certificates }: CertificateCarouse
 
 				{certificates.length > 1 && (
 					<>
-						<button
+						<Button
+							type="button"
+							variant="outline"
+							size="icon"
 							onClick={prev}
-							className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-background transition-colors"
+							className="absolute left-2 top-1/2 size-8 -translate-y-1/2 rounded-full border bg-background/80 shadow-sm backdrop-blur-sm transition-colors"
 							aria-label="Previous"
 						>
 							<ChevronLeft className="size-4" />
-						</button>
-						<button
+						</Button>
+						<Button
+							type="button"
+							variant="outline"
+							size="icon"
 							onClick={next}
-							className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-background transition-colors"
+							className="absolute right-2 top-1/2 size-8 -translate-y-1/2 rounded-full border bg-background/80 shadow-sm backdrop-blur-sm transition-colors"
 							aria-label="Next"
 						>
 							<ChevronRight className="size-4" />
-						</button>
+						</Button>
 
 						<div className="flex justify-center gap-1.5 pb-4">
 							{certificates.map((_, idx) => (
-								<button
+								<Button
 									key={idx}
+									type="button"
+									variant="ghost"
+									size="icon"
 									onClick={() => setActiveIndex(idx)}
 									className={cn(
-										"size-1.5 rounded-full transition-all duration-300",
+										"size-1.5 rounded-full p-0 transition-all duration-300",
 										idx === activeIndex
 											? "w-5 bg-primary"
-											: "bg-muted-foreground/30 hover:bg-muted-foreground/50",
+											: "bg-muted-foreground/30",
 									)}
 									aria-label={`Go to certificate ${idx + 1}`}
 								/>

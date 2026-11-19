@@ -20,11 +20,7 @@ export default function AboutHero() {
 				}}
 				className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em]"
 			>
-				<span
-					aria-hidden
-					className="size-1.5 rounded-full"
-					style={{ backgroundColor: "var(--ui-accent)" }}
-				/>
+				
 				About me
 			</span>
 
@@ -33,7 +29,7 @@ export default function AboutHero() {
 				style={reveal(60)}
 				className="mt-6 text-[2.5rem] font-bold leading-[1.05] tracking-[-0.035em] text-[var(--ui-text)] sm:text-5xl md:text-6xl lg:text-[3.75rem]"
 			>
-				Who <span style={{ color: "var(--ui-accent)" }}>I Am</span>
+				Who I Am
 			</h1>
 
 			<p

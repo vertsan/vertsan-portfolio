@@ -1,24 +1,25 @@
 import { Link } from "@tanstack/react-router";
 import { Github, Linkedin, Mail } from "lucide-react";
+import { Button } from "#/components/ui/button";
 
 const year = new Date().getFullYear();
 
 const footerLinks = [
-	{ to: "/" as const, label: "Home" },
-	{ to: "/about" as const, label: "About" },
-	{ to: "/projects" as const, label: "Projects" },
-	{ to: "/certificates" as const, label: "Certificates" },
-	{ to: "/visitors" as const, label: "Visitors" },
+	{ to: "/" as const, label:"Home" },
+	{ to: "/about" as const, label:"About" },
+	{ to: "/projects" as const, label:"Projects" },
+	{ to: "/certificates" as const, label:"Certificates" },
+	{ to: "/visitors" as const, label:"Visitors" },
 ];
 
 const socialLinks = [
-	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
+	{ href: "https://github.com/vertsan", label:"GitHub", icon: Github },
 	{
 		href: "https://linkedin.com/in/vertsan",
 		label: "LinkedIn",
 		icon: Linkedin,
 	},
-	{ href: "mailto:itsanvert@gmail.com", label: "Email", icon: Mail },
+	{ href: "mailto:itsanvert@gmail.com", label:"Email", icon: Mail },
 ];
 
 export default function Footer() {
@@ -41,7 +42,7 @@ export default function Footer() {
 								<Link
 									key={link.label}
 									to={link.to}
-									className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+									className="text-xs text-muted-foreground transition-colors"
 								>
 									{link.label}
 								</Link>
@@ -52,16 +53,22 @@ export default function Footer() {
 					{/* Right: Socials */}
 					<div className="flex items-center justify-center gap-1.5 md:justify-end">
 						{socialLinks.map(({ href, label, icon: Icon }) => (
-							<a
+							<Button
 								key={label}
-								href={href}
-								target={href.startsWith("mailto:") ? undefined : "_blank"}
-								rel="noreferrer"
-								className="flex size-9 sm:size-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-								aria-label={label}
+								variant="ghost"
+								size="icon"
+								asChild
+								className="sm:size-8"
 							>
-								<Icon className="size-3.5" />
-							</a>
+								<a
+									href={href}
+									target={href.startsWith("mailto:") ? undefined :"_blank"}
+									rel="noreferrer"
+									aria-label={label}
+								>
+									<Icon className="size-3.5" />
+								</a>
+							</Button>
 						))}
 					</div>
 				</div>

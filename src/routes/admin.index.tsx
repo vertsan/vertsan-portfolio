@@ -159,7 +159,7 @@ function AdminDashboard() {
 					collectionMeta.map((m) =>
 						fetch("/api/admin", {
 							method: "POST",
-							headers: { "Content-Type": "application/json" },
+							headers: { "Content-Type":"application/json" },
 							body: JSON.stringify({ collection: m.key, action: "list" }),
 						}).then((r) => r.json()),
 					),
@@ -297,14 +297,14 @@ function AdminDashboard() {
 											transition={{ delay: 0.6 + i * 0.05, duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
 										>
 											<Link
-												to={item.collection === 'jobs' ? '/admin/jobs' : item.collection === 'education' ? '/admin/education' : item.collection === 'projects' ? '/admin/projects' : item.collection === 'certificates' ? '/admin/certificates' : '/admin/technologies'}
-												className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-muted/50 transition-all duration-200 group"
+												to={item.collection === 'jobs' ?'/admin/jobs' : item.collection ==='education' ?'/admin/education' : item.collection ==='projects' ?'/admin/projects' : item.collection ==='certificates' ?'/admin/certificates' :'/admin/technologies'}
+												className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200"
 											>
 												<div className={`size-9 rounded-xl ${colorClass.iconBg} flex items-center justify-center shrink-0`}>
 													<Icon className={`size-4 ${colorClass.iconColor}`} />
 												</div>
 												<div className="flex-1 min-w-0">
-													<p className="text-sm font-medium truncate group-hover:text-primary transition-colors duration-200">
+													<p className="text-sm font-medium truncate transition-colors duration-200">
 														{item.title}
 													</p>
 													<div className="flex items-center gap-2 mt-0.5">

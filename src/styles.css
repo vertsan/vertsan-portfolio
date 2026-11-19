@@ -61,12 +61,6 @@ body {
   background-clip: padding-box;
 }
 
-*::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklch, var(--foreground) 38%, transparent);
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
 :focus-visible {
   outline-color: color-mix(in oklch, var(--ring) 70%, transparent);
 }
@@ -452,15 +446,8 @@ code {
   }
 }
 
-/* Header nav chip: keeps the hover interaction for nav links only */
+/* Header nav chip: keeps the active/focus interactions for nav links only */
 @utility header-chip-nav {
-  &:hover {
-    color: var(--foreground);
-    background-color: color-mix(in oklch, var(--accent) 70%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--ring) 40%, transparent);
-    transform: translateY(-1px);
-  }
-
   &:active {
     transform: translateY(0) scale(0.96);
   }
@@ -623,15 +610,6 @@ code {
     border: 1px solid var(--ui-border);
     background-color: var(--ui-surface);
     box-shadow: var(--ui-shadow);
-    transition:
-      transform 0.3s ease,
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-
-  .ui-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--ui-border-strong);
   }
 
   .ui-card-flat {
@@ -644,14 +622,6 @@ code {
     border-radius: 0.875rem;
     border: 1px solid var(--ui-border);
     background-color: var(--ui-surface);
-    transition:
-      transform 0.3s ease,
-      border-color 0.3s ease;
-  }
-
-  .ui-thumb:hover {
-    transform: translateY(-2px);
-    border-color: var(--ui-border-strong);
   }
 
   .ui-chip {
@@ -692,21 +662,14 @@ code {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 0.875rem;
+    border-radius: 14px;
     padding-inline: 1.25rem;
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
-    transition:
-      transform 0.2s ease,
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
   }
 
-  .ui-button:hover {
-    transform: translateY(-2px);
-  }
+
 
   .ui-button-primary {
     background-color: var(--ui-accent);
@@ -720,11 +683,6 @@ code {
     color: var(--ui-text);
   }
 
-  .ui-button-ghost:hover {
-    border-color: var(--ui-border-strong);
-    background-color: var(--ui-surface-soft);
-  }
-
   .ui-focusable:focus-visible {
     outline: 2px solid var(--ui-accent);
     outline-offset: 3px;
@@ -736,20 +694,6 @@ code {
 .hero-shell [data-reveal] {
   --reveal-y: 12px;
   --reveal-duration: 500ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ui-card,
-  .ui-thumb,
-  .ui-button {
-    transition: none;
-  }
-
-  .ui-card:hover,
-  .ui-thumb:hover,
-  .ui-button:hover {
-    transform: none;
-  }
 }
 
 /* Respect users who prefer reduced motion: no entrance animations at all. */

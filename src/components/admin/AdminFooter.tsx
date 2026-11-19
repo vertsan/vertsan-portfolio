@@ -12,7 +12,7 @@ export default function AdminFooter() {
 					&copy; {year} VertSan CMS. All rights reserved.
 				</p>
 				<div className="flex items-center gap-4">
-					<Button variant="link" size="sm" asChild className="text-xs text-muted-foreground hover:text-foreground h-auto p-0">
+					<Button variant="link" size="sm" asChild className="text-xs text-muted-foreground h-auto p-0">
 						<Link to="/">
 							<ArrowLeft className="size-3" />
 							Back to Site

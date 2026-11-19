@@ -65,14 +65,6 @@
   color: var(--foreground);
 }
 
-.gooey-nav-container nav ul li:not(.active):hover {
-  color: var(--foreground);
-  transform: translateY(-1px);
-  background-color: color-mix(in oklch, var(--accent) 70%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--ring) 40%, transparent);
-}
-
-.gooey-nav-container nav ul li:not(.active):hover::after,
 .gooey-nav-container nav ul li:not(.active):focus-within::after {
   opacity: 0.1;
   transform: scale(1);

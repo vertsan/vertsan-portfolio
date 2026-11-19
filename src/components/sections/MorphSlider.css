@@ -100,12 +100,6 @@
     border-color 0.25s ease;
 }
 
-.morph-slider-btn:hover {
-  background: rgba(24, 24, 28, 0.6);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.06);
-}
-
 .morph-slider-btn:active {
   transform: scale(0.96);
 }

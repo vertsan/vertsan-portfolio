@@ -4,10 +4,12 @@ import {
 	startTransition,
 	useCallback,
 	useEffect,
+	useId,
 	useRef,
 	useState,
 } from "react";
 
+import { Button } from "#/components/ui/button";
 import {
 	MobileNav,
 	MobileNavHeader,
@@ -72,6 +74,7 @@ export default function Header() {
 	}, [pathname, closeMenu]);
 
 	const activeLink = resolveActiveLink(pathname);
+	const loginTooltipId = useId();
 	const logoClass =
 		"relative z-20 shrink-0 cursor-pointer px-2 py-1 font-semibold tracking-tight text-foreground";
 
@@ -95,13 +98,24 @@ export default function Header() {
 				<div className="relative z-20 flex shrink-0 items-center gap-1 md:gap-1.5">
 					<PresenceBadge />
 					<ThemeToggle />
-					<Link
-						to="/login"
-						className="header-chip hidden items-center gap-1.5 px-3 py-1.5 text-sm cursor-pointer lg:inline-flex"
+					<Button
+						asChild
+						variant="ghost"
+						size="icon"
+						aria-describedby={loginTooltipId}
+						className="header-chip group relative hidden size-9 rounded-full md:inline-flex"
 					>
-						<LogIn className="size-3.5" />
-						Login
-					</Link>
+						<Link to="/login" aria-label="Admin login">
+							<LogIn className="size-4" />
+							<span
+								id={loginTooltipId}
+								role="tooltip"
+								className="pointer-events-none absolute right-0 top-full z-50 mt-2 whitespace-nowrap rounded-md border border-border/60 bg-background/95 px-2 py-1 text-[10px] font-medium text-muted-foreground opacity-0 shadow-[0_12px_32px_-16px_rgb(0_0_0/0.55)] backdrop-blur-lg transition-opacity duration-150 group-hover:opacity-100"
+							>
+								Admin login
+							</span>
+						</Link>
+					</Button>
 				</div>
 			</NavBody>
 

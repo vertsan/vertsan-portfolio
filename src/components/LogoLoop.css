@@ -128,12 +128,6 @@
   overflow: visible;
 }
 
-.logoloop--scale-hover .logoloop__item:hover img,
-.logoloop--scale-hover .logoloop__item:hover .logoloop__node {
-  transform: scale(1.2);
-  transform-origin: center center;
-}
-
 .logoloop--scale-hover .logoloop__node {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -143,11 +137,6 @@
   align-items: center;
   text-decoration: none;
   border-radius: 4px;
-  transition: opacity 0.2s ease;
-}
-
-.logoloop__link:hover {
-  opacity: 0.8;
 }
 
 .logoloop__link:focus-visible {

@@ -38,13 +38,13 @@ export default function StatCard({
 	return (
 		<Link
 			to={to}
-			className="group relative flex flex-col rounded-[20px] border border-[#e5e7eb] bg-white dark:bg-card dark:border-border overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] animate-card-enter"
+			className="relative flex flex-col rounded-[20px] border border-[#e5e7eb] bg-white dark:bg-card dark:border-border overflow-hidden transition-all duration-200 animate-card-enter"
 			style={{ animationDelay: `${index * 80}ms` }}
 		>
 			<div className="p-5 pb-3 flex-1">
 				<div className="flex items-start justify-between mb-4">
 					<div
-						className={`size-11 rounded-2xl ${color.iconBg} flex items-center justify-center transition-transform duration-200 group-hover:scale-110`}
+						className={`size-11 rounded-2xl ${color.iconBg} flex items-center justify-center transition-transform duration-200 `}
 					>
 						<Icon className={`size-5 ${color.iconColor}`} />
 					</div>
@@ -53,7 +53,7 @@ export default function StatCard({
 					</span>
 				</div>
 
-				<h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
+				<h3 className="text-sm font-semibold text-foreground transition-colors duration-200">
 					{title}
 				</h3>
 				<p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
@@ -105,10 +105,10 @@ export default function StatCard({
 
 			{/* CTA */}
 			<div className="px-5 py-3 border-t border-[#e5e7eb] dark:border-border flex items-center justify-between">
-				<span className="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors duration-200">
+				<span className="text-xs text-muted-foreground transition-colors duration-200">
 					Manage {title.toLowerCase()}
 				</span>
-				<ArrowRight className="size-3.5 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
+				<ArrowRight className="size-3.5 text-muted-foreground/40 transition-all duration-200" />
 			</div>
 		</Link>
 	);

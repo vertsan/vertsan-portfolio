@@ -1,6 +1,7 @@
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { Button } from "#/components/ui/button";
 import { cn } from "#/lib/utils";
 
 interface NavbarProps {
@@ -30,7 +31,7 @@ type NavLinkComponent = React.ElementType<{
 	href?: string;
 	className?: string;
 	onClick?: () => void;
-	"aria-current"?: "page" | undefined;
+	"aria-current"?:"page" | undefined;
 	children?: React.ReactNode;
 }>;
 
@@ -106,11 +107,8 @@ const SURFACE = {
 /** Fraction of `threshold` at which the bar expands again (hysteresis band). */
 const RELEASE_RATIO = 0.6;
 
-const DESKTOP_QUERY = "(min-width: 1024px)";
+const DESKTOP_QUERY = "(min-width: 768px)";
 
-const MENU_TRANSITION = { duration: 0.18, ease: [0.22, 1, 0.36, 1] } as const;
-const MENU_EXIT_TRANSITION = { duration: 0.12, ease: [0.4, 0, 1, 1] } as const;
-const TOGGLE_TRANSITION = { duration: 0.14, ease: [0.22, 1, 0.36, 1] } as const;
 const PILL_TRANSITION = {
 	type: "spring",
 	stiffness: 520,
@@ -254,14 +252,14 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 	return (
 		<div
-			data-scrolled={isVisible ? "true" : "false"}
+			data-scrolled={isVisible ? "true" :"false"}
 			className={cn(
 				// `isolate` keeps the surface layer behind the content without
 				// forcing a `z-index` onto every child.
-				"relative z-10 isolate mx-auto hidden w-full self-start items-center justify-between px-4 py-2.5 lg:flex [contain:layout_style]",
+				"relative z-10 isolate mx-auto hidden w-full self-start flex-nowrap items-center justify-between px-4 py-2.5 md:flex [contain:layout_style]",
 				BAR_GEOMETRY,
 				reducedMotion ? "duration-0" : BAR_DURATION,
-				isVisible ? "max-w-[min(52rem,94vw)]" : "max-w-[92rem]",
+				isVisible ? "max-w-[min(52rem,94vw)]" :"max-w-[92rem]",
 				className,
 			)}
 		>
@@ -285,7 +283,7 @@ export const NavItems = ({
 	return (
 		<div
 			className={cn(
-				"hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex",
+				"hidden min-w-0 flex-1 flex-nowrap items-center justify-center gap-0.5 whitespace-nowrap md:flex",
 				className,
 			)}
 		>
@@ -302,28 +300,20 @@ export const NavItems = ({
 						onClick={onItemClick}
 						aria-current={isActive ? "page" : undefined}
 						className={cn(
-							"relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-200",
-							isActive
-								? // The active pill paints the hover state itself, so no
-									// `hover:bg-muted` here and the two never stack.
-									"text-foreground"
-								: "text-muted-foreground hover:bg-muted hover:text-foreground",
+							"relative shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors duration-200",
+							isActive ? "text-foreground" :"text-muted-foreground",
 						)}
 					>
-						{/*
-						 * Only the active pill uses `layoutId`. A hover pill used to
-						 * share one too, which meant every mouse enter/leave remounted a
-						 * projection node and re-measured the whole nav row; a plain
-						 * `hover:bg-muted` is indistinguishable here and free.
-						 */}
+						{/* Only the active pill uses `layoutId`; it stays a cheap
+						    paint-only layer behind the label. */}
 						{isActive && (
 							<motion.span
 								layoutId="nav-active-pill"
 								transition={PILL_TRANSITION}
-								className="absolute inset-0 rounded-full bg-primary/10 ring-1 ring-primary/25"
+								className="absolute inset-0 rounded-full border border-white/10 bg-white/10"
 							/>
 						)}
-						<span className="relative z-20 inline-flex items-center gap-1.5">
+						<span className="relative z-20 inline-flex items-center gap-1 whitespace-nowrap">
 							{Icon ? <Icon className="size-3.5" /> : null}
 							{item.name}
 						</span>
@@ -340,9 +330,9 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
 
 	return (
 		<div
-			data-scrolled={isVisible ? "true" : "false"}
+			data-scrolled={isVisible ? "true" :"false"}
 			className={cn(
-				"relative z-10 isolate mx-auto flex w-full flex-col items-center justify-between px-3 py-2 lg:hidden [contain:layout_style]",
+				"relative z-10 isolate mx-auto flex w-full flex-col items-center justify-between px-3 py-2 md:hidden [contain:layout_style]",
 				BAR_GEOMETRY,
 				reducedMotion ? "duration-0" : BAR_DURATION,
 				isVisible
@@ -402,7 +392,7 @@ export const MobileNavMenu = ({
 			}
 		};
 
-		// Growing past the `lg` breakpoint hides this menu with CSS while leaving
+		// Growing past the `md` breakpoint hides this menu with CSS while leaving
 		// `isOpen` true, so the state has to be reset or the menu reappears
 		// already open on the way back down to mobile.
 		const desktop = window.matchMedia(DESKTOP_QUERY);
@@ -459,13 +449,15 @@ export const MobileNavToggle = ({
 	className?: string;
 }) => {
 	return (
-		<button
+		<Button
 			type="button"
+			variant="ghost"
+			size="icon"
 			onClick={onClick}
 			aria-expanded={isOpen}
-			aria-label={isOpen ? "Close menu" : "Open menu"}
+			aria-label={isOpen ? "Close menu" :"Open menu"}
 			className={cn(
-				"inline-flex size-9 shrink-0 items-center justify-center rounded-full text-foreground transition-colors duration-200 hover:bg-muted active:scale-90",
+				"size-9 shrink-0 rounded-full text-foreground transition-colors duration-200 active:scale-90",
 				className,
 			)}
 		>
@@ -474,7 +466,7 @@ export const MobileNavToggle = ({
 			<span className="relative block size-4">
 				<AnimatePresence initial={false}>
 					<motion.span
-						key={isOpen ? "close" : "open"}
+						key={isOpen ? "close" :"open"}
 						initial={{ opacity: 0, rotate: -70, scale: 0.7 }}
 						animate={{ opacity: 1, rotate: 0, scale: 1 }}
 						exit={{ opacity: 0, rotate: 70, scale: 0.7 }}
@@ -489,7 +481,7 @@ export const MobileNavToggle = ({
 					</motion.span>
 				</AnimatePresence>
 			</span>
-		</button>
+		</Button>
 	);
 };
 
@@ -542,23 +534,27 @@ export const NavbarButton = ({
 	...props
 }: {
 	href?: string;
-	as?: "a" | "button";
+	as?: "a" |"button";
 	children: React.ReactNode;
 	className?: string;
-	variant?: "primary" | "secondary" | "dark" | "gradient";
+	variant?: "primary" |"secondary" |"dark" |"gradient";
 } & (
 	| React.ComponentPropsWithoutRef<"a">
 	| React.ComponentPropsWithoutRef<"button">
 )) => {
-	const baseStyles =
-		"relative inline-block cursor-pointer rounded-full px-4 py-2 text-center text-sm font-bold transition duration-200 hover:-translate-y-0.5";
+	const variantMap = {
+		primary: "default",
+		secondary: "ghost",
+		dark: "default",
+		gradient: "default",
+	} as const;
 
 	const variantStyles = {
-		primary: "bg-primary text-primary-foreground shadow-lg shadow-primary/20",
-		secondary: "bg-transparent text-foreground shadow-none",
+		primary: "",
+		secondary: "",
 		dark: "bg-foreground text-background",
-		gradient: "bg-gradient-to-b from-blue-500 to-blue-700 text-white",
-	};
+		gradient: "bg-linear-to-b from-blue-500 to-blue-700 text-white",
+	} as const;
 
 	const Comp = Tag as React.ElementType<
 		React.ComponentPropsWithoutRef<"a"> &
@@ -566,12 +562,14 @@ export const NavbarButton = ({
 	>;
 
 	return (
-		<Comp
-			href={href || undefined}
-			className={cn(baseStyles, variantStyles[variant], className)}
-			{...props}
+		<Button
+			asChild
+			variant={variantMap[variant]}
+			className={cn("relative", variantStyles[variant], className)}
 		>
-			{children}
-		</Comp>
+			<Comp href={href || undefined} {...props}>
+				{children}
+			</Comp>
+		</Button>
 	);
 };
