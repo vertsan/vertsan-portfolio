@@ -1,4 +1,4 @@
-import { Code2, Globe, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import type { CSSProperties } from "react";
 import StatCard from "./StatCard";
 
@@ -11,9 +11,8 @@ const techStack = [
 ];
 
 /**
- * Right-hand content card: heading, readable bio, outlined tech chips, stats
- * and the closing tagline pill. `mt-auto` keeps the quote anchored to the
- * bottom when the card stretches to match the portrait column.
+ * Open-canvas right column: the bio, metrics and tagline sit directly on the
+ * page background. Only hairlines and type define the hierarchy.
  */
 export default function BioCard() {
 	return (
@@ -21,27 +20,23 @@ export default function BioCard() {
 			aria-labelledby="about-bio-heading"
 			data-reveal
 			style={{ "--reveal-delay": "120ms" } as CSSProperties}
-			className="ui-card flex h-full flex-col gap-6 p-6 sm:p-8"
+			className="flex h-full flex-col bg-transparent"
 		>
-			<div>
+			<div className="max-w-xl">
 				<h2
 					id="about-bio-heading"
-					className="text-2xl font-semibold tracking-tight"
-					style={{ color: "var(--ui-text)" }}
+					className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white sm:text-3xl"
 				>
 					A bit about me
 				</h2>
 
-				<p
-					className="mt-3 max-w-[60ch] text-base leading-[1.7] sm:text-[17px]"
-					style={{ color: "var(--ui-text-muted)" }}
-				>
+				<p className="mt-4 text-base leading-relaxed text-neutral-600 dark:text-neutral-300 sm:text-[17px]">
 					I focus on building interfaces that are fast, accessible, and visually
-					clean. I enjoy working across the full stack — from pixel-perfect
+					clean. I enjoy working across the full stack - from pixel-perfect
 					frontends to robust backends.
 				</p>
 
-				<ul aria-label="Tech stack" className="mt-5 flex flex-wrap gap-2">
+				<ul aria-label="Tech stack" className="mt-6 flex flex-wrap gap-2.5">
 					{techStack.map((tech) => (
 						<li key={tech} className="ui-chip">
 							{tech}
@@ -50,40 +45,21 @@ export default function BioCard() {
 				</ul>
 			</div>
 
-			<div aria-hidden className="ui-divider" />
-
-			<div className="grid grid-cols-2 gap-3 sm:gap-4">
+			<div className="mt-10 grid grid-cols-2 divide-x divide-black/10 border-y border-black/10 py-6 dark:divide-white/10 dark:border-white/10 sm:mt-12">
 				<StatCard
-					icon={Code2}
 					value={2.5}
 					decimals={1}
 					suffix="+"
 					label="Years Experience"
 					delay={180}
 				/>
-				<StatCard
-					icon={Globe}
-					value={10}
-					suffix="+"
-					label="Projects Delivered"
-					delay={240}
-				/>
+				<StatCard value={10} suffix="+" label="Projects Delivered" delay={240} />
 			</div>
 
-			<div
-				className="mt-auto flex items-center gap-3 rounded-2xl border px-4 py-3.5"
-				style={{
-					borderColor: "var(--ui-border)",
-					backgroundColor: "var(--ui-accent-soft)",
-				}}
-			>
-				<span className="ui-icon-chip size-9" aria-hidden>
-					<Sparkles className="size-4" />
-				</span>
-				<p className="text-sm" style={{ color: "var(--ui-text-muted)" }}>
-					Always learning, always building.
-				</p>
-			</div>
+			<p className="mt-auto flex items-center gap-2 pt-8 text-xs text-neutral-500 dark:text-neutral-400">
+				<Sparkles className="size-3.5 shrink-0 text-(--accent-1)" aria-hidden="true" />
+				Always learning, always building
+			</p>
 		</section>
 	);
 }

@@ -1,9 +1,6 @@
-﻿import AboutHero from "#/components/about/AboutHero";
+import AboutHero from "#/components/about/AboutHero";
 import BioCard from "#/components/about/BioCard";
 import PortraitCard from "#/components/about/PortraitCard";
-import GradientASCII from "#/components/GradientASCII";
-import { ASCII_FADE_MASK, GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
-import { useIsDark } from "#/lib/useIsDark";
 import { cn } from "#/lib/utils";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
@@ -28,8 +25,6 @@ export default function AboutSection({
 	/** Home already tells this story inside the hero. */
 	hideIntro?: boolean;
 }) {
-	const isDark = useIsDark();
-
 	return (
 		<section
 			id="about"
@@ -38,8 +33,6 @@ export default function AboutSection({
 				!hideIntro && "about-shell pt-16 pb-20 sm:pt-20 md:pt-24 md:pb-24",
 			)}
 		>
-			
-
 			<div className="relative z-10 mx-auto w-full max-w-[75rem] px-5 sm:px-6">
 				{!hideIntro && (
 					<>
