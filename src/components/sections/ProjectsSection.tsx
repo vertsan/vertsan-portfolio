@@ -5,6 +5,7 @@ import { type CSSProperties, memo, useMemo, useState } from "react";
 import GradientASCII from "#/components/GradientASCII";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
+import { VoteControl } from "#/components/ui/vote-control";
 import {
 	Card,
 	CardContent,
@@ -12,10 +13,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/ui/card";
+import { useProjectVotes } from "#/hooks/use-project-votes";
 import Pagination from "#/components/ui/pagination";
 import SectionHeading from "#/components/ui/section-heading";
 import { Skeleton } from "#/components/ui/skeleton";
 import { ASCII_FADE_MASK, GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
+import type { VoteTally } from "#/services/project-vote.service";
 import { useIsDark } from "#/lib/useIsDark";
 import { setCache, useLiveContent } from "#/lib/useLiveContent";
 import "#/lib/markdown";
@@ -50,6 +53,70 @@ function prefetchProjects() {
 		.catch(() => {});
 }
 
+function getDomain(url: string) {
+	try {
+		return new URL(url).hostname.replace("www.", "");
+	} catch {
+		return "";
+	}
+}
+
+/** Rounded-square logo on the preview, derived from the existing project link. */
+
+function ProjectPreview({ project }: { project: Project }) {
+	const [imageFailed, setImageFailed] = useState(false);
+	const hasImage = Boolean(project.image?.trim()) && !imageFailed;
+
+	return (
+		<div className="relative aspect-video w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
+			{hasImage ? (
+				<img
+					src={project.image as string}
+					alt={`${project.title} preview`}
+					loading="lazy"
+					decoding="async"
+					onError={() => setImageFailed(true)}
+					className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+				/>
+			) : (
+				<div
+					aria-hidden
+					className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.14),transparent_55%)]"
+				/>
+			)}
+			<div
+				aria-hidden
+				className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10"
+			/>
+			<div className="absolute right-3 top-3 flex items-center gap-2">
+				{project.github && (
+					<a
+						href={project.github}
+						target="_blank"
+						rel="noreferrer"
+						aria-label="View source on GitHub"
+						className="inline-flex size-9 items-center justify-center rounded-full border border-white/25 bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+					>
+						<Github className="size-4" />
+					</a>
+				)}
+				{project.link && (
+					<a
+						href={project.link}
+						target="_blank"
+						rel="noreferrer"
+						aria-label="View live project"
+						className="inline-flex size-9 items-center justify-center rounded-full border border-white/25 bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+					>
+						<ExternalLink className="size-4" />
+					</a>
+				)}
+			</div>
+			
+		</div>
+	);
+}
+
 function ProjectsShimmer() {
 	return (
 		<section className="min-h-screen flex flex-col justify-center py-16 md:py-24">
@@ -60,7 +127,11 @@ function ProjectsShimmer() {
 				</div>
 				<div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{[...Array(3)].map((_, i) => (
-						<Card key={i} className="border shadow-sm flex flex-col">
+						<Card
+							key={i}
+							className="flex h-full flex-col gap-0 overflow-hidden rounded-lg border border-border/60 bg-card py-0 pt-0 shadow-sm ring-0 backdrop-blur-none"
+						>
+							<Skeleton className="aspect-video w-full shrink-0 rounded-none" />
 							<CardHeader>
 								<div className="flex items-start justify-between gap-2">
 									<Skeleton className="h-6 w-36" />
@@ -92,9 +163,15 @@ function ProjectsShimmer() {
 const ProjectCard = memo(function ProjectCard({
 	project,
 	index = 0,
+	vote,
+	pending = false,
+	onVote,
 }: {
 	project: Project;
 	index?: number;
+	vote?: VoteTally;
+	pending?: boolean;
+	onVote: (slug: string, value: 1 | -1) => void;
 }) {
 	const renderedSummary = useMemo(
 		() => (project.summary?.trim() ? marked(project.summary) : ""),
@@ -105,99 +182,67 @@ const ProjectCard = memo(function ProjectCard({
 		<Card
 			data-reveal
 			style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
-			className="flex flex-col border shadow-sm transition-all duration-300 overflow-hidden gap-0"
+			onMouseEnter={prefetchProjects}
+			className="group flex h-full flex-col gap-0 overflow-hidden rounded-lg border border-border/60 bg-card py-0 pt-0 shadow-sm ring-0 backdrop-blur-none transition-all duration-300 hover:shadow-md"
 		>
-			<CardHeader className="px-5 pt-5 pb-3">
-				<div className="flex items-start justify-between gap-3">
-					<CardTitle className="text-base leading-snug md:text-lg transition-colors duration-300">
-						{project.title}
-					</CardTitle>
-					<Badge
-						variant={project.status === "Completed" ?"default" :"secondary"}
-						className="shrink-0"
-					>
-						{project.status}
-					</Badge>
-				</div>
-			</CardHeader>
-			<CardContent className="flex flex-col gap-3 px-5 pb-3 flex-1">
-				{renderedSummary ? (
-					<div
-						className="text-sm text-muted-foreground line-clamp-2"
-						dangerouslySetInnerHTML={{ __html: renderedSummary }}
-					/>
-				) : (
-					<p className="text-sm text-muted-foreground line-clamp-2">
-						{project.summary}
-					</p>
-				)}
-				<div className="flex flex-wrap gap-1.5">
-					{project.tags?.slice(0, 6).map((tag) => (
-						<Badge key={tag} variant="outline" className="text-xs font-normal">
-							{tag}
-						</Badge>
-					))}
-					{project.tags && project.tags.length > 6 && (
-						<Badge variant="outline" className="text-xs font-normal">
-							+{project.tags.length - 6}
-						</Badge>
-					)}
-				</div>
-			</CardContent>
-			<CardFooter className="flex items-center justify-between gap-2 border-t border-border/50 bg-muted/20 px-5 py-3 mt-auto">
-				<div className="flex gap-1">
-					{project.github && (
-						<Button variant="ghost" size="icon" asChild>
-							<a
-								href={project.github}
-								target="_blank"
-								rel="noreferrer"
-								aria-label="View source on GitHub"
-							>
-								<Github className="size-4" />
-							</a>
-						</Button>
-					)}
-					{project.link && (
-						<Button variant="ghost" size="icon" asChild>
-							<a
-								href={project.link}
-								target="_blank"
-								rel="noreferrer"
-								aria-label="View live project"
-							>
-								<ExternalLink className="size-4" />
-							</a>
-						</Button>
-					)}
-				</div>
-				{project.slug ? (
-					<Button
-						variant="ghost"
-						size="sm"
-						className="gap-1 text-muted-foreground"
-						asChild
-						onMouseEnter={prefetchProjects}
-					>
+			<ProjectPreview project={project} />
+			<CardHeader className="flex flex-1 flex-col gap-1 px-4 pb-3 pt-3">
+				<CardTitle className="text-base font-bold leading-snug md:text-lg">
+					{project.slug ? (
 						<Link
 							to="/projects/$projectId"
 							params={{ projectId: project.slug }}
+							className="line-clamp-1 transition-colors hover:text-primary"
 						>
-							Details
-							<ArrowUpRight className="size-3.5" />
+							{project.title}
 						</Link>
-					</Button>
+					) : (
+						<span className="line-clamp-1">{project.title}</span>
+					)}
+				</CardTitle>
+				{renderedSummary ? (
+					<div
+						className="line-clamp-2 text-sm leading-relaxed text-muted-foreground [&_a]:text-primary [&_p]:m-0"
+						dangerouslySetInnerHTML={{ __html: renderedSummary }}
+					/>
 				) : (
-					<Button
-						variant="ghost"
-						size="sm"
-						className="gap-1 text-muted-foreground"
-						disabled
-					>
-						Details
-						<ArrowUpRight className="size-3.5" />
-					</Button>
+					<p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+						{project.summary}
+					</p>
 				)}
+				{project.slug && (
+					<Link
+						to="/projects/$projectId"
+						params={{ projectId: project.slug }}
+						className="mt-1 inline-flex w-fit items-center gap-1 text-xs font-medium text-primary transition-opacity hover:opacity-80"
+					>
+						View details
+						<ArrowUpRight className="size-3" />
+					</Link>
+				)}
+			</CardHeader>
+			<CardFooter className="mt-auto flex items-center justify-between gap-2 border-t border-border/60 px-4 py-3">
+				<div className="flex min-w-0 flex-wrap items-center gap-1.5">
+					{project.tags?.slice(0, 3).map((tag) => (
+						<Badge
+							key={tag}
+							variant="outline"
+							className="text-[11px] font-normal"
+						>
+							{tag}
+						</Badge>
+					))}
+					{project.tags && project.tags.length > 3 && (
+						<Badge variant="outline" className="text-[11px] font-normal">
+							+{project.tags.length - 3}
+						</Badge>
+					)}
+				</div>
+				<VoteControl
+					vote={vote}
+					pending={pending}
+					onVote={(value) => onVote(project.slug, value)}
+				/>
 			</CardFooter>
 		</Card>
 	);
@@ -228,6 +273,11 @@ export default function ProjectsSection() {
 		safePage * PAGE_SIZE,
 	);
 	const displayed = isHome ? sortedProjects.slice(0, MAX_HOME) : pageItems;
+	const displayedSlugs = useMemo(
+		() => displayed.map((project) => project.slug).filter(Boolean),
+		[displayed],
+	);
+	const { votes, pending, vote } = useProjectVotes(displayedSlugs);
 
 	const handlePageChange = (nextPage: number) => {
 		setPage(nextPage);
@@ -260,6 +310,9 @@ export default function ProjectsSection() {
 							key={project.slug ?? project.title}
 							project={project}
 							index={index}
+							vote={votes[project.slug]}
+							pending={pending[project.slug]}
+							onVote={vote}
 						/>
 					))}
 				</div>

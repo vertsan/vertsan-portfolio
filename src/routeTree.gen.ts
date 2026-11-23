@@ -33,6 +33,7 @@ import { Route as ApiPublicRouteImport } from './routes/api.public'
 import { Route as ApiResumeChatRouteImport } from './routes/api.resume-chat'
 import { Route as ApiTestimonialsRouteImport } from './routes/api.testimonials'
 import { Route as ApiVisitorCountriesRouteImport } from './routes/api.visitor-countries'
+import { Route as ApiVotesRouteImport } from './routes/api.votes'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 import { Route as ApiAdminLoginRouteImport } from './routes/api.admin.login'
@@ -163,6 +164,11 @@ const ApiVisitorCountriesRoute = ApiVisitorCountriesRouteImport.update({
   path: '/api/visitor-countries',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVotesRoute = ApiVotesRouteImport.update({
+  id: '/api/votes',
+  path: '/api/votes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/api/resume-chat': typeof ApiResumeChatRoute
   '/api/testimonials': typeof ApiTestimonialsRoute
   '/api/visitor-countries': typeof ApiVisitorCountriesRoute
+  '/api/votes': typeof ApiVotesRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/admin/': typeof AdminIndexRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/api/resume-chat': typeof ApiResumeChatRoute
   '/api/testimonials': typeof ApiTestimonialsRoute
   '/api/visitor-countries': typeof ApiVisitorCountriesRoute
+  '/api/votes': typeof ApiVotesRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/admin': typeof AdminIndexRoute
   '/projects': typeof ProjectsIndexRoute
@@ -302,6 +310,7 @@ export interface FileRoutesById {
   '/api/resume-chat': typeof ApiResumeChatRoute
   '/api/testimonials': typeof ApiTestimonialsRoute
   '/api/visitor-countries': typeof ApiVisitorCountriesRoute
+  '/api/votes': typeof ApiVotesRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/admin/': typeof AdminIndexRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -339,6 +348,7 @@ export interface FileRouteTypes {
     | '/api/resume-chat'
     | '/api/testimonials'
     | '/api/visitor-countries'
+    | '/api/votes'
     | '/projects/$projectId'
     | '/admin/'
     | '/projects/'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/api/resume-chat'
     | '/api/testimonials'
     | '/api/visitor-countries'
+    | '/api/votes'
     | '/projects/$projectId'
     | '/admin'
     | '/projects'
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
     | '/api/resume-chat'
     | '/api/testimonials'
     | '/api/visitor-countries'
+    | '/api/votes'
     | '/projects/$projectId'
     | '/admin/'
     | '/projects/'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   ApiResumeChatRoute: typeof ApiResumeChatRoute
   ApiTestimonialsRoute: typeof ApiTestimonialsRoute
   ApiVisitorCountriesRoute: typeof ApiVisitorCountriesRoute
+  ApiVotesRoute: typeof ApiVotesRoute
   ApiAuthProviderRoute: typeof ApiAuthProviderRouteWithChildren
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
   ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
@@ -613,6 +626,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVisitorCountriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/votes': {
+      id: '/api/votes'
+      path: '/api/votes'
+      fullPath: '/api/votes'
+      preLoaderRoute: typeof ApiVotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/': {
       id: '/projects/'
       path: '/'
@@ -760,6 +780,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiResumeChatRoute: ApiResumeChatRoute,
   ApiTestimonialsRoute: ApiTestimonialsRoute,
   ApiVisitorCountriesRoute: ApiVisitorCountriesRoute,
+  ApiVotesRoute: ApiVotesRoute,
   ApiAuthProviderRoute: ApiAuthProviderRouteWithChildren,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
   ApiAuthLogoutRoute: ApiAuthLogoutRoute,
