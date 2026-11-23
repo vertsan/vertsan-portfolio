@@ -8,7 +8,7 @@ A modern, full-stack personal portfolio showcasing projects, experience, educati
 
 ## 🚀 Live Demo
 
-**[https://vertsan.netlify.app](https://vertsan.netlify.app)**
+**[https://vertsan.vercel.app](https://vertsan.vercel.app)**
 
 ## ✨ Features
 
