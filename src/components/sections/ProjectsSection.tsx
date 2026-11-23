@@ -179,7 +179,7 @@ function ProjectsShimmer() {
 	);
 }
 
-const ProjectCard = memo(function ProjectCard({
+export const ProjectCard = memo(function ProjectCard({
 	project,
 	index = 0,
 	vote,
