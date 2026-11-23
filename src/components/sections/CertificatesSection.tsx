@@ -115,7 +115,7 @@ export default function CertificatesSection() {
 							key={(cert as Record<string, any>).title as string}
 							data-reveal
 							style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
-							className="border shadow-sm transition-all duration-300 overflow-hidden gap-0"
+							className="group flex h-full flex-col border shadow-sm transition-all duration-300 overflow-hidden gap-0"
 						>
 							<CardHeader className="px-5 pt-5 pb-3">
 								<div className="flex items-start gap-3">
@@ -132,7 +132,7 @@ export default function CertificatesSection() {
 									</div>
 								</div>
 							</CardHeader>
-							<CardContent className="space-y-3 px-5 pb-3">
+							<CardContent className="flex flex-1 flex-col gap-3 px-5 pb-5">
 								<p className="text-sm text-muted-foreground leading-relaxed">
 									{(cert as Record<string, any>).summary as string}
 								</p>
@@ -155,7 +155,7 @@ export default function CertificatesSection() {
 										</a>
 									)}
 								</div>
-								<div className="flex flex-wrap gap-1.5 pt-1">
+								<div className="mt-auto flex flex-wrap gap-1.5 pt-1">
 									{((cert as Record<string, any>).tags as string[])?.map(
 										(tag: string) => (
 											<Badge

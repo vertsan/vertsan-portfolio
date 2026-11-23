@@ -21,6 +21,8 @@ import {
 } from "#/components/ui/breadcrumb";
 import { Button } from "#/components/ui/button";
 import { Skeleton } from "#/components/ui/skeleton";
+import { VoteControl } from "#/components/ui/vote-control";
+import { useProjectVotes } from "#/hooks/use-project-votes";
 import { ASCII_FADE_MASK, GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
 import { getCache, setCache } from "#/lib/useLiveContent";
@@ -56,6 +58,11 @@ function ProjectDetail() {
 		return cached ? cached.find((p) => p.slug === projectId) : undefined;
 	});
 	const [loading, setLoading] = useState(!project);
+	const voteSlugs = useMemo(
+		() => (project?.slug ? [project.slug] : []),
+		[project?.slug],
+	);
+	const { votes, pending, vote } = useProjectVotes(voteSlugs);
 
 	useEffect(() => {
 		const cached = getCache<Project>("projects");
@@ -98,28 +105,6 @@ function ProjectDetail() {
 				className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[100svh] overflow-hidden opacity-30 dark:opacity-45"
 				style={ASCII_FADE_MASK}
 			>
-				<GradientASCII
-					colors={GRADIENT_ASCII_COLORS}
-					shape="horizon"
-					cellSize={18}
-					density={0.8}
-					glyphOpacity={0.85}
-					gradientOpacity={0.9}
-					glow={0.2}
-					softness={0.5}
-					scale={1}
-					flow={0.5}
-					speed={0.4}
-					flicker={0.2}
-					depthOfField={0}
-					grain={0.08}
-					variation={0}
-					mouseInteraction
-					clickEffect="wave"
-					intro={false}
-					lightMode={!isDark}
-					className="size-full"
-				/>
 			</div>
 			<div
 				aria-hidden
@@ -290,6 +275,17 @@ function ProjectDetail() {
 									))}
 								</div>
 							)}
+
+							<div className="flex items-center justify-between gap-3 border-t border-border/60 pt-4">
+								<span className="text-xs text-muted-foreground">
+									Rate this project
+								</span>
+								<VoteControl
+									vote={votes[project.slug]}
+									pending={pending[project.slug]}
+									onVote={(value) => void vote(project.slug, value)}
+								/>
+							</div>
 
 							{(project.downloadAndroid ||
 								project.downloadIos ||

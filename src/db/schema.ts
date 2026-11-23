@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export type VisitorSession = typeof visitorSessions.$inferSelect;
+export type ProjectVote = typeof projectVotes.$inferSelect;
 
 export const jobs = pgTable("jobs", {
 	id: serial("id").primaryKey(),
@@ -120,6 +121,23 @@ export const testimonials = pgTable("testimonials", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export const projectVotes = pgTable(
+	"project_votes",
+	{
+		id: serial("id").primaryKey(),
+		projectSlug: text("project_slug").notNull(),
+		sessionId: text("session_id").notNull(),
+		value: integer("value").notNull(),
+		updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	},
+	(table) => [
+		uniqueIndex("project_vote_slug_session_idx").on(
+			table.projectSlug,
+			table.sessionId,
+		),
+	],
+);
 
 export const visitorSessions = pgTable(
 	"visitor_sessions",
