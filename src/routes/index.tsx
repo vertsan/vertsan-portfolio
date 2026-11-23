@@ -41,9 +41,9 @@ function Home() {
 		<DataProvider data={data}>
 			<ResumeAssistant />
 			<HeroSection />
+			<WhatICanDoSection />
 			<ShowcaseSection />
 			<AboutSection hideIntro />
-			<WhatICanDoSection />
 			<TestimonialsSection />
 			<GetInTouchSection />
 		</DataProvider>
