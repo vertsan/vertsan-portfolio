@@ -1,32 +1,22 @@
 import { Link } from "@tanstack/react-router";
-import {
-	ArrowDown,
-	ArrowUpRight,
-	Download,
-	Github,
-	Linkedin,
-	Mail,
-} from "lucide-react";
-import { useReducedMotion } from "motion/react";
+import { ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
 import ElapsedYearsCounter from "#/components/ElapsedYearsCounter";
 import GradientASCII from "#/components/GradientASCII";
 import { buttonVariants } from "#/components/ui/button";
+import { ContainerTextFlip } from "#/components/ui/container-text-flip";
 import { GRADIENT_ASCII_COLORS } from "#/lib/gradient-ascii";
 import { useIsDark } from "#/lib/useIsDark";
-import { useLiveContent } from "#/lib/useLiveContent";
-
-interface HeroProject {
-	title: string;
-	startDate: string;
-	image?: string | null;
-}
 
 const EMAIL = "itsanvert@gmail.com";
 const BIRTH_DATE = new Date("2004-09-25T00:00:00Z");
 
+/** The hero statement cycles its second adjective — see the supporting copy. */
+const HERO_ADJECTIVES = ["immersive", "accessible", "scalable", "secure"];
+
 const socials = [
-	{ href: "https://github.com/vertsan", label:"GitHub", icon: Github },
+	{ href: "https://github.com/vertsan", label: "GitHub", icon: Github },
 	{
 		href: "https://linkedin.com/in/vertsan",
 		label: "LinkedIn",
@@ -64,40 +54,6 @@ export default function HeroSection() {
 	const isDark = useIsDark();
 	const reduced = useReducedMotion() ?? false;
 	const cellSize = useGlyphCellSize();
-
-	const {
-		items: projects,
-		loading: projectsLoading,
-		error: projectsError,
-	} = useLiveContent<HeroProject>("projects");
-	const {
-		items: certificates,
-		loading: certificatesLoading,
-		error: certificatesError,
-	} = useLiveContent<Record<string, unknown>>("certificates");
-
-	const count = (
-		length: number,
-		loading: boolean,
-		error: string | null,
-	): string | null => {
-		if (length > 0) return `${length}+`;
-		if (error) return "–";
-		if (loading) return null;
-		return "0";
-	};
-
-	const stats = [
-		{ label: "Years", value: "2.5+" },
-		{
-			label: "Projects",
-			value: count(projects.length, projectsLoading, projectsError),
-		},
-		{
-			label: "Certificates",
-			value: count(certificates.length, certificatesLoading, certificatesError),
-		},
-	];
 
 	return (
 		<section
@@ -167,15 +123,21 @@ export default function HeroSection() {
 						{/* Live age counter */}
 						<ElapsedYearsCounter birthDate={BIRTH_DATE} />
 
-						{/* Statement headline */}
-						<h1
-							data-reveal
-							style={reveal(120)}
+						{/* Statement headline — same wrapper shape as the registry demo. */}
+						<motion.h1
+							layout
+							initial={{ opacity: 0 }}
+							whileInView={{ opacity: 1 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.5, delay: 0.12, ease: "easeOut" }}
 							className="mt-4 max-w-5xl text-balance text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.045em] text-(--ui-text)"
 						>
-							Building fast, immersive
-							<br className="hidden sm:block" /> web &amp; mobile software.
-						</h1>
+							<span className="inline-block">
+								Building fast,{" "}
+								<ContainerTextFlip words={HERO_ADJECTIVES} interval={2600} />
+								<br className="hidden sm:block" /> web &amp; mobile software.
+							</span>
+						</motion.h1>
 
 						{/* Supporting statement */}
 						<p
@@ -226,7 +188,7 @@ export default function HeroSection() {
 								<a
 									key={label}
 									href={href}
-									target={href.startsWith("mailto:") ? undefined :"_blank"}
+									target={href.startsWith("mailto:") ? undefined : "_blank"}
 									rel="noreferrer"
 									aria-label={label}
 									title={label}
