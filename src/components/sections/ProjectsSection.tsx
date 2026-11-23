@@ -67,28 +67,47 @@ function ProjectPreview({ project }: { project: Project }) {
 	const [imageFailed, setImageFailed] = useState(false);
 	const hasImage = Boolean(project.image?.trim()) && !imageFailed;
 
+	const media = hasImage ? (
+		<img
+			src={project.image as string}
+			alt={`${project.title} preview`}
+			loading="lazy"
+			decoding="async"
+			onError={() => setImageFailed(true)}
+			className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+		/>
+	) : (
+		<div
+			aria-hidden
+			className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.14),transparent_55%)]"
+		/>
+	);
+	const shade = (
+		<span
+			aria-hidden
+			className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10"
+		/>
+	);
+
 	return (
 		<div className="relative aspect-video w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
-			{hasImage ? (
-				<img
-					src={project.image as string}
-					alt={`${project.title} preview`}
-					loading="lazy"
-					decoding="async"
-					onError={() => setImageFailed(true)}
-					className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-				/>
+			{project.slug ? (
+				<Link
+					to="/projects/$projectId"
+					params={{ projectId: project.slug }}
+					aria-label={`View details for ${project.title}`}
+					className="absolute inset-0 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+				>
+					{media}
+					{shade}
+				</Link>
 			) : (
-				<div
-					aria-hidden
-					className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.14),transparent_55%)]"
-				/>
+				<>
+					{media}
+					{shade}
+				</>
 			)}
-			<div
-				aria-hidden
-				className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10"
-			/>
-			<div className="absolute right-3 top-3 flex items-center gap-2">
+			<div className="absolute right-3 top-3 z-10 flex items-center gap-2">
 				{project.github && (
 					<a
 						href={project.github}
@@ -209,16 +228,6 @@ const ProjectCard = memo(function ProjectCard({
 					<p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
 						{project.summary}
 					</p>
-				)}
-				{project.slug && (
-					<Link
-						to="/projects/$projectId"
-						params={{ projectId: project.slug }}
-						className="mt-1 inline-flex w-fit items-center gap-1 text-xs font-medium text-primary transition-opacity hover:opacity-80"
-					>
-						View details
-						<ArrowUpRight className="size-3" />
-					</Link>
 				)}
 			</CardHeader>
 			<CardFooter className="mt-auto flex items-center justify-between gap-2 border-t border-border/60 px-4 py-3">

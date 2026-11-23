@@ -1,5 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
+import {
+	ArrowUpRight,
+	Code2,
+	Download,
+	Github,
+	Layers3,
+	Linkedin,
+	Mail,
+	Palette,
+	Zap,
+} from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { type CSSProperties, useEffect, useState } from "react";
 import ElapsedYearsCounter from "#/components/ElapsedYearsCounter";
@@ -27,6 +37,8 @@ const socials = [
 
 const reveal = (delay: number) =>
 	({ "--reveal-delay": `${delay}ms` }) as CSSProperties;
+
+
 
 /** Phones need chunkier cells, or the character grid turns into noise. */
 function useGlyphCellSize() {
@@ -119,7 +131,8 @@ export default function HeroSection() {
 			{/* ============================================================== */}
 			<div className="relative z-10 w-full pt-32">
 				<div className="mx-auto w-full max-w-336 px-5 pb-6 sm:px-8 sm:pb-8 lg:px-10 lg:pb-10">
-					<div className="max-w-264">
+					<div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:gap-12">
+						<div className="max-w-264">
 						{/* Live age counter */}
 						<ElapsedYearsCounter birthDate={BIRTH_DATE} />
 
@@ -175,6 +188,9 @@ export default function HeroSection() {
 								Download resume
 							</a>
 						</div>
+					</div>
+
+						
 					</div>
 
 					{/* Baseline rail: socials, live counts, scroll cue. */}
