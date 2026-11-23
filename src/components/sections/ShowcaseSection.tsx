@@ -1,40 +1,56 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import {
+	type CSSProperties,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
+import {
+	ProjectCard,
+	type Project,
+} from "#/components/sections/ProjectsSection";
 import { Button } from "#/components/ui/button";
-import CardSwap, { Card, type CardSwapHandle } from "#/components/ui/CardSwap";
 import SectionHeading from "#/components/ui/section-heading";
 import { Skeleton } from "#/components/ui/skeleton";
+import { useProjectVotes } from "#/hooks/use-project-votes";
 import { useLiveContent } from "#/lib/useLiveContent";
 import "./ShowcaseSection.css";
 
-interface Project {
-	title: string;
-	slug: string;
-	summary: string;
-	status: string;
-	startDate: string;
-	endDate?: string | null;
-	image?: string | null;
-	tags: string[];
+const MAX_ITEMS = 6;
+const AUTOPLAY_MS = 5200;
+
+function usePerView() {
+	const [perView, setPerView] = useState(1);
+
+	useEffect(() => {
+		const compute = () =>
+			setPerView(
+				window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1,
+			);
+		compute();
+		window.addEventListener("resize", compute, { passive: true });
+		return () => window.removeEventListener("resize", compute);
+	}, []);
+
+	return perView;
 }
 
-const MAX_ITEMS = 6;
-
-function ShowcaseSkeleton() {
+function ShowcaseSkeleton({ perView }: { perView: number }) {
 	return (
-		<div className="showcase-stage" aria-hidden="true">
-			<div className="relative mx-auto h-full w-full">
-				{[3, 2, 1, 0].map((offset) => (
-					<div
-						key={offset}
-						className="absolute left-1/2 top-1/2 h-[70%] w-[78%]"
-						style={{
-							transform: `translate(calc(-50% + ${offset * 22}px), calc(-50% - ${offset * 24}px)) scale(${1 - offset * 0.06})`,
-							zIndex: 10 - offset,
-						}}
-					>
-						<Skeleton className="h-full w-full rounded-2xl" />
+		<div className="showcase-viewport" aria-hidden="true">
+			<div className="showcase-track">
+				{["a", "b", "c"].slice(0, perView).map((key) => (
+					<div className="showcase-slide" key={key}>
+						<div className="showcase-card-skeleton">
+							<Skeleton className="aspect-video w-full rounded-none" />
+							<div className="space-y-2 p-4">
+								<Skeleton className="h-5 w-2/3" />
+								<Skeleton className="h-4 w-full" />
+								<Skeleton className="h-4 w-4/5" />
+							</div>
+						</div>
 					</div>
 				))}
 			</div>
@@ -44,9 +60,9 @@ function ShowcaseSkeleton() {
 
 export default function ShowcaseSection() {
 	const { items: projects, loading } = useLiveContent<Project>("projects");
-	const navigate = useNavigate();
-	const swapRef = useRef<CardSwapHandle>(null);
-	const [activeIndex, setActiveIndex] = useState(0);
+	const perView = usePerView();
+	const [index, setIndex] = useState(0);
+	const [paused, setPaused] = useState(false);
 
 	const showcase = useMemo(
 		() =>
@@ -59,24 +75,29 @@ export default function ShowcaseSection() {
 		[projects],
 	);
 
-	const activeProject = showcase[activeIndex];
+	const slugs = useMemo(
+		() => showcase.map((project) => project.slug).filter(Boolean),
+		[showcase],
+	);
+	const { votes, pending, vote } = useProjectVotes(slugs);
+
+	const maxIndex = Math.max(0, showcase.length - perView);
+	const safeIndex = Math.min(index, maxIndex);
 	const isLoading = loading && showcase.length === 0;
 
-	const handleCardClick = useCallback(
-		(index: number) => {
-			const project = showcase[index];
-			if (!project) return;
-			// Only the front card opens the detail page. Clicking a card behind
-			// lets CardSwap bring it forward first (onChange updates activeIndex).
-			if (index === activeIndex && project.slug) {
-				navigate({
-					to: "/projects/$projectId",
-					params: { projectId: project.slug },
-				});
-			}
-		},
-		[activeIndex, navigate, showcase],
+	const goTo = useCallback(
+		(next: number) => setIndex(Math.max(0, Math.min(next, maxIndex))),
+		[maxIndex],
 	);
+
+	useEffect(() => {
+		if (paused || maxIndex === 0) return;
+		const timer = window.setInterval(
+			() => setIndex((current) => (current + 1) % (maxIndex + 1)),
+			AUTOPLAY_MS,
+		);
+		return () => window.clearInterval(timer);
+	}, [paused, maxIndex]);
 
 	if (!isLoading && showcase.length === 0) return null;
 
@@ -88,142 +109,102 @@ export default function ShowcaseSection() {
 			<div className="mx-auto w-full max-w-6xl space-y-10 md:space-y-14">
 				<SectionHeading
 					eyebrow="Showcase"
-					title={
-						<>
-							Featured Projects
-						</>
-					}
-					description="A rotating look at projects I've designed and shipped. Tap a card to jump straight into the case study."
+					title="Featured Projects"
+					description="A closer look at the projects I've designed and shipped."
 				/>
 
-				<div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14">
-					{isLoading ? (
-						<ShowcaseSkeleton />
-					) : (
-						<div className="showcase-stage">
-							<CardSwap
-								ref={swapRef}
-								width={400}
-								height={300}
-								cardDistance={55}
-								verticalDistance={60}
-								depth={90}
-								skewAmount={6}
-								visibleCards={4}
-								delay={4000}
-								pauseOnHover={true}
-								onCardClick={handleCardClick}
-								onChange={setActiveIndex}
-								theme="dark"
+				{isLoading ? (
+					<ShowcaseSkeleton perView={perView} />
+				) : (
+					<section
+						className="showcase-viewport"
+						aria-label="Featured projects carousel"
+						onMouseEnter={() => setPaused(true)}
+						onMouseLeave={() => setPaused(false)}
+						onFocusCapture={() => setPaused(true)}
+						onBlurCapture={() => setPaused(false)}
+					>
+						<div
+							className="showcase-track"
+							style={{ "--showcase-index": safeIndex } as CSSProperties}
+						>
+							{showcase.map((project, i) => (
+								<div
+									className="showcase-slide"
+									key={project.slug ?? project.title}
+								>
+									<ProjectCard
+										project={project}
+										index={i}
+										vote={votes[project.slug]}
+										pending={pending[project.slug]}
+										onVote={vote}
+									/>
+								</div>
+							))}
+						</div>
+					</section>
+				)}
+
+				{!isLoading && maxIndex > 0 && (
+					<div className="showcase-controls">
+						<div className="flex items-center gap-2">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								onClick={() => goTo(safeIndex - 1)}
+								disabled={safeIndex === 0}
+								aria-label="Previous project"
+								className="showcase-nav"
 							>
-								{showcase.map((project) => (
-									<Card
-										key={project.slug ?? project.title}
-										className="showcase-card"
-									>
-										<div className="showcase-card-media">
-											{project.image ? (
-												<img
-													src={project.image}
-													alt={project.title}
-													loading="lazy"
-													decoding="async"
-													draggable={false}
-												/>
-											) : (
-												<span className="showcase-card-fallback" />
-											)}
-											<span className="showcase-card-scrim" />
-										</div>
-										<div className="showcase-card-body">
-											<span className="showcase-card-status">
-												{project.status}
-											</span>
-											<h3 className="showcase-card-title">{project.title}</h3>
-											<p className="showcase-card-summary">{project.summary}</p>
-										</div>
-									</Card>
-								))}
-							</CardSwap>
+								<ArrowLeft className="size-4" />
+							</Button>
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								onClick={() => goTo(safeIndex + 1)}
+								disabled={safeIndex === maxIndex}
+								aria-label="Next project"
+								className="showcase-nav"
+							>
+								<ArrowRight className="size-4" />
+							</Button>
 						</div>
-					)}
 
-					{/* Active project details */}
-					{activeProject && (
-						<div className="flex flex-col gap-6">
-							<div className="flex flex-wrap items-center gap-3">
-								<span className="inline-flex items-center rounded-full border border-black/10 bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground dark:border-white/10">
-									{activeProject.status}
-								</span>
-								{activeProject.startDate && (
-									<span className="text-xs text-muted-foreground">
-										{activeProject.startDate}
-										{activeProject.endDate ? ` – ${activeProject.endDate}` : ""}
-									</span>
-								)}
-							</div>
-
-							<div className="space-y-3">
-								<h3 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-									{activeProject.title}
-								</h3>
-								<p className="max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-									{activeProject.summary}
-								</p>
-							</div>
-
-							{activeProject.tags?.length > 0 && (
-								<div className="flex flex-wrap gap-1.5">
-									{activeProject.tags.slice(0, 6).map((tag) => (
-										<span
-											key={tag}
-											className="rounded-full border border-border bg-background/60 px-2.5 py-0.5 text-xs text-muted-foreground"
-										>
-											{tag}
-										</span>
-									))}
-								</div>
-							)}
-
-							<div className="flex flex-wrap items-center gap-3">
-								{activeProject.slug && (
-									<Button variant="ghost" asChild>
-										<Link
-											to="/projects/$projectId"
-											params={{ projectId: activeProject.slug }}
-										>
-											View project
-											<ArrowUpRight className="size-4" />
-										</Link>
-									</Button>
-								)}
-
-								<div className="flex items-center gap-2">
-									<Button
-										type="button"
-										variant="outline"
-										size="icon"
-										onClick={() => swapRef.current?.prev()}
-										aria-label="Previous project"
-										className="size-10 rounded-full border-border bg-background/60 text-foreground transition-colors duration-200"
-									>
-										<ArrowLeft className="size-4" />
-									</Button>
-									<Button
-										type="button"
-										variant="outline"
-										size="icon"
-										onClick={() => swapRef.current?.next()}
-										aria-label="Next project"
-										className="size-10 rounded-full border-border bg-background/60 text-foreground transition-colors duration-200"
-									>
-										<ArrowRight className="size-4" />
-									</Button>
-								</div>
-							</div>
+						<div
+							className="showcase-dots"
+							role="tablist"
+							aria-label="Project slides"
+						>
+							{showcase.slice(0, maxIndex + 1).map((project, i) => (
+								<button
+									key={project.slug ?? project.title}
+									type="button"
+									role="tab"
+									aria-label={`Go to slide ${i + 1}`}
+									aria-selected={i === safeIndex}
+									onClick={() => goTo(i)}
+									className={`showcase-dot ${i === safeIndex ? "is-active" : ""}`}
+								/>
+							))}
 						</div>
-					)}
-				</div>
+
+						<Button variant="ghost" asChild>
+							<Link to="/projects" className="gap-2">
+								See all projects
+								<ArrowUpRight className="size-4" />
+							</Link>
+						</Button>
+					</div>
+				)}
+
+				{isLoading && (
+					<div className="flex justify-center">
+						<Skeleton className="h-9 w-36 rounded-full" />
+					</div>
+				)}
 			</div>
 		</section>
 	);
